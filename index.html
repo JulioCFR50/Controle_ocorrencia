@@ -41,10 +41,11 @@
          }
          .pesquisa-container input,
          .pesquisa-container button {
-         padding: 6px;
+         padding: 0%;
          border-radius: 6px;
          border: 1px solid #ccc;
          font-size: 0.85rem;
+         text-align: center;
          }
          .pesquisa-container input { flex: 1 1 100px; min-width: 90px; }
          .pesquisa-container button { cursor: pointer; flex: 1 1 90px; }
@@ -53,7 +54,7 @@
          .pesquisa-container button.excluir { background: #dc3545; color: white; border: none; }
          .pesquisa-container button.btn-lista { background: #007bff; color: white; border: none; }
          #filtroInvoice {
-         width: 100%;
+         width: 10%;
          padding: 6px;
          margin-bottom: 8px;
          font-size: 0.85rem;
@@ -142,15 +143,14 @@
             <input type="text" id="pesquisaDtCar" placeholder="DT Carregamento">
             <input type="text" id="pesquisaDraft" placeholder="Dead-Line Draft">
             <input type="text" id="pesquisaVgm" placeholder="Dead-line VGM">
-            <input type="text" id="pesquisaCarga" placeholder="Dead-line Carga">
-            <input type="text" id="pesquisaInvoice" placeholder="Filtrar INVOICES na lista abaixo...">
+            <input type="text" id="pesquisaCarga" placeholder="Dead-line Carga">            
             <button class="salvar" id="btnSalvar">Salvar / Atualizar</button>
             <button class="limpar" id="btnLimpar">Limpar</button>
             <button class="excluir" id="btnExcluir">Excluir</button>
             <button class="btn-lista" id="btnConsultar">Consultar Invoice</button>
             <button class="btn-lista" id="btnBuscarLista">Pesquisar e Editar</button>        
          </div>
-         <input type="text" id="filtroInvoice" placeholder="Filtrar INVOICES na lista abaixo...">
+         <input type="text" id="filtroInvoice" placeholder="Pesquisar INVOICES ">
          <form id="formInvoice">
             <div><label for="invoice">INVOICE</label><input type="text" id="invoice"></div>
             <div><label for="dtFaturamento">DT Faturamento</label><input type="text" id="dtFaturamento"></div>
@@ -423,6 +423,7 @@
              const m = parseInt(hora[1], 10);
          
              const d = new Date(ano, mes, dia, h, m);
+             
              // Verifica se a data é válida
              if(d.getFullYear() !== ano || d.getMonth() !== mes || d.getDate() !== dia ||
                 d.getHours() !== h || d.getMinutes() !== m) {
