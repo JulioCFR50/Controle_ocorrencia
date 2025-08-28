@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Controle Mercado Externo</title>
+      <style>
+         * { 
+         margin: 0; 
+         padding: 0; 
+         box-sizing: border-box; 
+         }
+         body {
+         font-family: 'Roboto', sans-serif;
+         background: url('coqueiral.png') no-repeat center center/cover;
+         display: flex;
+         justify-content: center;
+         align-items: flex-start;
+         min-height: 100vh;
+         padding: 20px;
+         }
+         .container {
+         width: 90%;          /* ocupa 90% da tela */
+         max-width: 1400px;   /* limite em telas grandes */
+         background: rgba(255, 255, 255, 0.85);
+         padding: 20px;
+         border-radius: 12px;
+         box-shadow: 0 8px 15px rgba(0,0,0,0.3);
+         backdrop-filter: blur(8px);
+         }
+         .container h1 {
+         font-size: 1.5rem;
+         text-align: center;
+         margin-bottom: 15px;
+         }
+         .pesquisa-container {
+         display: flex; 
+         flex-wrap: wrap;
+         gap: 6px;
+         margin-bottom: 10px; 
+         }
+         .pesquisa-container input,
+         .pesquisa-container button {
+         padding: 6px;
+         border-radius: 6px;
+         border: 1px solid #ccc;
+         font-size: 0.85rem;
+         }
+         .pesquisa-container input { flex: 1 1 100px; min-width: 90px; }
+         .pesquisa-container button { cursor: pointer; flex: 1 1 90px; }
+         .pesquisa-container button.salvar { background: #28a745; color: white; border: none; }
+         .pesquisa-container button.limpar { background: #f0f0f0; color: #333; border: none; }
+         .pesquisa-container button.excluir { background: #dc3545; color: white; border: none; }
+         .pesquisa-container button.btn-lista { background: #007bff; color: white; border: none; }
+         #filtroInvoice {
+         width: 100%;
+         padding: 6px;
+         margin-bottom: 8px;
+         font-size: 0.85rem;
+         border-radius: 6px;
+         border: 1px solid #ccc;
+         }
+         form {
+         display: grid;
+         grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+         gap: 10px;
+         margin-bottom: 10px;
+         }
+         form div { display: flex; flex-direction: column; }
+         input, select { 
+         width: 100%; 
+         padding: 6px; 
+         font-size: 0.85rem; 
+         border: 1px solid #ccc; 
+         border-radius: 6px; 
+         }
+         .buttons { 
+         display: flex; 
+         justify-content: space-between; 
+         margin-top: 8px; 
+         gap: 6px; 
+         }
+         .buttons button { flex: 1; padding: 6px; font-size: 0.85rem; border-radius: 6px; cursor: pointer; }
+         /* LISTA COM SCROLL */
+         #listaInvoices {
+         margin-top: 15px;
+         overflow-x: auto;
+         overflow-y: auto;
+         max-height: 350px; 
+         border: 1px solid #ccc;
+         border-radius: 8px;
+         padding: 8px;
+         background: #fff;
+         }
+         #listaInvoices table {
+         width: 100%;
+         border-collapse: collapse;
+         min-width: 1200px; 
+         }
+         #listaInvoices th, #listaInvoices td {
+         border: 1px solid #ccc;
+         padding: 5px;
+         text-align: center;
+         font-size: 0.8rem; 
+         }
+         #listaInvoices th {
+         background: #007bff;
+         color: white;
+         position: sticky;
+         top: 0;
+         z-index: 1;
+         }
+         /* ===== RESPONSIVIDADE ===== */
+         @media (max-width: 1200px) {
+         form { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+         .pesquisa-container input, .pesquisa-container button { font-size: 0.8rem; padding: 5px; }
+         }
+         @media (max-width: 992px) {
+         form { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); }
+         .pesquisa-container { flex-direction: column; }
+         .pesquisa-container input, .pesquisa-container button { flex: 1 1 100%; }
+         }
+         @media (max-width: 768px) {
+         form { grid-template-columns: 1fr; }
+         .buttons { flex-direction: column; }
+         #listaInvoices table { min-width: 900px; }
+         }
+         @media (max-width: 576px) {
+         .container { padding: 12px; width: 95%; }
+         #listaInvoices table { min-width: 700px; }
+         .pesquisa-container input, .pesquisa-container button { font-size: 0.75rem; padding: 4px; }
+         form div { margin-bottom: 4px; }
+         }
+      </style>
+   </head>
+   <body>
+      <div class="container">
+         <h1>Controle Mercado Externo</h1>
+         <div class="pesquisa-container">
+            <input type="text" id="pesquisaInvoice" placeholder="Invoice">
+            <input type="text" id="pesquisaDtFat" placeholder="DT Faturamento">
+            <input type="text" id="pesquisaDtCar" placeholder="DT Carregamento">
+            <input type="text" id="pesquisaDraft" placeholder="Dead-Line Draft">
+            <input type="text" id="pesquisaVgm" placeholder="Dead-line VGM">
+            <input type="text" id="pesquisaCarga" placeholder="Dead-line Carga">
+            <input type="text" id="pesquisaInvoice" placeholder="Filtrar INVOICES na lista abaixo...">
+            <button class="salvar" id="btnSalvar">Salvar / Atualizar</button>
+            <button class="limpar" id="btnLimpar">Limpar</button>
+            <button class="excluir" id="btnExcluir">Excluir</button>
+            <button class="btn-lista" id="btnConsultar">Consultar Invoice</button>
+            <button class="btn-lista" id="btnBuscarLista">Pesquisar e Editar</button>        
+         </div>
+         <input type="text" id="filtroInvoice" placeholder="Filtrar INVOICES na lista abaixo...">
+         <form id="formInvoice">
+            <div><label for="invoice">INVOICE</label><input type="text" id="invoice"></div>
+            <div><label for="dtFaturamento">DT Faturamento</label><input type="text" id="dtFaturamento"></div>
+            <div><label for="dtCarregamento">DT Carregamento</label><input type="text" id="dtCarregamento"></div>
+            <div><label for="draft">Dead-Line Draft</label><input type="text" id="draft"></div>
+            <div><label for="vgm">Dead-line VGM</label><input type="text" id="vgm"></div>
+            <div><label for="carga">Dead-line Carga</label><input type="text" id="carga"></div>
+            <div><label for="embarque">DT Embarque</label><input type="text" id="embarque"></div>
+            <div>
+               <label for="status">Status</label>
+               <select id="status">
+                  <option value=""></option>
+                  <option>Pendente</option>
+                  <option>Concluído</option>
+               </select>
+            </div>
+            <div>
+               <label for="booking">Status Booking</label>
+               <select id="booking">
+                  <option value=""></option>
+                  <option>Aguardando</option>
+                  <option>Confirmado</option>
+               </select>
+            </div>
+            <div>
+               <label for="producao">Status Produção</label>
+               <select id="producao">
+                  <option value=""></option>
+                  <option>Pendente</option>
+                  <option>Confirmado</option>
+               </select>
+            </div>
+            <div><label for="observacoes">Observações</label><input type="text" id="observacoes"></div>
+            <div><label for="dtProduto">Dt do Produto</label><input type="text" id="dtProduto"></div>
+         </form>
+         <div id="listaInvoices">
+            <h1>Lista de Invoices</h1>
+            <table>
+               <thead>
+                  <tr>
+                     <th>Invoice</th>
+                     <th>DT Faturamento</th>
+                     <th>DT Carregamento</th>
+                     <th>Dead-Line Draft</th>
+                     <th>Dead-line VGM</th>
+                     <th>Dead-line Carga</th>
+                     <th>DT Embarque</th>
+                     <th>Status</th>
+                     <th>Status Booking</th>
+                     <th>Status Produção</th>
+                     <th>Observações</th>
+                     <th>Dt do Produto</th>
+                     <th>Ação</th>
+                  </tr>
+               </thead>
+               <tbody id="tabelaInvoices"></tbody>
+            </table>
+         </div>
+      </div>
+      <script>
+         // Função para atualizar a lista filtrando os registros
+         function atualizarLista() {
+             const registros = JSON.parse(localStorage.getItem("invoices")) || [];
+             const tbody = document.getElementById("tabelaInvoices");
+             tbody.innerHTML = "";
+         
+             const fInvoice = document.getElementById("pesquisaInvoice").value.toLowerCase();
+             const fDtFat = document.getElementById("pesquisaDtFat").value.toLowerCase();
+             const fDtCar = document.getElementById("pesquisaDtCar").value.toLowerCase();
+             const fDraft = document.getElementById("pesquisaDraft").value.toLowerCase();
+             const fVgm = document.getElementById("pesquisaVgm").value.toLowerCase();
+             const fCarga = document.getElementById("pesquisaCarga").value.toLowerCase();
+         
+             registros.filter(r => 
+                 r.invoice.toLowerCase().includes(fInvoice) &&
+                 r.dtFaturamento.toLowerCase().includes(fDtFat) &&
+                 r.dtCarregamento.toLowerCase().includes(fDtCar) &&
+                 r.draft.toLowerCase().includes(fDraft) &&
+                 r.vgm.toLowerCase().includes(fVgm) &&
+                 r.carga.toLowerCase().includes(fCarga)
+             ).forEach(r => {
+                 const tr = document.createElement("tr");
+                 tr.innerHTML = `
+                     <td>${r.invoice}</td>
+                     <td>${r.dtFaturamento}</td>
+                     <td>${r.dtCarregamento}</td>
+                     <td>${r.draft}</td>
+                     <td>${r.vgm}</td>
+                     <td>${r.carga}</td>
+                     <td>${r.embarque}</td>
+                     <td>${r.status}</td>
+                     <td>${r.booking}</td>
+                     <td>${r.producao}</td>
+                     <td>${r.observacoes || ''}</td>
+                     <td>${r.dtProduto || ''}</td>
+                     <td><button onclick="editarInvoice('${r.invoice}')">Editar</button></td>
+                 `;
+                 tbody.appendChild(tr);
+             });
+         }
+         
+         // Função para editar registro
+         function editarInvoice(invoiceBusca) {
+             const registros = JSON.parse(localStorage.getItem("invoices")) || [];
+             const registro = registros.find(r => r.invoice === invoiceBusca);
+             if(!registro) return alert("Invoice não encontrada.");
+         
+             document.getElementById("invoice").value = registro.invoice;
+             document.getElementById("dtFaturamento").value = registro.dtFaturamento;
+             document.getElementById("dtCarregamento").value = registro.dtCarregamento;
+             document.getElementById("draft").value = registro.draft;
+             document.getElementById("vgm").value = registro.vgm;
+             document.getElementById("carga").value = registro.carga;
+             document.getElementById("embarque").value = registro.embarque;
+             document.getElementById("status").value = registro.status;
+             document.getElementById("booking").value = registro.booking;
+             document.getElementById("producao").value = registro.producao;
+             document.getElementById("observacoes").value = registro.observacoes;
+             document.getElementById("dtProduto").value = registro.dtProduto;
+         }
+         
+         // Eventos para filtro instantâneo
+         ["pesquisaInvoice","pesquisaDtFat","pesquisaDtCar","pesquisaDraft","pesquisaVgm","pesquisaCarga"].forEach(id => {
+             document.getElementById(id).addEventListener("input", atualizarLista);
+         });
+         
+         // Função para formatar datas e horas (DD/MM/AAAA às HH:MM)
+         function formatarDataHora(input) {
+             let valor = input.value.replace(/\D/g, ''); // remove tudo que não for número
+             if(valor.length <= 8) { 
+                 if(valor.length > 2 && valor.length <= 4) valor = valor.slice(0,2) + '/' + valor.slice(2);
+                 else if(valor.length > 4) valor = valor.slice(0,2) + '/' + valor.slice(2,4) + '/' + valor.slice(4,8);
+             } else { 
+                 const data = valor.slice(0,8);
+                 const hora = valor.slice(8,12);
+                 valor = data.slice(0,2)+'/'+data.slice(2,4)+'/'+data.slice(4,8);
+                 if(hora.length > 0) valor += ' às ' + hora.slice(0,2) + ':' + hora.slice(2,4);
+             }
+             input.value = valor;
+         }
+         
+         // Aplica formatação automática para Draft, VGM, Carga, DT Faturamento, DT Carregamento e DT Embarque
+         ['draft','vgm','carga','dtFaturamento','dtCarregamento','embarque'].forEach(id => {
+             const el = document.getElementById(id);
+             el.addEventListener('input', () => formatarDataHora(el));
+         });
+         
+         // Salvar / Atualizar
+         document.getElementById("btnSalvar").addEventListener("click", () => {
+             const invoice = document.getElementById("invoice").value.trim();
+             if(!invoice) return alert("Preencha o número da INVOICE.");
+         
+             const obj = {
+                 invoice,
+                 dtFaturamento: document.getElementById("dtFaturamento").value,
+                 dtCarregamento: document.getElementById("dtCarregamento").value,
+                 draft: document.getElementById("draft").value,
+                 vgm: document.getElementById("vgm").value,
+                 carga: document.getElementById("carga").value,
+                 embarque: document.getElementById("embarque").value,
+                 status: document.getElementById("status").value,
+                 booking: document.getElementById("booking").value,
+                 producao: document.getElementById("producao").value,
+                 observacoes: document.getElementById("observacoes").value,
+                 dtProduto: document.getElementById("dtProduto").value
+             };
+         
+             let registros = JSON.parse(localStorage.getItem("invoices")) || [];
+             const index = registros.findIndex(r => r.invoice === invoice);
+             if(index >= 0) registros[index] = obj;
+             else registros.push(obj);
+         
+             localStorage.setItem("invoices", JSON.stringify(registros));
+         
+             document.getElementById("formInvoice").reset();
+             ["pesquisaInvoice","pesquisaDtFat","pesquisaDtCar","pesquisaDraft","pesquisaVgm","pesquisaCarga","filtroInvoice"]
+             .forEach(id => document.getElementById(id).value = "");
+             document.getElementById("tabelaInvoices").innerHTML = "";
+             atualizarLista();
+         });
+         
+         // Limpar todos os campos
+         document.getElementById("btnLimpar").addEventListener("click", () => {
+             document.getElementById("formInvoice").reset();
+             ["pesquisaInvoice","pesquisaDtFat","pesquisaDtCar","pesquisaDraft","pesquisaVgm","pesquisaCarga","filtroInvoice"]
+             .forEach(id => document.getElementById(id).value = "");
+             atualizarLista();
+         });
+         
+         // Consultar Invoice → redireciona para lista.html
+         document.getElementById("btnConsultar").addEventListener("click", () => {
+             window.location.href = "lista.html";
+         });
+         
+         // Buscar e editar
+         document.getElementById("btnBuscarLista").addEventListener("click", () => {
+             const filtro = document.getElementById("filtroInvoice").value.trim().toLowerCase();
+             if (!filtro) return alert("Digite a invoice que deseja buscar.");
+         
+             const registros = JSON.parse(localStorage.getItem("invoices")) || [];
+             const registro = registros.find(r => r.invoice.toLowerCase() === filtro);
+         
+             if (!registro) return alert("Invoice não encontrada na lista.");
+         
+             document.getElementById("invoice").value = registro.invoice;
+             document.getElementById("dtFaturamento").value = registro.dtFaturamento;
+             document.getElementById("dtCarregamento").value = registro.dtCarregamento;
+             document.getElementById("draft").value = registro.draft;
+             document.getElementById("vgm").value = registro.vgm;
+             document.getElementById("carga").value = registro.carga;
+             document.getElementById("embarque").value = registro.embarque;
+             document.getElementById("status").value = registro.status;
+             document.getElementById("booking").value = registro.booking;
+             document.getElementById("producao").value = registro.producao;
+             document.getElementById("observacoes").value = registro.observacoes;
+             document.getElementById("dtProduto").value = registro.dtProduto;
+         
+             const tbody = document.getElementById("tabelaInvoices");
+             tbody.innerHTML = "";
+             const tr = document.createElement("tr");
+             tr.innerHTML = `
+                 <td>${registro.invoice}</td>
+                 <td>${registro.dtFaturamento}</td>
+                 <td>${registro.dtCarregamento}</td>
+                 <td>${registro.draft}</td>
+                 <td>${registro.vgm}</td>
+                 <td>${registro.carga}</td>
+                 <td>${registro.embarque}</td>
+                 <td>${registro.status}</td>
+                 <td>${registro.booking}</td>
+                 <td>${registro.producao}</td>
+                 <td>${registro.observacoes || ''}</td>
+                 <td>${registro.dtProduto || ''}</td>
+                 <td><button onclick="editarInvoice('${registro.invoice}')">Editar</button></td>
+             `;
+             tbody.appendChild(tr);
+         });
+         
+         // Excluir
+         document.getElementById("btnExcluir").addEventListener("click", () => {
+             const invoice = document.getElementById("invoice").value.trim();
+             if(!invoice) return alert("Digite a INVOICE para excluir.");
+         
+             let registros = JSON.parse(localStorage.getItem("invoices")) || [];
+             const index = registros.findIndex(r => r.invoice === invoice);
+         
+             if(index >= 0 && confirm("Deseja realmente excluir a INVOICE: " + invoice + "?")) {
+                 registros.splice(index, 1);
+                 localStorage.setItem("invoices", JSON.stringify(registros));
+         
+                 document.getElementById("formInvoice").reset();
+                 ["pesquisaInvoice","pesquisaDtFat","pesquisaDtCar","pesquisaDraft","pesquisaVgm","pesquisaCarga","filtroInvoice"]
+                 .forEach(id => document.getElementById(id).value = "");
+                 document.getElementById("tabelaInvoices").innerHTML = "";
+                 atualizarLista();
+             }
+         });
+         
+         
+         // Função para validar data e hora no formato DD/MM/AAAA às HH:MM
+         function validarDataHora(valor) {
+             const partes = valor.split(' às ');
+             const data = partes[0].split('/');
+             const hora = partes[1] ? partes[1].split(':') : ['00','00'];
+         
+             const dia = parseInt(data[0], 10);
+             const mes = parseInt(data[1], 10) - 1; // JS: janeiro = 0
+             const ano = parseInt(data[2], 10);
+             const h = parseInt(hora[0], 10);
+             const m = parseInt(hora[1], 10);
+         
+             const d = new Date(ano, mes, dia, h, m);
+             // Verifica se a data é válida
+             if(d.getFullYear() !== ano || d.getMonth() !== mes || d.getDate() !== dia ||
+                d.getHours() !== h || d.getMinutes() !== m) {
+                 return false;
+             }
+             return true;
+         }
+         
+         // Aplica validação e formatação para os campos de datas importantes
+         ['draft','vgm','carga','dtFaturamento','dtCarregamento','embarque'].forEach(id => {
+             const el = document.getElementById(id);
+             el.addEventListener('blur', () => {
+                 if(el.value) {
+                     if(!validarDataHora(el.value)) {
+                         alert("Data errada");
+                         el.value = '';
+                         el.focus();
+                     }
+                 }
+             });
+         });
+         
+         // Inicializa
+         atualizarLista();
+      </script>
+   </body>
+</html>

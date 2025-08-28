@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lista de Invoices</title>
+<style>
+/* Mantém seu CSS original */
+body { font-family: Arial, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; background: url('coqueiral.png') no-repeat center center/cover; min-height: 90vh; }
+h1 { text-align: center; margin-bottom: 20px; }
+table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0px 2px 6px rgba(0,0,0,0.2); }
+th, td { padding: 10px; text-align: center; border: 1px solid #ddd; }
+th { background: #007BFF; color: #fff; }
+tr:nth-child(even) { background: #f9f9f9; }
+.btn-voltar { display: block; margin: 20px auto; background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; }
+</style>
+</head>
+<body>
+<h1>Lista de Invoices</h1>
+<table id="tabela">
+    <thead>
+        <tr>
+            <th>Invoice</th>
+            <th>DT Faturamento</th>
+            <th>DT Carregamento</th>
+            <th>Dead-Line Draft</th>
+            <th>Dead-line VGM</th>
+            <th>Dead-line Carga</th>
+            <th>DT Embarque</th>
+            <th>Status</th>
+            <th>Status Booking</th>
+            <th>Status Produção</th>
+            <th>Ação</th>
+        </tr>
+    </thead>
+    <tbody id="dadosTabela"></tbody>
+</table>
+
+<button class="btn-voltar" onclick="window.location.href='index.html'">⬅ Voltar</button>
+
+<script>
+const registros = JSON.parse(localStorage.getItem("invoices")) || [];
+const filtroIndex = localStorage.getItem("filtroInvoiceSelecionada") || "";
+const tabela = document.getElementById("dadosTabela");
+
+const dadosFiltrados = registros.filter(r => r.invoice.toLowerCase().includes(filtroIndex.toLowerCase()));
+
+if(dadosFiltrados.length === 0){
+    const linha = document.createElement("tr");
+    linha.innerHTML = `<td colspan="11">Nenhuma INVOICE encontrada.</td>`;
+    tabela.appendChild(linha);
+} else {
+    dadosFiltrados.forEach(registro => {
+      const linha = document.createElement("tr");
+      linha.innerHTML = `
+        <td>${registro.invoice}</td>
+        <td>${registro.dtFaturamento}</td>
+        <td>${registro.dtCarregamento}</td>
+        <td>${registro.draft}</td>
+        <td>${registro.vgm}</td>
+        <td>${registro.carga}</td>
+        <td>${registro.embarque}</td>
+        <td>${registro.status}</td>
+        <td>${registro.booking}</td>
+        <td>${registro.producao}</td>
+        <td><button onclick="selecionarInvoice('${registro.invoice}')">Selecionar</button></td>
+      `;
+      tabela.appendChild(linha);
+    });
+}
+
+function selecionarInvoice(invoiceBusca) {
+    const registros = JSON.parse(localStorage.getItem("invoices")) || [];
+    const registro = registros.find(r => r.invoice === invoiceBusca);
+    if (!registro) return alert("Invoice não encontrada.");
+
+    localStorage.setItem("invoiceSelecionada", JSON.stringify(registro));
+    localStorage.removeItem("filtroInvoiceSelecionada");
+    window.location.href = "index.html";
+}
+</script>
+</body>
+</html>
