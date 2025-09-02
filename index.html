@@ -6,46 +6,53 @@
       <title>Controle Mercado Externo</title>
       <style>
          * { 
-         margin: 0; 
-         padding: 0; 
-         box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
          }
          body {
-         font-family: 'Roboto', sans-serif;
-         background: url('coqueiral.png') no-repeat center center/cover;
-         display: flex;
-         justify-content: center;
-         align-items: flex-start;
-         min-height: 100vh;
-         padding: 20px;
+            font-family: 'Roboto', sans-serif;
+            background: url('coqueiral.png') no-repeat center center/cover;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 20px;
          }
+
+         /* Ajuste geral da fonte do container */
          .container {
-         width: 90%;          /* ocupa 90% da tela */
-         max-width: 1400px;   /* limite em telas grandes */
-         background: rgba(255, 255, 255, 0.85);
-         padding: 20px;
-         border-radius: 4px;
-         box-shadow: 0 8px 15px rgba(0,0,0,0.3);
-         backdrop-filter: blur(8px);
+            width: 90%;          
+            max-width: 1400px;   
+            background: rgba(255, 255, 255, 0.85);
+            padding: 15px; /* reduz padding interno */
+            border-radius: 4px;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.3);
+            backdrop-filter: blur(8px);
+            font-size: 0.8rem; /* menor fonte padrão */
          }
+
+         /* Título */
          .container h1 {
-         font-size: 1.5rem;
-         text-align: center;
-         margin-bottom: 15px;
+            font-size: 1.2rem; /* antes era 1.5rem */
+            text-align: center;
+            margin-bottom: 10px;
          }
+
+         /* Campos de pesquisa e botões */
          .pesquisa-container {
-         display: flex; 
-         flex-wrap: wrap;
-         gap: 6px;
-         margin-bottom: 10px; 
+            display: flex; 
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 10px; 
          }
          .pesquisa-container input,
          .pesquisa-container button {
-         padding: 0%;
-         border-radius: 4px;
-         border: 1px solid #ccc;
-         font-size: 0.85rem;
-         text-align: center;
+            font-size: 0.75rem;  /* diminui fonte */
+            padding: 3px 5px;    /* reduz altura e largura */
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            text-align: center;
          }
          .pesquisa-container input { flex: 1 1 100px; min-width: 90px; }
          .pesquisa-container button { cursor: pointer; flex: 1 1 90px; }
@@ -53,84 +60,100 @@
          .pesquisa-container button.limpar { background: #f0f0f0; color: #333; border: none; }
          .pesquisa-container button.excluir { background: #dc3545; color: white; border: none; }
          .pesquisa-container button.btn-lista { background: #007bff; color: white; border: none; }
+
          #filtroInvoice {
-         width: 10%;
-         padding: 6px;
-         margin-bottom: 8px;
-         font-size: 0.85rem;
-         border-radius: 4px;
-         border: 1px solid #ccc;
+            width: 10%;
+            padding: 6px;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            border-radius: 4px;
+            border: 1px solid #ccc;
          }
+
+         /* Inputs do formulário */
          form {
-         display: grid;
-         grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-         gap: 10px;
-         margin-bottom: 10px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px;
+            margin-bottom: 10px;
          }
          form div { display: flex; flex-direction: column; }
+         form div label {
+            font-size: 0.75rem; /* reduz tamanho do label */
+         }
          input, select { 
-         width: 100%; 
-         padding: 6px; 
-         font-size: 0.85rem; 
-         border: 1px solid #ccc; 
-         border-radius: 4px; 
+            width: 100%; 
+            font-size: 0.75rem;
+            padding: 4px; /* antes era 6px */
+            border: 1px solid #ccc; 
+            border-radius: 4px; 
          }
+
+         /* Botões do formulário */
          .buttons { 
-         display: flex; 
-         justify-content: space-between; 
-         margin-top: 8px; 
-         gap: 6px; 
+            display: flex; 
+            justify-content: space-between; 
+            margin-top: 8px; 
+            gap: 6px; 
          }
-         .buttons button { flex: 1; padding: 6px; font-size: 0.85rem; border-radius: 6px; cursor: pointer; }
-         /* LISTA COM SCROLL */
+         .buttons button { 
+            flex: 1; 
+            font-size: 0.75rem; 
+            padding: 5px; 
+            border-radius: 6px; 
+            cursor: pointer; 
+         }
+
+         /* LISTA DE INVOICES */
          #listaInvoices {
-         margin-top: 10px;
-         overflow-x: auto;
-         overflow-y: auto;
-         max-height: 850px; 
-         border: 1px solid #ccc;
-         border-radius: 4px;
-         padding: 10px;         
-          background: rgba(255, 255, 255, 0.6);
+            margin-top: 10px;
+            overflow-x: auto;
+            overflow-y: auto;
+            max-height: 700px; /* antes 850px */
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 5px; /* menos espaço interno */
+            background: rgba(255, 255, 255, 0.6);
          }
          #listaInvoices table {
-         width: 100%;
-         border-collapse: collapse;
-         min-width: 1200px; 
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1200px; 
          }
          #listaInvoices th, #listaInvoices td {
-         border: 1px solid #ccc;
-         padding: 5px;
-         text-align: center;
-         font-size: 0.8rem; 
+            border: 1px solid #ccc;
+            font-size: 0.75rem; /* menor texto na tabela */
+            padding: 3px;       /* células mais compactas */
+            text-align: center;
          }
          #listaInvoices th {
-         background: #007bff;
-         color: white;
-         position: sticky;
-         top: 0;
-         z-index: 1;
+            background: #007bff;
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 1;
          }
+
          /* ===== RESPONSIVIDADE ===== */
          @media (max-width: 1200px) {
-         form { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
-         .pesquisa-container input, .pesquisa-container button { font-size: 0.8rem; padding: 5px; }
+            form { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+            .pesquisa-container input, .pesquisa-container button { font-size: 0.7rem; padding: 3px; }
          }
          @media (max-width: 992px) {
-         form { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); }
-         .pesquisa-container { flex-direction: column; }
-         .pesquisa-container input, .pesquisa-container button { flex: 1 1 100%; }
+            form { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); }
+            .pesquisa-container { flex-direction: column; }
+            .pesquisa-container input, .pesquisa-container button { flex: 1 1 100%; }
          }
          @media (max-width: 768px) {
-         form { grid-template-columns: 1fr; }
-         .buttons { flex-direction: column; }
-         #listaInvoices table { min-width: 900px; }
+            form { grid-template-columns: 1fr; }
+            .buttons { flex-direction: column; }
+            #listaInvoices table { min-width: 900px; }
          }
          @media (max-width: 576px) {
-         .container { padding: 12px; width: 95%; }
-         #listaInvoices table { min-width: 700px; }
-         .pesquisa-container input, .pesquisa-container button { font-size: 0.75rem; padding: 4px; }
-         form div { margin-bottom: 4px; }
+            .container { padding: 10px; font-size: 0.7rem; }
+            .pesquisa-container input, .pesquisa-container button { font-size: 0.7rem; padding: 3px; }
+            input, select { font-size: 0.7rem; padding: 3px; }
+            #listaInvoices th, #listaInvoices td { font-size: 0.7rem; padding: 2px; }
          }
       </style>
    </head>
@@ -209,7 +232,7 @@
                <tbody id="tabelaInvoices"></tbody>
             </table>
          </div>
-         <!-- Adicione após o div #listaInvoices -->
+         <!-- Modal PDF -->
          <div id="modalPDF" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); justify-content:center; align-items:center; z-index:1000;">
             <div style="position:relative; width:90%; max-width:1000px; height:90%; background:#fff; border-radius:12px; overflow:hidden;">
                <button id="fecharModal" style="position:absolute; top:10px; right:10px; padding:5px 10px; z-index:2; cursor:pointer;">Fechar</button>
