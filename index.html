@@ -5,54 +5,65 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Controle Mercado Externo</title>
       <style>
-         * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
+         * {
+         margin: 0;
+         padding: 0;
+         box-sizing: border-box;
          }
-         body {
-            font-family: 'Roboto', sans-serif;
-            background: url('coqueiral.png') no-repeat center center/cover;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-            padding: 20px;
+         /* ===== BODY E CONTAINER ===== */
+         html, body {
+         height: 100%;
+         margin: 0;
+         padding: 0;
+         overflow: hidden; /* bloqueia rolagem da página */
+         font-family: Arial, sans-serif;
+         background: url("coqueiral.png") no-repeat center center fixed;
+         background-size: cover;
          }
-
-         /* Ajuste geral da fonte do container */
          .container {
-            width: 90%;          
-            max-width: 1400px;   
-            background: rgba(255, 255, 255, 0.85);
-            padding: 15px; /* reduz padding interno */
-            border-radius: 4px;
-            box-shadow: 0 8px 15px rgba(0,0,0,0.3);
-            backdrop-filter: blur(8px);
-            font-size: 0.8rem; /* menor fonte padrão */
+         position: fixed;
+         top: 0;
+         left: 0;
+         right: 0;
+         bottom: 0;
+         width: 100%;
+         height: 100%;
+         background: rgba(255, 255, 255, 0.45);
+         backdrop-filter: blur(10px);
+         padding: 15px;
+         border-radius: 8px;
+         box-shadow: 0 8px 15px rgba(0,0,0,0.3);
+         font-size: 0.8rem;
+         display: flex;
+         flex-direction: column;
          }
-
-         /* Título */
+         /* ===== TITULO H1 FIXO E TRANSPARENTE ===== */
          .container h1 {
-            font-size: 1.2rem; /* antes era 1.5rem */
-            text-align: center;
-            margin-bottom: 10px;
+         font-size: 1.2rem;
+         text-align: center;
+         color: #333;
+         position: sticky;
+         top: 0;
+         background: rgba(255, 255, 255, 0.60);
+         backdrop-filter: blur(10px);
+         z-index: 4;
+         padding: 8px 0;
+         margin-bottom: 5px;
          }
-
-         /* Campos de pesquisa e botões */
+         /* ===== CAMPOS DE PESQUISA E BOTÕES ===== */
          .pesquisa-container {
-            display: flex; 
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-bottom: 10px; 
+         display: flex;
+         flex-wrap: wrap;
+         gap: 6px;
+         margin-bottom: 10px;
          }
          .pesquisa-container input,
          .pesquisa-container button {
-            font-size: 0.75rem;  /* diminui fonte */
-            padding: 3px 5px;    /* reduz altura e largura */
-            border-radius: 4px;
-            border: 1px solid #ccc;
-            text-align: center;
+         font-size: 0.75rem;
+         padding: 3px 5px;
+         border-radius: 4px;
+         border: 1px solid #ccc;
+         text-align: center;
          }
          .pesquisa-container input { flex: 1 1 100px; min-width: 90px; }
          .pesquisa-container button { cursor: pointer; flex: 1 1 90px; }
@@ -60,101 +71,133 @@
          .pesquisa-container button.limpar { background: #f0f0f0; color: #333; border: none; }
          .pesquisa-container button.excluir { background: #dc3545; color: white; border: none; }
          .pesquisa-container button.btn-lista { background: #007bff; color: white; border: none; }
-
          #filtroInvoice {
-            width: 10%;
-            padding: 6px;
-            margin-bottom: 8px;
-            font-size: 0.85rem;
-            border-radius: 4px;
-            border: 1px solid #ccc;
+         width: 10%;
+         padding: 6px;
+         margin-bottom: 8px;
+         font-size: 0.85rem;
+         border-radius: 4px;
+         border: 1px solid #ccc;
          }
-
-         /* Inputs do formulário */
+         /* ===== FORMULARIO ===== */
          form {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 10px;
-            margin-bottom: 10px;
+         display: grid;
+         grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+         gap: 10px;
+         margin-bottom: 10px;
          }
          form div { display: flex; flex-direction: column; }
-         form div label {
-            font-size: 0.75rem; /* reduz tamanho do label */
+         form div label { font-size: 0.75rem; }
+         input, select {
+         width: 100%;
+         font-size: 0.75rem;
+         padding: 4px;
+         border: 1px solid #ccc;
+         border-radius: 4px;
          }
-         input, select { 
-            width: 100%; 
-            font-size: 0.75rem;
-            padding: 4px; /* antes era 6px */
-            border: 1px solid #ccc; 
-            border-radius: 4px; 
+         /* ===== BOTOES DO FORM ===== */
+         .buttons {
+         display: flex;
+         justify-content: space-between;
+         margin-top: 8px;
+         gap: 6px;
          }
-
-         /* Botões do formulário */
-         .buttons { 
-            display: flex; 
-            justify-content: space-between; 
-            margin-top: 8px; 
-            gap: 6px; 
+         .buttons button {
+         flex: 1;
+         font-size: 0.75rem;
+         padding: 5px;
+         border-radius: 6px;
+         cursor: pointer;
          }
-         .buttons button { 
-            flex: 1; 
-            font-size: 0.75rem; 
-            padding: 5px; 
-            border-radius: 6px; 
-            cursor: pointer; 
-         }
-
-         /* LISTA DE INVOICES */
+         /* ===== LISTA DE INVOICES ===== */
          #listaInvoices {
-            margin-top: 10px;
-            overflow-x: auto;
-            overflow-y: auto;
-            max-height: 700px; /* antes 850px */
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            padding: 5px; /* menos espaço interno */
-            background: rgba(255, 255, 255, 0.6);
+         flex: 1;
+         overflow: auto;
+         border: 1px solid #ccc;
+         border-radius: 6px;
+         background: rgba(255, 255, 255, 0.95);
+         padding: 0;
          }
+         /* TABELA */
          #listaInvoices table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 1200px; 
+         width: 100%;
+         border-collapse: collapse;
+         min-width: 1200px;
          }
-         #listaInvoices th, #listaInvoices td {
-            border: 1px solid #ccc;
-            font-size: 0.75rem; /* menor texto na tabela */
-            padding: 3px;       /* células mais compactas */
-            text-align: center;
+         #listaInvoices th, 
+         #listaInvoices td {
+         border: 1px solid #ccc;
+         font-size: 0.60rem;
+         padding: 2px;
+         text-align: center;
+         background: rgba(255,255,255,0.95);
+         font-weight: normal;     /* evita pulo ao trocar para bold */
+         min-width: 80px;         /* largura mínima segura */
          }
+         /* CABEÇALHO FIXO */
          #listaInvoices th {
-            background: #007bff;
-            color: white;
-            position: sticky;
-            top: 0;
-            z-index: 1;
+         background: rgba(0, 123, 255, 0.85);
+         color: white;
+         font-weight: bold;
+         position: sticky;
+         top: 42px; /* altura do h1 */
+         z-index: 3;
+         backdrop-filter: blur(6px);
          }
+         /* ===== ZEBRA NAS LINHAS ===== */
+         #listaInvoices tr:nth-child(even) td {
+         background: rgba(240, 240, 240, 0.85);
+         }
+         #listaInvoices tr:nth-child(odd) td {
+         background: rgba(255, 255, 255, 0.55);
+         }
+         /* ===== HOVER E ATIVO ===== */
+         #listaInvoices tr:hover td {
+         background: #fdf59f !important; /* amarelo */
+         cursor: pointer;
+         }
+         /*#listaInvoices tr.ativo td {
+         background: orange !important;
+         font-weight: bold;   
+         color: #fff;
+         }*/
+ 
 
          /* ===== RESPONSIVIDADE ===== */
          @media (max-width: 1200px) {
-            form { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
-            .pesquisa-container input, .pesquisa-container button { font-size: 0.7rem; padding: 3px; }
+         form { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+         .pesquisa-container input, .pesquisa-container button { font-size: 0.7rem; padding: 3px; }
          }
          @media (max-width: 992px) {
-            form { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); }
-            .pesquisa-container { flex-direction: column; }
-            .pesquisa-container input, .pesquisa-container button { flex: 1 1 100%; }
+         form { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); }
+         .pesquisa-container { flex-direction: column; }
+         .pesquisa-container input, .pesquisa-container button { flex: 0 0 5%; }
          }
          @media (max-width: 768px) {
-            form { grid-template-columns: 1fr; }
-            .buttons { flex-direction: column; }
-            #listaInvoices table { min-width: 900px; }
+         form { grid-template-columns: 1fr; }
+         .buttons { flex-direction: column; }
+         #listaInvoices table { min-width: 900px; }
          }
          @media (max-width: 576px) {
-            .container { padding: 10px; font-size: 0.7rem; }
-            .pesquisa-container input, .pesquisa-container button { font-size: 0.7rem; padding: 3px; }
-            input, select { font-size: 0.7rem; padding: 3px; }
-            #listaInvoices th, #listaInvoices td { font-size: 0.7rem; padding: 2px; }
+         .container { padding: 10px; font-size: 0.7rem; }
+         .pesquisa-container input, .pesquisa-container button { font-size: 0.7rem; padding: 3px; }
+         input, select { font-size: 0.7rem; padding: 3px; }
+         #listaInvoices th, #listaInvoices td { font-size: 0.7rem; padding: 2px; }
          }
+         /* ===== FOOTER ===== */
+         footer {
+         margin-top: 4px;  
+         display: flex; 
+         justify-content: space-between; 
+         font-size: 0.65rem; 
+         color: #f8f6f6;
+         border-top: 1px solid #ccc;
+         }
+         /* Linha clicada (ativa) 
+         #listaInvoices tr.ativo td {
+         background: orange !important;
+         font-weight: bold;
+         }*/
       </style>
    </head>
    <body>
@@ -206,8 +249,8 @@
                   <option>Confirmado</option>
                </select>
             </div>
-            <div><label for="observacoes">Observações</label><input type="text" id="observacoes"></div>
             <div><label for="dtProduto">Dt do Produto</label><input type="text" id="dtProduto"></div>
+            <div><label for="observacoes">Observações</label><input type="text" id="observacoes"></div>
          </form>
          <div id="listaInvoices">
             <h1>Lista de Invoices</h1>
@@ -224,21 +267,18 @@
                      <th>Status</th>
                      <th>Status Booking</th>
                      <th>Status Produção</th>
-                     <th>Observações</th>
                      <th>Dt do Produto</th>
+                     <th>Observações</th>
                      <th>Ação</th>
                   </tr>
                </thead>
                <tbody id="tabelaInvoices"></tbody>
             </table>
          </div>
-         <!-- Modal PDF -->
-         <div id="modalPDF" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); justify-content:center; align-items:center; z-index:1000;">
-            <div style="position:relative; width:90%; max-width:1000px; height:90%; background:#fff; border-radius:12px; overflow:hidden;">
-               <button id="fecharModal" style="position:absolute; top:10px; right:10px; padding:5px 10px; z-index:2; cursor:pointer;">Fechar</button>
-               <iframe id="iframePDF" src="" style="width:100%; height:100%; border:none;"></iframe>
-            </div>
-         </div>
+         <!-- FOOTER -->
+         <footer>
+            <span>© 2025 Julio Cesar. Todos os direitos reservados.</span>
+         </footer>
       </div>
       <script>
          // Função para atualizar a lista filtrando os registros
@@ -273,10 +313,10 @@
                      <td>${r.embarque}</td>
                      <td>${r.status}</td>
                      <td>${r.booking}</td>
-                     <td>${r.producao}</td>
-                     <td>${r.observacoes || ''}</td>
+                     <td>${r.producao}</td>                    
                      <td>${r.dtProduto || ''}</td>
-                     <td><button onclick="editarInvoice('${r.invoice}')">Editar</button></td>
+                      <td>${r.observacoes || ''}</td>
+                     <td><button onclick="editarInvoice('${r.invoice}')">✏️ Editar</button></td>
                  `;
                  tbody.appendChild(tr);
              });
@@ -297,9 +337,9 @@
              document.getElementById("embarque").value = registro.embarque;
              document.getElementById("status").value = registro.status;
              document.getElementById("booking").value = registro.booking;
-             document.getElementById("producao").value = registro.producao;
-             document.getElementById("observacoes").value = registro.observacoes;
+             document.getElementById("producao").value = registro.producao;             
              document.getElementById("dtProduto").value = registro.dtProduto;
+             document.getElementById("observacoes").value = registro.observacoes;
          }
          
          // Eventos para filtro instantâneo
@@ -343,9 +383,9 @@
                  embarque: document.getElementById("embarque").value,
                  status: document.getElementById("status").value,
                  booking: document.getElementById("booking").value,
-                 producao: document.getElementById("producao").value,
+                 producao: document.getElementById("producao").value,                 
+                 dtProduto: document.getElementById("dtProduto").value,
                  observacoes: document.getElementById("observacoes").value,
-                 dtProduto: document.getElementById("dtProduto").value
              };
          
              let registros = JSON.parse(localStorage.getItem("invoices")) || [];
@@ -394,9 +434,9 @@
              document.getElementById("embarque").value = registro.embarque;
              document.getElementById("status").value = registro.status;
              document.getElementById("booking").value = registro.booking;
-             document.getElementById("producao").value = registro.producao;
-             document.getElementById("observacoes").value = registro.observacoes;
+             document.getElementById("producao").value = registro.producao;             
              document.getElementById("dtProduto").value = registro.dtProduto;
+             document.getElementById("observacoes").value = registro.observacoes;
          
              const tbody = document.getElementById("tabelaInvoices");
              tbody.innerHTML = "";
@@ -411,9 +451,9 @@
                  <td>${registro.embarque}</td>
                  <td>${registro.status}</td>
                  <td>${registro.booking}</td>
-                 <td>${registro.producao}</td>
-                 <td>${registro.observacoes || ''}</td>
+                 <td>${registro.producao}</td>                 
                  <td>${registro.dtProduto || ''}</td>
+                 <td>${registro.observacoes || ''}</td>
                  <td><button onclick="editarInvoice('${registro.invoice}')">Editar</button></td>
              `;
              tbody.appendChild(tr);
@@ -478,6 +518,27 @@
          
          // Inicializa
          atualizarLista();
+         
+         // Destaque ao clicar na linha
+         document.addEventListener("click", function(e) {
+         const linha = e.target.closest("#listaInvoices tbody tr");
+         if (!linha) return; // só age se for dentro do tbody da tabela
+         
+         // remove destaque de todas as linhas
+         document.querySelectorAll("#listaInvoices tbody tr").forEach(tr => tr.classList.remove("ativo"));
+         
+         // aplica destaque na linha clicada
+         linha.classList.add("ativo");
+         });
+
+         document.querySelectorAll('.btn-editar').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const invoice = btn.dataset.invoice;
+    editarInvoice(invoice);
+  });
+});
+
+         
       </script>
    </body>
 </html>
