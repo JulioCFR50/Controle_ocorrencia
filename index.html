@@ -5,200 +5,240 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Controle Mercado Externo</title>
       <style>
-         * {
-         margin: 0;
-         padding: 0;
-         box-sizing: border-box;
-         }
-         /* ===== BODY E CONTAINER ===== */
-         html, body {
-         height: 100%;
-         margin: 0;
-         padding: 0;
-         overflow: hidden; /* bloqueia rolagem da página */
-         font-family: Arial, sans-serif;
-         background: url("coqueiral.png") no-repeat center center fixed;
-         background-size: cover;
-         }
-         .container {
-         position: fixed;
-         top: 0;
-         left: 0;
-         right: 0;
-         bottom: 0;
-         width: 100%;
-         height: 100%;
-         background: rgba(255, 255, 255, 0.45);
-         backdrop-filter: blur(10px);
-         padding: 15px;
-         border-radius: 8px;
-         box-shadow: 0 8px 15px rgba(0,0,0,0.3);
-         font-size: 0.8rem;
-         display: flex;
-         flex-direction: column;
-         }
-         /* ===== TITULO H1 FIXO E TRANSPARENTE ===== */
-         .container h1 {
-         font-size: 1.2rem;
-         text-align: center;
-         color: #333;
-         position: sticky;
-         top: 0;
-         background: rgba(255, 255, 255, 0.60);
-         backdrop-filter: blur(10px);
-         z-index: 4;
-         padding: 8px 0;
-         margin-bottom: 5px;
-         }
-         /* ===== CAMPOS DE PESQUISA E BOTÕES ===== */
-         .pesquisa-container {
-         display: flex;
-         flex-wrap: wrap;
-         gap: 6px;
-         margin-bottom: 10px;
-         }
-         .pesquisa-container input,
-         .pesquisa-container button {
-         font-size: 0.75rem;
-         padding: 3px 5px;
-         border-radius: 4px;
-         border: 1px solid #ccc;
-         text-align: center;
-         }
-         .pesquisa-container input { flex: 1 1 100px; min-width: 90px; }
-         .pesquisa-container button { cursor: pointer; flex: 1 1 90px; }
-         .pesquisa-container button.salvar { background: #28a745; color: white; border: none; }
-         .pesquisa-container button.limpar { background: #f0f0f0; color: #333; border: none; }
-         .pesquisa-container button.excluir { background: #dc3545; color: white; border: none; }
-         .pesquisa-container button.btn-lista { background: #007bff; color: white; border: none; }
-         #filtroInvoice {
-         width: 10%;
-         padding: 6px;
-         margin-bottom: 8px;
-         font-size: 0.85rem;
-         border-radius: 4px;
-         border: 1px solid #ccc;
-         }
-         /* ===== FORMULARIO ===== */
-         form {
-         display: grid;
-         grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-         gap: 10px;
-         margin-bottom: 10px;
-         }
-         form div { display: flex; flex-direction: column; }
-         form div label { font-size: 0.75rem; }
-         input, select {
-         width: 100%;
-         font-size: 0.75rem;
-         padding: 4px;
-         border: 1px solid #ccc;
-         border-radius: 4px;
-         }
-         /* ===== BOTOES DO FORM ===== */
-         .buttons {
-         display: flex;
-         justify-content: space-between;
-         margin-top: 8px;
-         gap: 6px;
-         }
-         .buttons button {
-         flex: 1;
-         font-size: 0.75rem;
-         padding: 5px;
-         border-radius: 6px;
-         cursor: pointer;
-         }
-         /* ===== LISTA DE INVOICES ===== */
-         #listaInvoices {
-         flex: 1;
-         overflow: auto;
-         border: 1px solid #ccc;
-         border-radius: 6px;
-         background: rgba(255, 255, 255, 0.40);
-         padding: 0;
-         }
-         /* TABELA */
-         #listaInvoices table {
-         width: 100%;
-         border-collapse: collapse;
-         min-width: 1200px;
-         }
-         #listaInvoices th, 
-         #listaInvoices td {
-         border: 1px solid #ccc;
-         font-size: 0.60rem;
-         padding: 2px;
-         text-align: center;
-         background: rgba(255,255,255,0.95);
-         font-weight: normal;     /* evita pulo ao trocar para bold */
-         min-width: 80px;         /* largura mínima segura */
-         }
-         /* CABEÇALHO FIXO */
-         #listaInvoices th {
-         background: rgba(0, 123, 255, 0.85);
-         color: white;
-         font-weight: bold;
-         position: sticky;
-         top: 42px; /* altura do h1 */
-         z-index: 3;
-         backdrop-filter: blur(6px);
-         }
-         /* ===== ZEBRA NAS LINHAS ===== */
-         #listaInvoices tr:nth-child(even) td {
-         background: rgba(240, 240, 240, 0.8);
-         }
-         #listaInvoices tr:nth-child(odd) td {
-         background: rgba(255, 255, 255, 0.55);
-         }
-         /* ===== HOVER E ATIVO ===== */
-         #listaInvoices tr:hover td {
-         background: #fdf59f !important; /* amarelo */
-         cursor: pointer;
-         }
-         /*#listaInvoices tr.ativo td {
-         background: orange !important;
-         font-weight: bold;   
-         color: #fff;
-         }*/
- 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-         /* ===== RESPONSIVIDADE ===== */
-         @media (max-width: 1200px) {
-         form { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
-         .pesquisa-container input, .pesquisa-container button { font-size: 0.7rem; padding: 3px; }
-         }
-         @media (max-width: 992px) {
-         form { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); }
-         .pesquisa-container { flex-direction: column; }
-         .pesquisa-container input, .pesquisa-container button { flex: 0 0 5%; }
-         }
-         @media (max-width: 768px) {
-         form { grid-template-columns: 1fr; }
-         .buttons { flex-direction: column; }
-         #listaInvoices table { min-width: 900px; }
-         }
-         @media (max-width: 576px) {
-         .container { padding: 10px; font-size: 0.7rem; }
-         .pesquisa-container input, .pesquisa-container button { font-size: 0.7rem; padding: 3px; }
-         input, select { font-size: 0.7rem; padding: 3px; }
-         #listaInvoices th, #listaInvoices td { font-size: 0.7rem; padding: 2px; }
-         }
-         /* ===== FOOTER ===== */
-         footer {
-         margin-top: 4px;  
-         display: flex; 
-         justify-content: space-between; 
-         font-size: 0.65rem; 
-         color: #f8f6f6;
-         border-top: 1px solid #ccc;
-         }
-         /* Linha clicada (ativa) 
-         #listaInvoices tr.ativo td {
-         background: orange !important;
-         font-weight: bold;
-         }*/
-      </style>
+/* ===== BODY E CONTAINER ===== */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* bloqueia rolagem da página */
+  font-family: Arial, sans-serif;
+  background: url("coqueiral.png") no-repeat center center fixed;
+  background-size: cover;
+}
+
+.container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(10px);
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 8px 15px rgba(0,0,0,0.3);
+  font-size: 0.8rem;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== TITULO H1 FIXO E TRANSPARENTE ===== */
+.container h1 {
+  font-size: 1.2rem;
+  text-align: center;
+  color: #333;
+  position: sticky;
+  top: 0;
+  background: rgba(255, 255, 255, 0.60);
+  backdrop-filter: blur(10px);
+  z-index: 4;
+  padding: 8px 0;
+  margin-bottom: 5px;
+}
+
+/* ===== CAMPOS DE PESQUISA E BOTÕES ===== */
+.pesquisa-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.pesquisa-container input,
+.pesquisa-container button {
+  font-size: 0.75rem;
+  padding: 3px 5px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  text-align: center;
+}
+.pesquisa-container input { flex: 1 1 100px; min-width: 90px; }
+.pesquisa-container button { cursor: pointer; flex: 1 1 90px; }
+.pesquisa-container button.salvar { background: #28a745; color: white; border: none; }
+.pesquisa-container button.limpar { background: #f0f0f0; color: #333; border: none; }
+.pesquisa-container button.excluir { background: #dc3545; color: white; border: none; }
+.pesquisa-container button.btn-lista { background: #007bff; color: white; border: none; }
+
+#filtroInvoice {
+  width: 10%;
+  padding: 6px;
+  margin-bottom: 8px;
+  font-size: 0.85rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+/* ===== FORMULARIO ===== */
+form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+  margin-bottom: 10px;
+}
+form div { display: flex; flex-direction: column; }
+form div label { font-size: 0.75rem; }
+input, select {
+  width: 100%;
+  font-size: 0.75rem;
+  padding: 4px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+
+
+/* Foco no input (opcional, deixa ainda mais chamativo) */
+input:focus,
+select:focus {
+  border-color: #fd4213;
+  box-shadow: 0 0 6px rgba(250, 30, 1, 0.7);
+  outline: none;
+}
+
+
+/* ===== BOTOES DO FORM ===== */
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  gap: 6px;
+}
+.buttons button {
+  flex: 1;
+  font-size: 0.75rem;
+  padding: 5px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* ===== LISTA DE INVOICES ===== */
+#listaInvoices {
+  flex: 1;
+  overflow: auto;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.40);
+  padding: 0;
+}
+
+/* TABELA */
+#listaInvoices table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 1200px;
+}
+#listaInvoices th, 
+#listaInvoices td {
+  border: 1px solid #ccc;
+  font-size: 0.75rem;
+  padding: 2px;
+  text-align: center;
+  background: rgba(255,255,255,0.95);
+  font-weight: normal;
+  min-width: 80px;  
+}
+
+#listaInvoices table th,
+#listaInvoices table td {
+    white-space: nowrap;       /* impede quebra de linha */
+    overflow: hidden;          /* esconde excesso de conteúdo */
+    text-overflow: ellipsis;   /* mostra "..." se o conteúdo exceder */
+}
+
+
+/* CABEÇALHO FIXO */
+#listaInvoices th {
+  background: rgba(0, 123, 255, 0.85);
+  color: white;
+  font-weight: bold;
+  position: sticky;
+  top: 42px;
+  z-index: 3;
+  backdrop-filter: blur(6px);
+}
+
+/* ZEBRA */
+#listaInvoices tr:nth-child(even) td {
+  background: rgba(240, 240, 240, 0.8);
+}
+#listaInvoices tr:nth-child(odd) td {
+  background: rgba(255, 255, 255, 0.55);
+}
+
+/* HOVER */
+#listaInvoices tr:hover td {
+  background: #fdf59f !important;
+  cursor: pointer;
+}
+
+/* ===== OBSERVAÇÕES AJUSTADO ===== */
+#observacoes {
+  width: 205%; /* ajusta ao container */
+  font-size: 0.75rem;
+  padding: 4px 9px;
+  box-sizing: border-box;
+  white-space: nowrap; /* impede quebra de linha */
+  overflow: hidden; /* esconde excesso */
+  text-overflow: ellipsis; /* mostra "..." se exceder largura */
+}
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 1200px) {
+  form { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+  .pesquisa-container input, .pesquisa-container button { font-size: 0.7rem; padding: 3px; }
+}
+@media (max-width: 992px) {
+  form { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); }
+  .pesquisa-container { flex-direction: column; }
+  .pesquisa-container input, .pesquisa-container button { flex: 0 0 5%; }
+}
+@media (max-width: 768px) {
+  form { grid-template-columns: 1fr; }
+  .buttons { flex-direction: column; }
+  #listaInvoices table { min-width: 900px; }
+}
+@media (max-width: 576px) {
+  .container { padding: 10px; font-size: 0.7rem; }
+  .pesquisa-container input, .pesquisa-container button { font-size: 0.7rem; padding: 3px; }
+  input, select { font-size: 0.7rem; padding: 3px; }
+  #listaInvoices th, #listaInvoices td { font-size: 0.7rem; padding: 2px; }
+}
+
+/* ===== FOOTER ===== */
+footer {
+  margin-top: 4px;  
+  display: flex; 
+  justify-content: space-between; 
+  font-size: 0.65rem; 
+  color: #f8f6f6;
+  border-top: 1px solid #ccc;
+}
+
+
+/* Linha clicada (ativa) 
+#listaInvoices tr.ativo td {
+  background: orange !important;
+  font-weight: bold;
+}*/
+</style>
+
    </head>
    <body>
       <div class="container">
@@ -218,40 +258,49 @@
          </div>
          <input type="text" id="filtroInvoice" placeholder="Pesquisar INVOICES ">
          <form id="formInvoice">
-            <div><label for="invoice">INVOICE</label><input type="text" id="invoice"></div>
-            <div><label for="dtFaturamento">DT Faturamento</label><input type="text" id="dtFaturamento"></div>
-            <div><label for="dtCarregamento">DT Carregamento</label><input type="text" id="dtCarregamento"></div>
-            <div><label for="draft">Dead-Line Draft</label><input type="text" id="draft"></div>
-            <div><label for="vgm">Dead-line VGM</label><input type="text" id="vgm"></div>
-            <div><label for="carga">Dead-line Carga</label><input type="text" id="carga"></div>
-            <div><label for="embarque">DT Embarque</label><input type="text" id="embarque"></div>
-            <div>
-               <label for="status">Status Faturamento</label>
-               <select id="status">
-                  <option value=""></option>
-                  <option>Pendente</option>
-                  <option>Concluído</option>
-               </select>
-            </div>
-            <div>
-               <label for="booking">Status Booking</label>
-               <select id="booking">
-                  <option value=""></option>
-                  <option>Aguardando</option>
-                  <option>Confirmado</option>
-               </select>
-            </div>
-            <div>
-               <label for="producao">Status Produção</label>
-               <select id="producao">
-                  <option value=""></option>
-                  <option>Pendente</option>
-                  <option>Confirmado</option>
-               </select>
-            </div>
-            <div><label for="dtProduto">Protidão do Pedido</label><input type="text" id="dtProduto"></div>
-            <div><label for="observacoes">Observações</label><input type="text" id="observacoes"></div>
-         </form>
+   <div><label for="invoice">INVOICE</label><input type="text" id="invoice"></div>
+   <div><label for="dtFaturamento">DT Faturamento</label><input type="text" id="dtFaturamento"></div>
+   <div><label for="dtCarregamento">DT Carregamento</label><input type="text" id="dtCarregamento"></div>
+   <div><label for="draft">Dead-Line Draft</label><input type="text" id="draft"></div>
+   <div><label for="vgm">Dead-line VGM</label><input type="text" id="vgm"></div>
+   <div><label for="carga">Dead-line Carga</label><input type="text" id="carga"></div>
+   <div><label for="embarque">DT Embarque</label><input type="text" id="embarque"></div>
+   <div>
+      <label for="status">Status Faturamento</label>
+      <select id="status">
+         <option value=""></option>
+         <option>Pendente</option>
+         <option>Concluído</option>
+      </select>
+   </div>
+   <div>
+      <label for="booking">Status Booking</label>
+      <select id="booking">
+         <option value=""></option>
+         <option>Aguardando</option>
+         <option>Confirmado</option>
+      </select>
+   </div>
+   <div>
+      <label for="instrucao">Instrução de Embarque</label>
+      <select id="instrucao">
+         <option value=""></option>
+         <option>Pendente</option>
+         <option>Enviada</option>
+      </select>
+   </div>
+   <div>
+      <label for="producao">Status Produção</label>
+      <select id="producao">
+         <option value=""></option>
+         <option>Pendente</option>
+         <option>Confirmado</option>
+      </select>
+   </div>   
+   <div><label for="dtProduto">Prontidão do Pedido</label><input type="text" id="dtProduto"></div>
+   <div><label for="observacoes">Observações</label><input type="text" id="observacoes"></div>
+</form>
+
          <div id="listaInvoices">
             <h1>Lista de Invoices</h1>
             <table>
@@ -264,10 +313,11 @@
                      <th>Dead-line VGM</th>
                      <th>Dead-line Carga</th>
                      <th>DT Embarque</th>
-                     <th>Status</th>
+                     <th>Status Faturamento</th>
                      <th>Status Booking</th>
+                     <th>Instrução de Embarque</th>
                      <th>Status Produção</th>
-                     <th>Protidão do Pedido</th>
+                     <th>Prontidão do Pedido<button id="btnOrdenarDtProduto" style="background:none;border:none;color:white;cursor:pointer;">🔄</button></th>
                      <th>Observações</th>
                      <th>Ação</th>
                   </tr>
@@ -313,6 +363,7 @@
                      <td>${r.embarque}</td>
                      <td>${r.status}</td>
                      <td>${r.booking}</td>
+                     <td>${r.instrucao || ''}</td>
                      <td>${r.producao}</td>                    
                      <td>${r.dtProduto || ''}</td>
                       <td>${r.observacoes || ''}</td>
@@ -337,6 +388,7 @@
              document.getElementById("embarque").value = registro.embarque;
              document.getElementById("status").value = registro.status;
              document.getElementById("booking").value = registro.booking;
+             document.getElementById("instrucao").value = registro.instrucao;
              document.getElementById("producao").value = registro.producao;             
              document.getElementById("dtProduto").value = registro.dtProduto;
              document.getElementById("observacoes").value = registro.observacoes;
@@ -374,19 +426,21 @@
              if(!invoice) return alert("Preencha o número da INVOICE.");
          
              const obj = {
-                 invoice,
-                 dtFaturamento: document.getElementById("dtFaturamento").value,
-                 dtCarregamento: document.getElementById("dtCarregamento").value,
-                 draft: document.getElementById("draft").value,
-                 vgm: document.getElementById("vgm").value,
-                 carga: document.getElementById("carga").value,
-                 embarque: document.getElementById("embarque").value,
-                 status: document.getElementById("status").value,
-                 booking: document.getElementById("booking").value,
-                 producao: document.getElementById("producao").value,                 
-                 dtProduto: document.getElementById("dtProduto").value,
-                 observacoes: document.getElementById("observacoes").value,
-             };
+    invoice,
+    dtFaturamento: document.getElementById("dtFaturamento").value,
+    dtCarregamento: document.getElementById("dtCarregamento").value,
+    draft: document.getElementById("draft").value,
+    vgm: document.getElementById("vgm").value,
+    carga: document.getElementById("carga").value,
+    embarque: document.getElementById("embarque").value,
+    status: document.getElementById("status").value,
+    booking: document.getElementById("booking").value,
+    instrucao: document.getElementById("instrucao").value, // novo campo
+    producao: document.getElementById("producao").value,   
+    dtProduto: document.getElementById("dtProduto").value,
+    observacoes: document.getElementById("observacoes").value,
+};
+
          
              let registros = JSON.parse(localStorage.getItem("invoices")) || [];
              const index = registros.findIndex(r => r.invoice === invoice);
@@ -426,38 +480,42 @@
              if (!registro) return alert("Invoice não encontrada na lista.");
          
              document.getElementById("invoice").value = registro.invoice;
-             document.getElementById("dtFaturamento").value = registro.dtFaturamento;
-             document.getElementById("dtCarregamento").value = registro.dtCarregamento;
-             document.getElementById("draft").value = registro.draft;
-             document.getElementById("vgm").value = registro.vgm;
-             document.getElementById("carga").value = registro.carga;
-             document.getElementById("embarque").value = registro.embarque;
-             document.getElementById("status").value = registro.status;
-             document.getElementById("booking").value = registro.booking;
-             document.getElementById("producao").value = registro.producao;             
-             document.getElementById("dtProduto").value = registro.dtProduto;
-             document.getElementById("observacoes").value = registro.observacoes;
+            document.getElementById("dtFaturamento").value = registro.dtFaturamento;
+            document.getElementById("dtCarregamento").value = registro.dtCarregamento;
+            document.getElementById("draft").value = registro.draft;
+            document.getElementById("vgm").value = registro.vgm;
+            document.getElementById("carga").value = registro.carga;
+            document.getElementById("embarque").value = registro.embarque;
+            document.getElementById("status").value = registro.status;
+            document.getElementById("booking").value = registro.booking;
+            document.getElementById("instrucao").value = registro.instrucao; // corrigido
+            document.getElementById("producao").value = registro.producao;                       
+            document.getElementById("dtProduto").value = registro.dtProduto;
+            document.getElementById("observacoes").value = registro.observacoes;
+
          
              const tbody = document.getElementById("tabelaInvoices");
              tbody.innerHTML = "";
              const tr = document.createElement("tr");
              tr.innerHTML = `
-                 <td>${registro.invoice}</td>
-                 <td>${registro.dtFaturamento}</td>
-                 <td>${registro.dtCarregamento}</td>
-                 <td>${registro.draft}</td>
-                 <td>${registro.vgm}</td>
-                 <td>${registro.carga}</td>
-                 <td>${registro.embarque}</td>
-                 <td>${registro.status}</td>
-                 <td>${registro.booking}</td>
-                 <td>${registro.producao}</td>                 
-                 <td>${registro.dtProduto || ''}</td>
-                 <td>${registro.observacoes || ''}</td>
-                 <td><button onclick="editarInvoice('${registro.invoice}')">Editar</button></td>
-             `;
-             tbody.appendChild(tr);
-         });
+            <td>${registro.invoice}</td>
+            <td>${registro.dtFaturamento}</td>
+            <td>${registro.dtCarregamento}</td>
+            <td>${registro.draft}</td>
+            <td>${registro.vgm}</td>
+            <td>${registro.carga}</td>
+            <td>${registro.embarque}</td>
+            <td>${registro.status}</td>
+            <td>${registro.booking}</td>
+            <td>${registro.instrucao || ''}</td>
+            <td>${registro.producao}</td>            
+            <td>${registro.dtProduto || ''}</td>
+            <td>${registro.observacoes || ''}</td>
+            <td><button onclick="editarInvoice('${registro.invoice}')">✏️ Editar</button></td>
+            `;
+
+                tbody.appendChild(tr);
+            });
          
          // Excluir
          document.getElementById("btnExcluir").addEventListener("click", () => {
@@ -537,6 +595,32 @@
     editarInvoice(invoice);
   });
 });
+
+let ordemDtProdutoCrescente = true;
+
+document.getElementById("btnOrdenarDtProduto").addEventListener("click", () => {
+    const registros = JSON.parse(localStorage.getItem("invoices")) || [];
+
+    registros.sort((a, b) => {
+        const transformarData = (d) => {
+            if (!d) return 0;
+            const partes = d.split('/');
+            return new Date(partes[2], partes[1]-1, partes[0]).getTime();
+        };
+
+        const dataA = transformarData(a.dtProduto);
+        const dataB = transformarData(b.dtProduto);
+
+        return ordemDtProdutoCrescente ? dataA - dataB : dataB - dataA;
+    });
+
+    ordemDtProdutoCrescente = !ordemDtProdutoCrescente;
+
+    localStorage.setItem("invoices", JSON.stringify(registros));
+    atualizarLista();
+});
+
+
 
          
       </script>
