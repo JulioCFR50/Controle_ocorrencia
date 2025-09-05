@@ -4,7 +4,7 @@
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Controle Mercado Externo</title>
-      <style>
+     <style>
          * {
          margin: 0;
          padding: 0;
@@ -124,6 +124,8 @@
          border-collapse: collapse;
          min-width: 1200px;
          }
+
+         
          #listaInvoices th, 
          #listaInvoices td {
          border: 1px solid #ccc;
@@ -134,15 +136,14 @@
          font-weight: normal;     /* evita pulo ao trocar para bold */
          min-width: 80px;         /* largura mínima segura */
          }
-         /* CABEÇALHO FIXO */
+         /* CABEÇALHO FIXO AJUSTADO */
          #listaInvoices th {
-         background: rgba(0, 123, 255, 0.85);
+         background: #007bff;   /* fundo sólido */
          color: white;
          font-weight: bold;
          position: sticky;
          top: 42px; /* altura do h1 */
-         z-index: 3;
-         backdrop-filter: blur(6px);
+         z-index: 5; /* garante que fique acima das linhas */
          }
          /* ===== ZEBRA NAS LINHAS ===== */
          #listaInvoices tr:nth-child(even) td {
@@ -162,7 +163,6 @@
          color: #fff;
          }*/
  
-
          /* ===== RESPONSIVIDADE ===== */
          @media (max-width: 1200px) {
          form { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
@@ -193,12 +193,8 @@
          color: #f8f6f6;
          border-top: 1px solid #ccc;
          }
-         /* Linha clicada (ativa) 
-         #listaInvoices tr.ativo td {
-         background: orange !important;
-         font-weight: bold;
-         }*/
-      </style>
+</style>
+
    </head>
    <body>
       <div class="container">
