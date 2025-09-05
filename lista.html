@@ -1,206 +1,272 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lista de Invoices</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: Arial, sans-serif;
-      background: url('coqueiral.png') no-repeat center center/cover;
-      margin: 0;
-      padding: 15px;
-      min-height: 90vh;
-    }
-
-    h1 {
-      text-align: center;
-      margin-bottom: 15px;
-      font-size: 1.6rem;
-      color: #fff;
-      text-shadow: 1px 1px 3px #000;
-      position: sticky;
-      top: 0;
-      background: rgba(0,0,0,0.3);
-      z-index: 5;
-      padding: 8px 0;
-      border-radius: 6px;
-    }
-
-    .filtro-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: flex-start; 
-      gap: 8px;
-      margin-bottom: 15px;
-      align-items: center;
-    }
-
-    .filtro-container input {
-      padding: 6px;
-      font-size: 12px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      width: 200px;
-    }
-
-    .btn-voltar, .btn-limpar {
-      display: inline-block;
-      margin: 0;
-      background: #007bff;
-      color: white;
-      padding: 6px 12px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 12px;
-      transition: background 0.3s ease;
-    }
-
-    .btn-voltar:hover, .btn-limpar:hover { background: #0056b3; }
-
-    .table-container {
-      width: 100%;
-      flex: 1;
-      overflow: auto;
-      background: rgba(255,255,255,0.95);
-      border-radius: 6px;
-      box-shadow: 0px 2px 4px rgba(0,0,0,0.2);
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 1200px;
-    }
-
-    td {
-      border: 1px solid #ccc;
-      font-size: 10px;
-      padding: 0px;
-      text-align: center;
-      font-weight: normal;
-      min-width: 80px;
-    }
-
-    th {
-      border: 1px solid #ccc;
-      font-size: 13px;
-      padding: 6px;
-      text-align: center;
-      font-weight: bold;
-      background: #007BFF;
-      color: white;
-      position: sticky;
-      top: 0;
-      z-index: 3;
-    }
-
-    tr:nth-child(even) td { background: rgba(240,240,240,0.85); }
-    tr:nth-child(odd) td { background: rgba(255,255,255,0.55); }
-    tr:hover td { background: #fdf59f !important; cursor: pointer; }
-    tr.ativo td { background: orange !important; font-weight: bold; color: #fff; }
-
-    td[contenteditable="true"] { background: #fff8dc; outline: none; }
-
-    input[type="date"] {
-      font-size: 12px;
-      padding: 4px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      width: 130px;
-    }
-
-    @media (max-width:1024px){
-      h1 { font-size: 1.4rem; }
-      th,td { font-size: 11px; padding: 5px; }
-      .btn-voltar, .btn-limpar { font-size: 12px; padding: 5px 10px; }
-    }
-    @media (max-width:768px){
-      .filtro-container input { width: 100%; }
-      table { min-width: 950px; }
-    }
-    @media (max-width:480px){
-      h1 { font-size: 1.2rem; }
-      th,td { font-size: 10px; padding: 4px; }
-      .filtro-container {
-        flex-direction: column;
-        align-items: stretch;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lista de Invoices</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
       }
-      .btn-voltar, .btn-limpar, .filtro-container input { width: 100%; }
-    }
-  </style>
-</head>
-<body>
-  <h1>Lista de Invoices</h1>
 
-  <!-- Filtros e botões na mesma linha -->
-  <div class="filtro-container">
-    <button class="btn-voltar" onclick="window.location.href='index.html'">⬅ Voltar</button>
-    <input type="text" id="filtroInvoice" placeholder="Pesquisar por Invoice">
-    <button class="btn-limpar" id="btnLimpar">✖ Limpar</button>
-    <input type="text" id="filtroFaturamento" placeholder="Pesquisar por DT Faturamento">
-    <input type="text" id="filtroCarregamento" placeholder="Pesquisar por DT Carregamento">
-  </div>
+      body {
+        font-family: Arial, sans-serif;
+        background: url("coqueiral.png") no-repeat center center/cover;
+        padding: 15px;
+        min-height: 90vh;
+        line-height: 1.3;
+        color: #333;
+      }
 
-  <div class="table-container">
-    <table id="tabela">
-      <thead>
-        <tr>
-          <th>Invoice</th>
-          <th>DT Faturamento</th>
-          <th>DT Carregamento</th>
-          <th>Dead-Line Draft</th>
-          <th>Dead-line VGM</th>
-          <th>Dead-line Carga</th>
-          <th>DT Embarque</th>
-          <th>Status Faturamento</th>
-          <th>Status Booking</th>
-          <th>Status Produção</th>
-          <th>Protidão do Pedido</th>
-          <th>Observações</th>
-        </tr>
-      </thead>
-      <tbody id="dadosTabela"></tbody>
-    </table>
-  </div>
+      h1 {
+        text-align: center;
+        margin-bottom: 15px;
+        font-size: 1.4rem;
+        color: #fff;
+        text-shadow: 1px 1px 3px #000;
+        position: sticky;
+        top: 0;
+        background: rgba(0, 0, 0, 0.3);
+        z-index: 5;
+        padding: 8px 0;
+        border-radius: 6px;
+      }
 
-  <script>
-    const registros = JSON.parse(localStorage.getItem("invoices")) || [];
-    const filtroInvoice = document.getElementById("filtroInvoice");
-    const filtroFaturamento = document.getElementById("filtroFaturamento");
-    const filtroCarregamento = document.getElementById("filtroCarregamento");
-    const tabela = document.getElementById("dadosTabela");
-    const btnLimpar = document.getElementById("btnLimpar");
+      .filtro-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        gap: 8px;
+        margin-bottom: 15px;
+        align-items: center;
+      }
 
-    function formatarParaInput(dataBR) {
-      const partes = dataBR.split("/");
-      if (partes.length !== 3) return "";
-      return `${partes[2]}-${partes[1]}-${partes[0]}`;
-    }
+      .filtro-container input {
+        padding: 6px;
+        font-size: 12px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        width: 200px;
+      }
 
-    function formatarParaBR(dataISO) {
-      const partes = dataISO.split("-");
-      if (partes.length !== 3) return "";
-      return `${partes[2]}/${partes[1]}/${partes[0]}`;
-    }
+      .btn-voltar,
+      .btn-limpar {
+        display: inline-block;
+        margin: 0;
+        background: #007bff;
+        color: white;
+        padding: 6px 12px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 12px;
+        transition: background 0.3s ease;
+        white-space: nowrap;
+      }
 
-    function exibirDados(dados) {
-      tabela.innerHTML = "";
-      if (dados.length === 0) {
-        const linha = document.createElement("tr");
-        linha.innerHTML = `<td colspan="12" style="color:gray;font-style:italic;">Nenhuma INVOICE encontrada.</td>`;
-        tabela.appendChild(linha);
-      } else {
-        dados.forEach((registro, index) => {
+      .btn-voltar:hover,
+      .btn-limpar:hover {
+        background: #0056b3;
+      }
+
+      .table-container {
+        width: 100%;
+        max-height: 70vh;
+        overflow-x: auto; /* rolamento horizontal */
+        overflow-y: auto; /* rolamento vertical */
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 6px;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      table {
+        width: max-content; /* largura mínima necessária para caber todas as colunas */
+        border-collapse: collapse;
+        table-layout: fixed;
+        min-width: 100%;
+      }
+
+      th,
+      td {
+        border: 1px solid #ccc;
+        padding: 4px 5px;
+        text-align: center;
+        font-weight: normal;
+        /* white-space: nowrap; /* evita quebra de linha */
+      }
+
+      th {
+        background: #007bff;
+        color: white;
+        position: sticky;
+        top: 0;
+        z-index: 3;
+        font-weight: bold;
+      }
+
+      tr:nth-child(even) td {
+        background: rgba(240, 240, 240, 0.85);
+      }
+      tr:nth-child(odd) td {
+        background: rgba(255, 255, 255, 0.55);
+      }
+      tr:hover td {
+        background: #fdf59f !important;
+        cursor: pointer;
+      }
+      td[contenteditable="true"] {
+        background: #fff8dc;
+        outline: none;
+      }
+      tr.ativo td {
+        background: orange !important;
+        font-weight: bold;
+        color: #fff;
+      }
+
+      input[type="date"] {
+        font-size: 12px;
+        padding: 4px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        width: 130px;
+      }
+
+      /* Ajustes específicos para colunas */
+      th:nth-child(11),
+      td:nth-child(11) {
+        min-width: 120px;
+      }
+      th:nth-child(12),
+      td:nth-child(12) {
+        min-width: 150px;
+      }
+      th:nth-child(13),
+      td:nth-child(13) {
+        min-width: 200px;
+        max-width: 400px;
+        padding: 4px 6px;
+        text-align: left;
+        white-space: nowrap; /* evita quebra de linha */
+        overflow: hidden;
+        /*text-overflow: ellipsis; /* mostra '...' se ultrapassar */
+      }
+
+      /* Responsividade */
+      @media (max-width: 1024px) {
+        h1 {
+          font-size: 1.3rem;
+        }
+        th,
+        td {
+          font-size: 11px;
+          padding: 4px 5px;
+        }
+        .btn-voltar,
+        .btn-limpar {
+          font-size: 11px;
+          padding: 4px 8px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .filtro-container input {
+          width: 100%;
+        }
+        table {
+          min-width: 900px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        h1 {
+          font-size: 1.1rem;
+        }
+        th,
+        td {
+          font-size: 10px;
+          padding: 3px 4px;
+        }
+        .filtro-container {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        .btn-voltar,
+        .btn-limpar,
+        .filtro-container input {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Lista de Invoices</h1>
+
+    <div class="filtro-container">
+      <button class="btn-voltar" onclick="window.location.href='index.html'">
+        ⬅ Voltar
+      </button>
+      <input
+        type="text"
+        id="filtroInvoice"
+        placeholder="Pesquisar por Invoice"
+      />
+      <button class="btn-limpar" id="btnLimpar">✖ Limpar</button>
+      <input
+        type="text"
+        id="filtroFaturamento"
+        placeholder="Pesquisar por DT Faturamento"
+      />
+      <input
+        type="text"
+        id="filtroCarregamento"
+        placeholder="Pesquisar por DT Carregamento"
+      />
+    </div>
+
+    <div class="table-container">
+      <table id="tabela">
+        <thead>
+          <tr>
+            <th>Invoice</th>
+            <th>DT Faturamento</th>
+            <th>DT Carregamento</th>
+            <th>Dead-Line Draft</th>
+            <th>Dead-line VGM</th>
+            <th>Dead-line Carga</th>
+            <th>DT Embarque</th>
+            <th>Status Faturamento</th>
+            <th>Status Booking</th>
+            <th>Instrução de Embarque</th>
+            <th>Status Produção</th>
+            <th>Protidão do Pedido</th>
+            <th>Observações</th>
+          </tr>
+        </thead>
+        <tbody id="dadosTabela"></tbody>
+      </table>
+    </div>
+
+    <script>
+      const registros = JSON.parse(localStorage.getItem("invoices")) || [];
+      const filtroInvoice = document.getElementById("filtroInvoice");
+      const filtroFaturamento = document.getElementById("filtroFaturamento");
+      const filtroCarregamento = document.getElementById("filtroCarregamento");
+      const tabela = document.getElementById("dadosTabela");
+      const btnLimpar = document.getElementById("btnLimpar");
+
+      function exibirDados(dados) {
+        tabela.innerHTML = "";
+        if (dados.length === 0) {
           const linha = document.createElement("tr");
-          linha.innerHTML = `
+          linha.innerHTML = `<td colspan="13" style="color:gray;font-style:italic;">Nenhuma INVOICE encontrada.</td>`;
+          tabela.appendChild(linha);
+        } else {
+          dados.forEach((registro) => {
+            const linha = document.createElement("tr");
+            linha.innerHTML = `
             <td>${registro.invoice}</td>
             <td>${registro.dtFaturamento}</td>
             <td>${registro.dtCarregamento}</td>
@@ -210,52 +276,43 @@
             <td>${registro.embarque}</td>
             <td>${registro.status}</td>
             <td>${registro.booking}</td>
+            <td>${registro.instrucao || ""}</td>
             <td>${registro.producao}</td>
-            <td>
-              <input type="date" class="campo-data" value="${registro.dtProduto ? formatarParaInput(registro.dtProduto) : ''}">
-            </td>
-            <td contenteditable="true" class="campo-obs">${registro.observacoes || ""}</td>
+            <td>${registro.dtProduto || ""}</td>            
+            <td>${registro.observacoes || ""}</td>
           `;
-          tabela.appendChild(linha);
-
-          const campoData = linha.querySelector(".campo-data");
-          campoData.addEventListener("change", e => {
-            registros[index].dtProduto = formatarParaBR(e.target.value);
-            localStorage.setItem("invoices", JSON.stringify(registros));
+            tabela.appendChild(linha);
           });
-
-          linha.querySelector(".campo-obs").addEventListener("blur", e => {
-            registros[index].observacoes = e.target.innerText;
-            localStorage.setItem("invoices", JSON.stringify(registros));
-          });
-        });
+        }
       }
-    }
 
-    function filtrar() {
-      const invoiceFiltro = filtroInvoice.value.toLowerCase();
-      const faturamentoFiltro = filtroFaturamento.value.toLowerCase();
-      const carregamentoFiltro = filtroCarregamento.value.toLowerCase();
+      function filtrar() {
+        const invoiceFiltro = filtroInvoice.value.toLowerCase();
+        const faturamentoFiltro = filtroFaturamento.value.toLowerCase();
+        const carregamentoFiltro = filtroCarregamento.value.toLowerCase();
 
-      const dadosFiltrados = registros.filter(r =>
-        r.invoice.toLowerCase().includes(invoiceFiltro) &&
-        r.dtFaturamento.toLowerCase().includes(faturamentoFiltro) &&
-        r.dtCarregamento.toLowerCase().includes(carregamentoFiltro)
-      );
-      exibirDados(dadosFiltrados);
-    }
+        const dadosFiltrados = registros.filter(
+          (r) =>
+            r.invoice.toLowerCase().includes(invoiceFiltro) &&
+            r.dtFaturamento.toLowerCase().includes(faturamentoFiltro) &&
+            r.dtCarregamento.toLowerCase().includes(carregamentoFiltro)
+        );
+        exibirDados(dadosFiltrados);
+      }
 
-    filtroInvoice.addEventListener("input", filtrar);
-    filtroFaturamento.addEventListener("input", filtrar);
-    filtroCarregamento.addEventListener("input", filtrar);
+      filtroInvoice.addEventListener("input", filtrar);
+      filtroFaturamento.addEventListener("input", filtrar);
+      filtroCarregamento.addEventListener("input", filtrar);
 
-    btnLimpar.addEventListener("click", () => {
-      filtroInvoice.value = "";
-      filtrar();
-      filtroInvoice.focus();
-    });
+      btnLimpar.addEventListener("click", () => {
+        filtroInvoice.value = "";
+        filtroFaturamento.value = "";
+        filtroCarregamento.value = "";
+        filtrar();
+        filtroInvoice.focus();
+      });
 
-    exibirDados(registros);
-  </script>
-</body>
+      exibirDados(registros);
+    </script>
+  </body>
 </html>
