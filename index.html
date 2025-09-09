@@ -151,15 +151,16 @@
          /* HOVER */
          #listaInvoices tr:hover td { background: #fdf59f !important; cursor: pointer; }
          /* OBSERVAÇÕES */
-         #observacoes {
-         width: 100%;
-         font-size: 0.75rem;
-         padding: 4px 185px;
-         box-sizing: border-box;
-         white-space: nowrap;
-         overflow: hidden;
-         text-overflow: ellipsis;
-         }
+       #observacoes {
+        width: 100%;
+        font-size: 0.75rem;
+        padding: 4px 210px;       /* padding pequeno e uniforme */
+        box-sizing: border-box;
+        text-align: left;       /* texto sempre começa na esquerda */
+        white-space: normal;    /* comportamento padrão */
+        overflow: visible;      /* não corta o texto */
+      }
+
          /* ===== RESPONSIVIDADE TOTAL ===== */
          @media (max-width: 1200px) {
          form { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
