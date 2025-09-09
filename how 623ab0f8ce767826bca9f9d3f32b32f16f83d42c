@@ -1,0 +1,84 @@
+[33mcommit f926b4bab5cc2dcb7c1e0ed232368f5f6ee89424[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: Julio Cesar <juliocfr72@email.com>
+Date:   Tue Sep 9 08:24:47 2025 -0300
+
+    Atualizando campo de observações
+
+[33mcommit 13bc524d495e3f85abc9ca654cb3d0ba29d734f2[m
+Author: Julio Cesar <juliocfr72@email.com>
+Date:   Tue Sep 9 08:22:59 2025 -0300
+
+    Atualizando campo de observações
+
+[33mcommit 4346015497bbe1ddf5c84828a3bc476b479ae7e2[m
+Author: Julio Cesar <juliocfr72@gmail.com.br>
+Date:   Tue Sep 9 00:41:04 2025 -0300
+
+    Atualizando lista firebase
+
+[33mcommit 1097d2468047b5fee1d0b6fd5e4eb478c04151f9[m
+Author: Julio Cesar <juliocfr72@gmail.com.br>
+Date:   Tue Sep 9 00:36:54 2025 -0300
+
+    Atualizando .gitignore para ignorar node_modules
+
+[33mcommit 623ab0f8ce767826bca9f9d3f32b32f16f83d42c[m
+Merge: 2680167 2c4b8b8
+Author: Julio Cesar <juliocfr72@email.com>
+Date:   Fri Sep 5 16:10:23 2025 -0300
+
+    Finalizando merge e removendo Controle_ME do repositório
+
+[33mcommit 26801673d30ac736a62a0f5909aa2e4d46438e42[m
+Author: Julio Cesar <juliocfr72@email.com>
+Date:   Fri Sep 5 14:10:28 2025 -0300
+
+    Melhoria e ajuste no layout
+
+[33mcommit 2c4b8b89a9dea02478d356a5801604e602e96d62[m
+Author: Julio Cesar <juliocfr72@gmail.com.br>
+Date:   Thu Sep 4 00:28:10 2025 -0300
+
+    Melhoria no projeto ME
+
+[33mcommit d4c431fe956acfca8c2b8fda183e45716235782a[m
+Author: Julio Cesar <juliocfr72@email.com>
+Date:   Wed Sep 3 16:54:33 2025 -0300
+
+    Melhoria e ajuste no layout
+
+[33mcommit 6a48ef60fb3b7736d28c2f06a759ccb942d0c1b4[m
+Author: Julio Cesar <juliocfr72@email.com>
+Date:   Wed Sep 3 16:43:57 2025 -0300
+
+    Melhoria e ajuste no layout
+
+[33mcommit 3f4e7e15be79e46d8f8286dfffed4cdde196e674[m
+Author: Julio Cesar <juliocfr72@email.com>
+Date:   Wed Sep 3 16:35:47 2025 -0300
+
+    Melhoria e ajuste no layout
+
+[33mcommit feda9854d2526eb208210ac6c1035f7414bc3b34[m
+Author: Julio Cesar <juliocfr72@email.com>
+Date:   Tue Sep 2 15:55:56 2025 -0300
+
+    Melhoria e ajuste no layout
+
+[33mcommit 3b2a4e3d11deff1c15009ec8eadd7ead8119509d[m
+Author: Julio Cesar <juliocfr72@email.com>
+Date:   Thu Aug 28 16:30:33 2025 -0300
+
+    Melhoria e ajuste no layout
+
+[33mcommit c59b05807deca25ae2fab7b1dea9bdbbfd429de7[m
+Author: Julio Cesar <juliocfr72@email.com>
+Date:   Thu Aug 28 09:08:15 2025 -0300
+
+    Melhoria e ajuste no layout
+
+[33mcommit 670b0f77fe2cb1085d3429527058fcf7402cd989[m
+Author: Julio Cesar <Juliocfr72@gmail.com>
+Date:   Thu Aug 28 05:44:37 2025 -0300
+
+    Commit inicial do projeto Controle_ME

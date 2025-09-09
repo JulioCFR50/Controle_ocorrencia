@@ -4,47 +4,55 @@
       <meta charset="UTF-8" />
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <meta name="description" content="Pagina Cadastro Mercado Externo>
+      <meta name="description" content="Pagina Cadastro Mercado Externo">
       <meta name="author" content="Julio Cesar">
       <title>Controle Mercado Externo</title>
       <style>
-         * {
-         margin: 0;
-         padding: 0;
-         box-sizing: border-box;
-         }
+         * { margin: 0; padding: 0; box-sizing: border-box; }
          /* ===== BODY E CONTAINER ===== */
          html, body {
          height: 100%;
+         margin: 0;
+         padding: 0;
+         overflow: hidden; /* Mantive seu comportamento (scroll interno em #listaInvoices) */
          font-family: Arial, sans-serif;
          background: url("coqueiral.png") no-repeat center center fixed;
          background-size: cover;
          }
          .container {
-         display: flex;
-         flex-direction: column;
+         position: fixed;
+         top: 0;
+         left: 0;
+         right: 0;
+         bottom: 0;
          width: 100%;
-         min-height: 100vh;
-         padding: 15px;
+         height: 100%;
          background: rgba(255, 255, 255, 0.45);
          backdrop-filter: blur(10px);
+         padding: 15px;
          border-radius: 8px;
          box-shadow: 0 8px 15px rgba(0,0,0,0.3);
          font-size: 0.8rem;
-         overflow: hidden;
+         display: flex;
+         flex-direction: column;
          }
-         /* ===== TITULO H1 ===== */
-         .container h1 {
-         font-size: 1.2rem;
-         text-align: center;
-         color: #333;
+         /* ===== TOP-AREA: H1 + filtros + form (agora agrupados) ===== */
+         .top-area {
          position: sticky;
          top: 0;
-         background: rgba(255, 255, 255, 0.6);
-         backdrop-filter: blur(10px);
-         z-index: 4;
-         padding: 8px 0;
-         margin-bottom: 5px;
+         z-index: 20; /* acima da tabela */
+         background: rgba(255,255,255,0.92);
+         backdrop-filter: blur(6px);
+         padding: 8px 10px;
+         border-radius: 6px;
+         box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+         margin-bottom: 6px;
+         }
+         .top-area h1 {
+         font-size: 1.2rem;
+         text-align: center;
+         color: #fc0505;
+         margin-bottom: 8px;
          }
          /* ===== CAMPOS DE PESQUISA E BOTÕES ===== */
          .pesquisa-container {
@@ -56,7 +64,7 @@
          .pesquisa-container input,
          .pesquisa-container button {
          font-size: 0.75rem;
-         padding: 3px 5px;
+         padding: 1px 5px;
          border-radius: 4px;
          border: 1px solid #ccc;
          text-align: center;
@@ -68,8 +76,7 @@
          .pesquisa-container button.excluir { background: #dc3545; color: white; border: none; }
          .pesquisa-container button.btn-lista { background: #007bff; color: white; border: none; }
          #filtroInvoice {
-         width: 100%;
-         max-width: 150px;
+         width: 20%;
          padding: 6px;
          margin-bottom: 8px;
          font-size: 0.85rem;
@@ -81,7 +88,7 @@
          display: grid;
          grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
          gap: 10px;
-         margin-bottom: 10px;
+         margin-bottom: 6px;
          }
          form div { display: flex; flex-direction: column; }
          form div label { font-size: 0.75rem; }
@@ -92,18 +99,8 @@
          border: 1px solid #ccc;
          border-radius: 4px;
          }
-         input:focus, select:focus {
-         border-color: #fd4213;
-         box-shadow: 0 0 6px rgba(250, 30, 1, 0.7);
-         outline: none;
-         }
          /* ===== BOTOES DO FORM ===== */
-         .buttons {
-         display: flex;
-         justify-content: space-between;
-         margin-top: 8px;
-         gap: 6px;
-         }
+         .buttons { display: flex; justify-content: space-between; margin-top: 8px; gap: 6px; }
          .buttons button {
          flex: 1;
          font-size: 0.75rem;
@@ -111,57 +108,60 @@
          border-radius: 6px;
          cursor: pointer;
          }
-         /* ===== LISTA DE INVOICES ===== */
+         /* ===== LISTA DE INVOICES (container rolável) ===== */
+         /* usa a variável --top-area-height (definida por JS) para empurrar a tabela para baixo */
+         /* container da tabela */
          #listaInvoices {
          flex: 1;
          overflow: auto;
          border: 1px solid #ccc;
          border-radius: 6px;
          background: rgba(255, 255, 255, 0.40);
+         padding: 0;
+         margin-top: 10px; /* cria espaço entre filtros e tabela */
          }
-         #listaInvoices table {
-         width: 100%;
-         border-collapse: collapse;
-         min-width: 700px; /* tabela mínima para telas pequenas */
-         }
-         #listaInvoices th, #listaInvoices td {
-         border: 1px solid #ccc;
-         font-size: 0.75rem;
-         padding: 2px;
-         text-align: center;
-         background: rgba(255,255,255,0.95);
-         font-weight: normal;
-         white-space: nowrap;
-         overflow: hidden;
-         text-overflow: ellipsis;
-         }
-         /* CABEÇALHO FIXO */
+         /* cabeçalho fixo */
          #listaInvoices th {
          background: rgba(0, 123, 255, 0.85);
          color: white;
          font-weight: bold;
          position: sticky;
-         top: 42px;
+         top: 0;   /* agora cola sempre no topo do container */
          z-index: 3;
          backdrop-filter: blur(6px);
          }
-         /* ZEBRA */
+         /* TABELA */
+         #listaInvoices table {
+         width: 100%;
+         border-collapse: collapse;
+         min-width: 1200px;
+         }
+         #listaInvoices th, 
+         #listaInvoices td {
+         border: 1px solid #ccc;
+         font-size: 0.60rem;
+         padding: 2px;
+         text-align: center;
+         background: rgba(255,255,255,0.95);
+         font-weight: normal;
+         min-width: 80px;
+         }
+         /* CABEÇALHO FIXO: agora top: 0 (relativo ao #listaInvoices) */
+         #listaInvoices th {
+         background: rgba(0, 123, 255, 0.85);
+         color: white;
+         font-weight: bold;
+         position: sticky;
+         top: 0; /* colado ao topo do container rolável (#listaInvoices) */
+         z-index: 5; /* abaixo da top-area (z-index:20) */
+         backdrop-filter: blur(6px);
+         }
+         /* ===== ZEBRA NAS LINHAS ===== */
          #listaInvoices tr:nth-child(even) td { background: rgba(240, 240, 240, 0.8); }
          #listaInvoices tr:nth-child(odd) td { background: rgba(255, 255, 255, 0.55); }
-         /* HOVER */
+         /* ===== HOVER ===== */
          #listaInvoices tr:hover td { background: #fdf59f !important; cursor: pointer; }
-         /* OBSERVAÇÕES */
-       #observacoes {
-        width: 100%;
-        font-size: 0.75rem;
-        padding: 4px 8px;       /* padding pequeno e uniforme */
-        box-sizing: border-box;
-        text-align: left;       /* texto sempre começa na esquerda */
-        white-space: normal;    /* comportamento padrão */
-        overflow: visible;      /* não corta o texto */
-      }
-
-         /* ===== RESPONSIVIDADE TOTAL ===== */
+         /* ===== RESPONSIVIDADE ===== */
          @media (max-width: 1200px) {
          form { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
          .pesquisa-container input, .pesquisa-container button { font-size: 0.7rem; padding: 3px; }
@@ -169,98 +169,116 @@
          @media (max-width: 992px) {
          form { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); }
          .pesquisa-container { flex-direction: column; }
-         .pesquisa-container input, .pesquisa-container button { flex: 1 1 100%; }
-         #listaInvoices table { min-width: 600px; }
+         .pesquisa-container input, .pesquisa-container button { flex: 0 0 5%; }
          }
          @media (max-width: 768px) {
          form { grid-template-columns: 1fr; }
          .buttons { flex-direction: column; }
-         #listaInvoices table { min-width: 500px; }
+         #listaInvoices table { min-width: 900px; }
          }
          @media (max-width: 576px) {
          .container { padding: 10px; font-size: 0.7rem; }
-         input, select, .pesquisa-container input, .pesquisa-container button { font-size: 0.65rem; padding: 2px; }
-         #listaInvoices th, #listaInvoices td { font-size: 0.65rem; padding: 1px; }
-         #listaInvoices table { min-width: 400px; }
+         .pesquisa-container input, .pesquisa-container button { font-size: 0.7rem; padding: 3px; }
+         input, select { font-size: 0.7rem; padding: 3px; }
+         #listaInvoices th, #listaInvoices td { font-size: 0.7rem; padding: 2px; }
          }
          /* ===== FOOTER ===== */
          footer {
-         margin-top: 4px;  
-         display: flex; 
-         justify-content: space-between; 
-         font-size: 0.65rem; 
+         margin-top: 4px;
+         display: flex;
+         justify-content: space-between;
+         font-size: 0.65rem;
          color: #f8f6f6;
          border-top: 1px solid #ccc;
          }
-         /* Linha clicada (ativa) 
-         #listaInvoices tr.ativo td {
-         background: orange !important;
-         font-weight: bold;
-         }*/
+         /* Observações */
+         #observacoes {
+         width: 100%;
+         font-size: 0.75rem;
+         padding: 4px 9px;
+         box-sizing: border-box;
+         }
+         .titulo {
+         text-align: center;                  /* centraliza o texto */
+         font-size: 1.2rem;                   /* tamanho do texto */
+         font-weight: bold;                    
+         margin: 2px 1;                       
+         color: #333;                          /* cor do texto escuro */
+         background-color: #f1f3f5;           /* fundo cinza claro */
+         padding: 5px 0;                      /* espaço interno vertical */
+         border-radius: 4px;                   /* cantos arredondados */
+         border: 1px solid #dcdfe3;           /* borda sutil */
+         }
+         /* destaque linha selecionada */
+         #listaInvoices tbody tr.ativo td { outline: 2px solid #007bff; }
       </style>
    </head>
    <body>
       <div class="container">
-         <h1>Controle Mercado Externo</h1>
-         <div class="pesquisa-container">
-            <input type="text" id="pesquisaInvoice" placeholder="Invoice">
-            <input type="text" id="pesquisaDtFat" placeholder="DT Faturamento">
-            <input type="text" id="pesquisaDtCar" placeholder="DT Carregamento">
-            <input type="text" id="pesquisaDraft" placeholder="Dead-Line Draft">
-            <input type="text" id="pesquisaVgm" placeholder="Dead-line VGM">
-            <input type="text" id="pesquisaCarga" placeholder="Dead-line Carga">            
-            <button class="salvar" id="btnSalvar">Salvar / Atualizar</button>
-            <button class="limpar" id="btnLimpar">Limpar</button>
-            <button class="excluir" id="btnExcluir">Excluir</button>
-            <button class="btn-lista" id="btnConsultar">Consultar Invoice</button>
-            <button class="btn-lista" id="btnBuscarLista">Pesquisar e Editar</button>        
+         <!-- TOP AREA: agrupado aqui para medir altura dinâmica -->
+         <div class="top-area">
+            <h1>Controle Mercado Externo</h1>
+            <div class="pesquisa-container">
+               <input type="text" id="pesquisaInvoice" placeholder="Invoice">
+               <input type="text" id="pesquisaDtFat" placeholder="DT Faturamento">
+               <input type="text" id="pesquisaDtCar" placeholder="DT Carregamento">
+               <input type="text" id="pesquisaDraft" placeholder="Dead-Line Draft">
+               <input type="text" id="pesquisaVgm" placeholder="Dead-line VGM">
+               <input type="text" id="pesquisaCarga" placeholder="Dead-line Carga">
+               <button class="salvar" id="btnSalvar">Salvar / Atualizar</button>
+               <button class="limpar" id="btnLimpar">Limpar</button>
+               <button class="excluir" id="btnExcluir">Excluir</button>
+               <button class="btn-lista" id="btnConsultar">Consultar Invoice</button>
+               <button class="btn-lista" id="btnBuscarLista">Pesquisar e Editar</button>
+            </div>
+            <input type="text" id="filtroInvoice" placeholder="Pesquisar INVOICES ">
+            <form id="formInvoice">
+               <div><label for="invoice">INVOICE</label><input type="text" id="invoice"></div>
+               <div><label for="dtFaturamento">DT Faturamento</label><input type="text" id="dtFaturamento"></div>
+               <div><label for="dtCarregamento">DT Carregamento</label><input type="text" id="dtCarregamento"></div>
+               <div><label for="draft">Dead-Line Draft</label><input type="text" id="draft"></div>
+               <div><label for="vgm">Dead-line VGM</label><input type="text" id="vgm"></div>
+               <div><label for="carga">Dead-line Carga</label><input type="text" id="carga"></div>
+               <div><label for="embarque">DT Embarque</label><input type="text" id="embarque"></div>
+               <div>
+                  <label for="status">Status Faturamento</label>
+                  <select id="status">
+                     <option value=""></option>
+                     <option>Pendente</option>
+                     <option>Concluído</option>
+                  </select>
+               </div>
+               <div>
+                  <label for="booking">Status Booking</label>
+                  <select id="booking">
+                     <option value=""></option>
+                     <option>Aguardando</option>
+                     <option>Confirmado</option>
+                  </select>
+               </div>
+               <div>
+                  <label for="instrucao">Instrução de Embarque</label>
+                  <select id="instrucao">
+                     <option value=""></option>
+                     <option>Pendente</option>
+                     <option>Enviada</option>
+                  </select>
+               </div>
+               <div>
+                  <label for="producao">Status Produção</label>
+                  <select id="producao">
+                     <option value=""></option>
+                     <option>Pendente</option>
+                     <option>Confirmado</option>
+                  </select>
+               </div>
+               <div><label for="dtProduto">Prontidão do Pedido</label><input type="text" id="dtProduto"></div>
+               <div><label for="observacoes">Observações</label><input type="text" id="observacoes"></div>
+            </form>
          </div>
-         <input type="text" id="filtroInvoice" placeholder="Pesquisar INVOICES ">
-         <form id="formInvoice">
-            <div><label for="invoice">INVOICE</label><input type="text" id="invoice"></div>
-            <div><label for="dtFaturamento">DT Faturamento</label><input type="text" id="dtFaturamento"></div>
-            <div><label for="dtCarregamento">DT Carregamento</label><input type="text" id="dtCarregamento"></div>
-            <div><label for="draft">Dead-Line Draft</label><input type="text" id="draft"></div>
-            <div><label for="vgm">Dead-line VGM</label><input type="text" id="vgm"></div>
-            <div><label for="carga">Dead-line Carga</label><input type="text" id="carga"></div>
-            <div><label for="embarque">DT Embarque</label><input type="text" id="embarque"></div>
-            <div>
-               <label for="status">Status Faturamento</label>
-               <select id="status">
-                  <option value=""></option>
-                  <option>Pendente</option>
-                  <option>Concluído</option>
-               </select>
-            </div>
-            <div>
-               <label for="booking">Status Booking</label>
-               <select id="booking">
-                  <option value=""></option>
-                  <option>Aguardando</option>
-                  <option>Confirmado</option>
-               </select>
-            </div>
-            <div>
-               <label for="instrucao">Instrução de Embarque</label>
-               <select id="instrucao">
-                  <option value=""></option>
-                  <option>Pendente</option>
-                  <option>Enviada</option>
-               </select>
-            </div>
-            <div>
-               <label for="producao">Status Produção</label>
-               <select id="producao">
-                  <option value=""></option>
-                  <option>Pendente</option>
-                  <option>Confirmado</option>
-               </select>
-            </div>
-            <div><label for="dtProduto">Prontidão do Pedido</label><input type="text" id="dtProduto"></div>
-            <div><label for="observacoes">Observações</label><input type="text" id="observacoes"></div>
-         </form>
+         <!-- LISTA: rolável; observe que removi o H1 duplicado -->
+         <h2 class="titulo">Lista de Invoices</h2>
          <div id="listaInvoices">
-            <h1>Lista de Invoices</h1>
             <table>
                <thead>
                   <tr>
@@ -304,15 +322,24 @@
             messagingSenderId: "523084089883",
             appId: "1:523084089883:web:6b9750c6df679852b346be",
             measurementId: "G-RCJG4ZWJ9E"
-          };
+         };
          
          const app = initializeApp(firebaseConfig);
          const db  = getFirestore(app);
          const invoicesCol = collection(db, "invoices");
          
-         // ======= Estado em memória (equivale ao antigo localStorage na tela) =======
-         let cacheInvoices = [];         // lista carregada do Firestore
+         // ======= Estado em memória =======
+         let cacheInvoices = [];
          let ordemDtProdutoCrescente = true;
+         
+         // ======= Função para atualizar a variável CSS com a altura do topo =======
+         function updateTopAreaHeight() {
+            const top = document.querySelector('.top-area');
+            if (!top) return;
+            const h = top.offsetHeight;
+            document.documentElement.style.setProperty('--top-area-height', h + 'px');
+         }
+         window.addEventListener('resize', updateTopAreaHeight);
          
          // ======= Util: renderização da tabela a partir de uma lista =======
          function renderTabela(lista) {
@@ -367,15 +394,17 @@
                cacheInvoices.push(docSnap.data());
             });
             renderTabela(listaFiltrada());
+            // garante que a altura do topo esteja atualizada (caso o conteúdo tenha mudado)
+            updateTopAreaHeight();
          }
          
-         // ======= Formatação/validação de data/hora (SEU CÓDIGO, mantido) =======
+         // ======= Formatação/validação de data/hora (mantido) =======
          function formatarDataHora(input) {
              let valor = input.value.replace(/\D/g, '');
-             if (valor.length <= 8) { 
+             if (valor.length <= 8) {
                  if (valor.length > 2 && valor.length <= 4) valor = valor.slice(0,2) + '/' + valor.slice(2);
                  else if (valor.length > 4) valor = valor.slice(0,2) + '/' + valor.slice(2,4) + '/' + valor.slice(4,8);
-             } else { 
+             } else {
                  const data = valor.slice(0,8);
                  const hora = valor.slice(8,12);
                  valor = data.slice(0,2)+'/'+data.slice(2,4)+'/'+data.slice(4,8);
@@ -401,7 +430,6 @@
          }
          
          // ======= Eventos (mantidos/adaptados) =======
-         // Filtros instantâneos
          ["pesquisaInvoice","pesquisaDtFat","pesquisaDtCar","pesquisaDraft","pesquisaVgm","pesquisaCarga"]
             .forEach(id => {
                document.getElementById(id).addEventListener("input", () => {
@@ -409,12 +437,11 @@
                });
             });
          
-         // Formatação automática para datas/hora
          ['draft','vgm','carga','dtFaturamento','dtCarregamento','embarque','dtProduto'].forEach(id => {
               const el = document.getElementById(id);
               el.addEventListener('input', () => formatarDataHora(el));
               el.addEventListener('blur', () => {
-                  if (el.value.trim() === "") return; // permite vazio
+                  if (el.value.trim() === "") return;
                   if (!validarDataHora(el.value)) {
                       alert("Data errada");
                       el.focus();
@@ -422,8 +449,6 @@
               });
           });
          
-         
-         // Salvar / Atualizar
          document.getElementById("btnSalvar").addEventListener("click", async () => {
             const invoice = document.getElementById("invoice").value.trim();
             if (!invoice) return alert("Preencha o número da INVOICE.");
@@ -445,7 +470,7 @@
             };
          
             try {
-               await setDoc(doc(db, "invoices", invoice), obj); // upsert pelo ID = invoice
+               await setDoc(doc(db, "invoices", invoice), obj);
                alert("Invoice salva com sucesso!");
                document.getElementById("formInvoice").reset();
                ["pesquisaInvoice","pesquisaDtFat","pesquisaDtCar","pesquisaDraft","pesquisaVgm","pesquisaCarga","filtroInvoice"]
@@ -457,7 +482,6 @@
             }
          });
          
-         // Limpar
          document.getElementById("btnLimpar").addEventListener("click", () => {
             document.getElementById("formInvoice").reset();
             ["pesquisaInvoice","pesquisaDtFat","pesquisaDtCar","pesquisaDraft","pesquisaVgm","pesquisaCarga","filtroInvoice"]
@@ -465,7 +489,6 @@
             renderTabela(listaFiltrada());
          });
          
-         // Excluir
          document.getElementById("btnExcluir").addEventListener("click", async () => {
             const invoice = document.getElementById("invoice").value.trim();
             if (!invoice) return alert("Digite a INVOICE para excluir.");
@@ -482,20 +505,16 @@
             }
          });
          
-         // Consultar Invoice → redireciona para lista.html (mantido)
          document.getElementById("btnConsultar").addEventListener("click", () => {
              window.location.href = "lista.html";
          });
          
-         // Buscar e editar
          document.getElementById("btnBuscarLista").addEventListener("click", async () => {
             const filtro = (document.getElementById("filtroInvoice").value || "").trim().toLowerCase();
             if (!filtro) return alert("Digite a invoice que deseja buscar.");
          
-            // procura na cache (case-insensitive)
             let registro = cacheInvoices.find(r => (r.invoice || "").toLowerCase() === filtro);
          
-            // se não achar, tenta buscar direto pelo ID informado (case exato)
             if (!registro) {
                const tryDoc = await getDoc(doc(db, "invoices", document.getElementById("filtroInvoice").value.trim()));
                if (tryDoc.exists()) registro = tryDoc.data();
@@ -503,7 +522,6 @@
          
             if (!registro) return alert("Invoice não encontrada na lista.");
          
-            // Preenche o form
             document.getElementById("invoice").value = registro.invoice || "";
             document.getElementById("dtFaturamento").value = registro.dtFaturamento || "";
             document.getElementById("dtCarregamento").value = registro.dtCarregamento || "";
@@ -518,11 +536,10 @@
             document.getElementById("dtProduto").value = registro.dtProduto || "";
             document.getElementById("observacoes").value = registro.observacoes || "";
          
-            // Mostra somente ela na tabela
             renderTabela([registro]);
          });
          
-         // Ordenar por dtProduto (sem gravar no banco)
+         // Ordenar por dtProduto
          function parseDDMMYYYY(d) {
             if (!d) return 0;
             const partesHora = d.split(" às ");
@@ -542,7 +559,7 @@
             renderTabela(lista);
          });
          
-         // Destaque ao clicar na linha (mantido)
+         // Destaque ao clicar na linha
          document.addEventListener("click", function(e) {
            const linha = e.target.closest("#listaInvoices tbody tr");
            if (!linha) return;
@@ -550,9 +567,8 @@
            linha.classList.add("ativo");
          });
          
-         // ======= Expor funções usadas em onclick no HTML gerado =======
+         // Expor editarInvoice
          window.editarInvoice = async function(invoiceBusca) {
-            // tenta na cache
             let registro = cacheInvoices.find(r => r.invoice === invoiceBusca);
             if (!registro) {
                const ds = await getDoc(doc(db, "invoices", invoiceBusca));
@@ -575,8 +591,11 @@
             document.getElementById("observacoes").value = registro.observacoes || "";
          };
          
-         // ======= Inicializa carregando a lista do Firestore =======
-         window.addEventListener("DOMContentLoaded", atualizarLista);
+         // Inicializa: atualiza altura do topo e carrega lista
+         window.addEventListener("DOMContentLoaded", () => {
+            updateTopAreaHeight();
+            atualizarLista();
+         });
       </script>
    </body>
 </html>
