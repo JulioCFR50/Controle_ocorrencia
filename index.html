@@ -7,14 +7,19 @@
       <meta name="description" content="Pagina Cadastro Mercado Externo">
       <meta name="author" content="Julio Cesar">
       <title>Controle Mercado Externo</title>
-      <style>
-         * { margin: 0; padding: 0; box-sizing: border-box; }
+      <style>* {
+         margin: 0;
+         padding: 0;
+         box-sizing: border-box;
+         }
          /* ===== BODY E CONTAINER ===== */
-         html, body {
+         html,
+         body {
          height: 100%;
          margin: 0;
          padding: 0;
-         overflow: hidden; /* Mantive seu comportamento (scroll interno em #listaInvoices) */
+         overflow: hidden;
+         /* Mantive seu comportamento (scroll interno em #listaInvoices) */
          font-family: Arial, sans-serif;
          background: url("coqueiral.png") no-repeat center center fixed;
          background-size: cover;
@@ -31,7 +36,7 @@
          backdrop-filter: blur(10px);
          padding: 15px;
          border-radius: 8px;
-         box-shadow: 0 8px 15px rgba(0,0,0,0.3);
+         box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
          font-size: 0.8rem;
          display: flex;
          flex-direction: column;
@@ -40,12 +45,13 @@
          .top-area {
          position: sticky;
          top: 0;
-         z-index: 20; /* acima da tabela */
-         background: rgba(255,255,255,0.60);
+         z-index: 20;
+         /* acima da tabela */
+         background: rgba(255, 255, 255, 0.60);
          backdrop-filter: blur(6px);
          padding: 8px 10px;
          border-radius: 6px;
-         box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+         box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
          margin-bottom: 6px;
          }
          .top-area h1 {
@@ -69,12 +75,34 @@
          border: 1px solid #ccc;
          text-align: center;
          }
-         .pesquisa-container input { flex: 1 1 100px; min-width: 90px; }
-         .pesquisa-container button { cursor: pointer; flex: 1 1 90px; }
-         .pesquisa-container button.salvar { background: #28a745; color: white; border: none; }
-         .pesquisa-container button.limpar { background: #f0f0f0; color: #333; border: none; }
-         .pesquisa-container button.excluir { background: #dc3545; color: white; border: none; }
-         .pesquisa-container button.btn-lista { background: #007bff; color: white; border: none; }
+         .pesquisa-container input {
+         flex: 1 1 100px;
+         min-width: 90px;
+         }
+         .pesquisa-container button {
+         cursor: pointer;
+         flex: 1 1 90px;
+         }
+         .pesquisa-container button.salvar {
+         background: #28a745;
+         color: white;
+         border: none;
+         }
+         .pesquisa-container button.limpar {
+         background: #f0f0f0;
+         color: #333;
+         border: none;
+         }
+         .pesquisa-container button.excluir {
+         background: #dc3545;
+         color: white;
+         border: none;
+         }
+         .pesquisa-container button.btn-lista {
+         background: #007bff;
+         color: white;
+         border: none;
+         }
          #filtroInvoice {
          width: 20%;
          padding: 6px;
@@ -90,9 +118,15 @@
          gap: 10px;
          margin-bottom: 6px;
          }
-         form div { display: flex; flex-direction: column; }
-         form div label { font-size: 0.75rem; }
-         input, select {
+         form div {
+         display: flex;
+         flex-direction: column;
+         }
+         form div label {
+         font-size: 0.75rem;
+         }
+         input,
+         select {
          width: 100%;
          font-size: 0.75rem;
          padding: 4px;
@@ -100,7 +134,12 @@
          border-radius: 4px;
          }
          /* ===== BOTOES DO FORM ===== */
-         .buttons { display: flex; justify-content: space-between; margin-top: 8px; gap: 6px; }
+         .buttons {
+         display: flex;
+         justify-content: space-between;
+         margin-top: 8px;
+         gap: 6px;
+         }
          .buttons button {
          flex: 1;
          font-size: 0.75rem;
@@ -117,8 +156,9 @@
          border: 1px solid #ccc;
          border-radius: 6px;
          background: rgba(255, 255, 255, 0.40);
-         padding: 0;
-         margin-top: 10px; /* cria espaço entre filtros e tabela */
+         padding: 1;
+         margin-top: 10px;
+         /* cria espaço entre filtros e tabela */
          }
          /* cabeçalho fixo */
          #listaInvoices th {
@@ -126,7 +166,8 @@
          color: white;
          font-weight: bold;
          position: sticky;
-         top: 0;   /* agora cola sempre no topo do container */
+         top: 0;
+         /* agora cola sempre no topo do container */
          z-index: 3;
          backdrop-filter: blur(6px);
          }
@@ -136,13 +177,13 @@
          border-collapse: collapse;
          min-width: 1200px;
          }
-         #listaInvoices th, 
+         #listaInvoices th,
          #listaInvoices td {
          border: 1px solid #ccc;
          font-size: 0.60rem;
          padding: 2px;
          text-align: center;
-         background: rgba(255,255,255,0.60);
+         background: rgba(255, 255, 255, 0.60);
          font-weight: normal;
          min-width: 80px;
          }
@@ -152,35 +193,78 @@
          color: white;
          font-weight: bold;
          position: sticky;
-         top: 0; /* colado ao topo do container rolável (#listaInvoices) */
-         z-index: 5; /* abaixo da top-area (z-index:20) */
+         top: 0;
+         /* colado ao topo do container rolável (#listaInvoices) */
+         z-index: 5;
+         /* abaixo da top-area (z-index:20) */
          backdrop-filter: blur(6px);
          }
          /* ===== ZEBRA NAS LINHAS ===== */
-         #listaInvoices tr:nth-child(even) td { background: rgba(240, 240, 240, 0.8); }
-         #listaInvoices tr:nth-child(odd) td { background: rgba(255, 255, 255, 0.55); }
+         #listaInvoices tr:nth-child(even) td {
+         background: rgba(240, 240, 240, 0.8);
+         }
+         #listaInvoices tr:nth-child(odd) td {
+         background: rgba(255, 255, 255, 0.55);
+         }
          /* ===== HOVER ===== */
-         #listaInvoices tr:hover td { background: #fdf59f !important; cursor: pointer; }
+         #listaInvoices tr:hover td {
+         background: #fdf59f !important;
+         cursor: pointer;
+         }
          /* ===== RESPONSIVIDADE ===== */
          @media (max-width: 1200px) {
-         form { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
-         .pesquisa-container input, .pesquisa-container button { font-size: 0.7rem; padding: 3px; }
+         form {
+         grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+         }
+         .pesquisa-container input,
+         .pesquisa-container button {
+         font-size: 0.7rem;
+         padding: 3px;
+         }
          }
          @media (max-width: 992px) {
-         form { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); }
-         .pesquisa-container { flex-direction: column; }
-         .pesquisa-container input, .pesquisa-container button { flex: 0 0 5%; }
+         form {
+         grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+         }
+         .pesquisa-container {
+         flex-direction: column;
+         }
+         .pesquisa-container input,
+         .pesquisa-container button {
+         flex: 0 0 5%;
+         }
          }
          @media (max-width: 768px) {
-         form { grid-template-columns: 1fr; }
-         .buttons { flex-direction: column; }
-         #listaInvoices table { min-width: 900px; }
+         form {
+         grid-template-columns: 1fr;
+         }
+         .buttons {
+         flex-direction: column;
+         }
+         #listaInvoices table {
+         min-width: 900px;
+         }
          }
          @media (max-width: 576px) {
-         .container { padding: 10px; font-size: 0.7rem; }
-         .pesquisa-container input, .pesquisa-container button { font-size: 0.7rem; padding: 3px; }
-         input, select { font-size: 0.7rem; padding: 3px; }
-         #listaInvoices th, #listaInvoices td { font-size: 0.7rem; padding: 2px; }
+         .container {
+         padding: 10px;
+         font-size: 0.7rem;
+         }
+         .pesquisa-container input,
+         .pesquisa-container button {
+         font-size: 0.7rem;
+         padding: 3px;
+         }
+         input,
+         select {
+         font-size: 0.7rem;
+         padding: 3px;
+         }
+         #listaInvoices th,
+         #listaInvoices td {
+         font-size: 0.7rem;
+         padding: 2px;
+         }
          }
          /* ===== FOOTER ===== */
          footer {
@@ -199,18 +283,27 @@
          box-sizing: border-box;
          }
          .titulo {
-         text-align: center;                  /* centraliza o texto */
-         font-size: 1.2rem;                   /* tamanho do texto */
-         font-weight: bold;                    
-         margin: 2px 1;                       
-         color: #333;                          /* cor do texto escuro */
-          background: rgba(255,255,255,0.60);         /* fundo cinza claro */
-         padding: 5px 0;                      /* espaço interno vertical */
-         border-radius: 4px;                   /* cantos arredondados */
-         border: 1px solid #dcdfe3;           /* borda sutil */
+         text-align: center;
+         /* centraliza o texto */
+         font-size: 1.2rem;
+         /* tamanho do texto */
+         font-weight: bold;
+         margin: 2px 1;
+         color: #333;
+         /* cor do texto escuro */
+         background: rgba(255, 255, 255, 0.60);
+         /* fundo cinza claro */
+         padding: 5px 0;
+         /* espaço interno vertical */
+         border-radius: 4px;
+         /* cantos arredondados */
+         border: 1px solid #dcdfe3;
+         /* borda sutil */
          }
          /* destaque linha selecionada */
-         #listaInvoices tbody tr.ativo td { outline: 2px solid #007bff; }
+         #listaInvoices tbody tr.ativo td {
+         outline: 2px solid #007bff;
+         }
       </style>
    </head>
    <body>
@@ -288,7 +381,7 @@
                      <th>Dead-Line Draft</th>
                      <th>Dead-line VGM</th>
                      <th>Dead-line Carga</th>
-                     <th>DT Embarque</th>
+                     <th>DT Embarque<button id="btnOrdenarDtEmbarque" style="background:none;border:none;color:white;cursor:pointer;">🔄</button></th>
                      <th>Status Faturamento</th>
                      <th>Status Booking</th>
                      <th>Instrução de Embarque</th>
@@ -310,18 +403,18 @@
       <script type="module">
          import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
          import { 
-            getFirestore, collection, getDocs, getDoc, setDoc, doc, deleteDoc 
+             getFirestore, collection, getDocs, getDoc, setDoc, doc, deleteDoc 
          } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
          
-         // === Firebase config (a sua) ===
+         // === Firebase config ===
          const firebaseConfig = {
-            apiKey: "AIzaSyACGNNnZcHU1yA3Vozek5cD6egRnADDKUI",
-            authDomain: "controle-mercado-externo-9c3e8.firebaseapp.com",
-            projectId: "controle-mercado-externo-9c3e8",
-            storageBucket: "controle-mercado-externo-9c3e8.appspot.com",
-            messagingSenderId: "523084089883",
-            appId: "1:523084089883:web:6b9750c6df679852b346be",
-            measurementId: "G-RCJG4ZWJ9E"
+             apiKey: "AIzaSyACGNNnZcHU1yA3Vozek5cD6egRnADDKUI",
+             authDomain: "controle-mercado-externo-9c3e8.firebaseapp.com",
+             projectId: "controle-mercado-externo-9c3e8",
+             storageBucket: "controle-mercado-externo-9c3e8.appspot.com",
+             messagingSenderId: "523084089883",
+             appId: "1:523084089883:web:6b9750c6df679852b346be",
+             measurementId: "G-RCJG4ZWJ9E"
          };
          
          const app = initializeApp(firebaseConfig);
@@ -331,74 +424,74 @@
          // ======= Estado em memória =======
          let cacheInvoices = [];
          let ordemDtProdutoCrescente = true;
+         let ordemDtEmbarqueCrescente = true;
          
-         // ======= Função para atualizar a variável CSS com a altura do topo =======
+         // ======= Atualiza altura do topo =======
          function updateTopAreaHeight() {
-            const top = document.querySelector('.top-area');
-            if (!top) return;
-            const h = top.offsetHeight;
-            document.documentElement.style.setProperty('--top-area-height', h + 'px');
+             const top = document.querySelector('.top-area');
+             if (!top) return;
+             const h = top.offsetHeight;
+             document.documentElement.style.setProperty('--top-area-height', h + 'px');
          }
          window.addEventListener('resize', updateTopAreaHeight);
          
-         // ======= Util: renderização da tabela a partir de uma lista =======
+         // ======= Renderizar tabela =======
          function renderTabela(lista) {
-            const tbody = document.getElementById("tabelaInvoices");
-            tbody.innerHTML = "";
-            lista.forEach(r => {
-               const tr = document.createElement("tr");
-               tr.innerHTML = `
-                  <td>${r.invoice || ""}</td>
-                  <td>${r.dtFaturamento || ""}</td>
-                  <td>${r.dtCarregamento || ""}</td>
-                  <td>${r.draft || ""}</td>
-                  <td>${r.vgm || ""}</td>
-                  <td>${r.carga || ""}</td>
-                  <td>${r.embarque || ""}</td>
-                  <td>${r.status || ""}</td>
-                  <td>${r.booking || ""}</td>
-                  <td>${r.instrucao || ""}</td>
-                  <td>${r.producao || ""}</td>
-                  <td>${r.dtProduto || ""}</td>
-                  <td>${r.observacoes || ""}</td>
-                  <td><button onclick="editarInvoice('${(r.invoice || "").replace(/'/g, "\\'")}')">✏️ Editar</button></td>
-               `;
-               tbody.appendChild(tr);
-            });
+             const tbody = document.getElementById("tabelaInvoices");
+             tbody.innerHTML = "";
+             lista.forEach(r => {
+                 const tr = document.createElement("tr");
+                 tr.innerHTML = `
+                     <td>${r.invoice || ""}</td>
+                     <td>${r.dtFaturamento || ""}</td>
+                     <td>${r.dtCarregamento || ""}</td>
+                     <td>${r.draft || ""}</td>
+                     <td>${r.vgm || ""}</td>
+                     <td>${r.carga || ""}</td>
+                     <td>${r.embarque || ""}</td>
+                     <td>${r.status || ""}</td>
+                     <td>${r.booking || ""}</td>
+                     <td>${r.instrucao || ""}</td>
+                     <td>${r.producao || ""}</td>
+                     <td>${r.dtProduto || ""}</td>
+                     <td>${r.observacoes || ""}</td>
+                     <td><button onclick="editarInvoice('${(r.invoice || "").replace(/'/g, "\\'")}')">✏️ Editar</button></td>
+                 `;
+                 tbody.appendChild(tr);
+             });
          }
          
-         // ======= Aplicar filtros dos campos superiores sobre a cache =======
+         // ======= Filtro da lista =======
          function listaFiltrada() {
-            const fInvoice = (document.getElementById("pesquisaInvoice").value || "").toLowerCase();
-            const fDtFat   = (document.getElementById("pesquisaDtFat").value   || "").toLowerCase();
-            const fDtCar   = (document.getElementById("pesquisaDtCar").value   || "").toLowerCase();
-            const fDraft   = (document.getElementById("pesquisaDraft").value   || "").toLowerCase();
-            const fVgm     = (document.getElementById("pesquisaVgm").value     || "").toLowerCase();
-            const fCarga   = (document.getElementById("pesquisaCarga").value   || "").toLowerCase();
+             const fInvoice = (document.getElementById("pesquisaInvoice").value || "").toLowerCase();
+             const fDtFat   = (document.getElementById("pesquisaDtFat").value   || "").toLowerCase();
+             const fDtCar   = (document.getElementById("pesquisaDtCar").value   || "").toLowerCase();
+             const fDraft   = (document.getElementById("pesquisaDraft").value   || "").toLowerCase();
+             const fVgm     = (document.getElementById("pesquisaVgm").value     || "").toLowerCase();
+             const fCarga   = (document.getElementById("pesquisaCarga").value   || "").toLowerCase();
          
-            return cacheInvoices.filter(r =>
-               (r.invoice || "").toLowerCase().includes(fInvoice) &&
-               (r.dtFaturamento || "").toLowerCase().includes(fDtFat) &&
-               (r.dtCarregamento || "").toLowerCase().includes(fDtCar) &&
-               (r.draft || "").toLowerCase().includes(fDraft) &&
-               (r.vgm || "").toLowerCase().includes(fVgm) &&
-               (r.carga || "").toLowerCase().includes(fCarga)
-            );
+             return cacheInvoices.filter(r =>
+                 (r.invoice || "").toLowerCase().includes(fInvoice) &&
+                 (r.dtFaturamento || "").toLowerCase().includes(fDtFat) &&
+                 (r.dtCarregamento || "").toLowerCase().includes(fDtCar) &&
+                 (r.draft || "").toLowerCase().includes(fDraft) &&
+                 (r.vgm || "").toLowerCase().includes(fVgm) &&
+                 (r.carga || "").toLowerCase().includes(fCarga)
+             );
          }
          
-         // ======= Carregar do Firestore para a cache e renderizar =======
+         // ======= Carregar do Firestore =======
          async function atualizarLista() {
-            const snap = await getDocs(collection(db, "invoices"));
-            cacheInvoices = [];
-            snap.forEach(docSnap => {
-               cacheInvoices.push(docSnap.data());
-            });
-            renderTabela(listaFiltrada());
-            // garante que a altura do topo esteja atualizada (caso o conteúdo tenha mudado)
-            updateTopAreaHeight();
+             const snap = await getDocs(collection(db, "invoices"));
+             cacheInvoices = [];
+             snap.forEach(docSnap => {
+                 cacheInvoices.push(docSnap.data());
+             });
+             renderTabela(listaFiltrada());
+             updateTopAreaHeight();
          }
          
-         // ======= Formatação/validação de data/hora (mantido) =======
+         // ======= Funções Data/Hora =======
          function formatarDataHora(input) {
              let valor = input.value.replace(/\D/g, '');
              if (valor.length <= 8) {
@@ -422,87 +515,85 @@
              const h = parseInt(hora[0], 10);
              const m = parseInt(hora[1], 10);
              const d = new Date(ano, mes, dia, h, m);
-             if (d.getFullYear() !== ano || d.getMonth() !== mes || d.getDate() !== dia ||
-                 d.getHours() !== h || d.getMinutes() !== m) {
-                 return false;
-             }
-             return true;
+             return !(d.getFullYear() !== ano || d.getMonth() !== mes || d.getDate() !== dia ||
+                 d.getHours() !== h || d.getMinutes() !== m);
          }
          
-         // ======= Eventos (mantidos/adaptados) =======
+         // ======= Eventos filtros =======
          ["pesquisaInvoice","pesquisaDtFat","pesquisaDtCar","pesquisaDraft","pesquisaVgm","pesquisaCarga"]
-            .forEach(id => {
-               document.getElementById(id).addEventListener("input", () => {
-                  renderTabela(listaFiltrada());
-               });
-            });
+             .forEach(id => {
+                 document.getElementById(id).addEventListener("input", () => {
+                     renderTabela(listaFiltrada());
+                 });
+             });
          
          ['draft','vgm','carga','dtFaturamento','dtCarregamento','embarque','dtProduto'].forEach(id => {
-              const el = document.getElementById(id);
-              el.addEventListener('input', () => formatarDataHora(el));
-              el.addEventListener('blur', () => {
-                  if (el.value.trim() === "") return;
-                  if (!validarDataHora(el.value)) {
-                      alert("Data errada");
-                      el.focus();
-                  }
-              });
-          });
+             const el = document.getElementById(id);
+             el.addEventListener('input', () => formatarDataHora(el));
+             el.addEventListener('blur', () => {
+                 if (el.value.trim() === "") return;
+                 if (!validarDataHora(el.value)) {
+                     alert("Data errada");
+                     el.focus();
+                 }
+             });
+         });
          
+         // ======= Botões de CRUD =======
          document.getElementById("btnSalvar").addEventListener("click", async () => {
-            const invoice = document.getElementById("invoice").value.trim();
-            if (!invoice) return alert("Preencha o número da INVOICE.");
+             const invoice = document.getElementById("invoice").value.trim();
+             if (!invoice) return alert("Preencha o número da INVOICE.");
          
-            const obj = {
-               invoice,
-               dtFaturamento: document.getElementById("dtFaturamento").value || "",
-               dtCarregamento: document.getElementById("dtCarregamento").value || "",
-               draft: document.getElementById("draft").value || "",
-               vgm: document.getElementById("vgm").value || "",
-               carga: document.getElementById("carga").value || "",
-               embarque: document.getElementById("embarque").value || "",
-               status: document.getElementById("status").value || "",
-               booking: document.getElementById("booking").value || "",
-               instrucao: document.getElementById("instrucao").value || "",
-               producao: document.getElementById("producao").value || "",
-               dtProduto: document.getElementById("dtProduto").value || "",
-               observacoes: document.getElementById("observacoes").value || "",
-            };
+             const obj = {
+                 invoice,
+                 dtFaturamento: document.getElementById("dtFaturamento").value || "",
+                 dtCarregamento: document.getElementById("dtCarregamento").value || "",
+                 draft: document.getElementById("draft").value || "",
+                 vgm: document.getElementById("vgm").value || "",
+                 carga: document.getElementById("carga").value || "",
+                 embarque: document.getElementById("embarque").value || "",
+                 status: document.getElementById("status").value || "",
+                 booking: document.getElementById("booking").value || "",
+                 instrucao: document.getElementById("instrucao").value || "",
+                 producao: document.getElementById("producao").value || "",
+                 dtProduto: document.getElementById("dtProduto").value || "",
+                 observacoes: document.getElementById("observacoes").value || "",
+             };
          
-            try {
-               await setDoc(doc(db, "invoices", invoice), obj);
-               alert("Invoice salva com sucesso!");
-               document.getElementById("formInvoice").reset();
-               ["pesquisaInvoice","pesquisaDtFat","pesquisaDtCar","pesquisaDraft","pesquisaVgm","pesquisaCarga","filtroInvoice"]
-                  .forEach(id => document.getElementById(id).value = "");
-               await atualizarLista();
-            } catch (e) {
-               console.error(e);
-               alert("Erro ao salvar no Firestore.");
-            }
+             try {
+                 await setDoc(doc(db, "invoices", invoice), obj);
+                 alert("Invoice salva com sucesso!");
+                 document.getElementById("formInvoice").reset();
+                 ["pesquisaInvoice","pesquisaDtFat","pesquisaDtCar","pesquisaDraft","pesquisaVgm","pesquisaCarga","filtroInvoice"]
+                     .forEach(id => document.getElementById(id).value = "");
+                 await atualizarLista();
+             } catch (e) {
+                 console.error(e);
+                 alert("Erro ao salvar no Firestore.");
+             }
          });
          
          document.getElementById("btnLimpar").addEventListener("click", () => {
-            document.getElementById("formInvoice").reset();
-            ["pesquisaInvoice","pesquisaDtFat","pesquisaDtCar","pesquisaDraft","pesquisaVgm","pesquisaCarga","filtroInvoice"]
-               .forEach(id => document.getElementById(id).value = "");
-            renderTabela(listaFiltrada());
+             document.getElementById("formInvoice").reset();
+             ["pesquisaInvoice","pesquisaDtFat","pesquisaDtCar","pesquisaDraft","pesquisaVgm","pesquisaCarga","filtroInvoice"]
+                 .forEach(id => document.getElementById(id).value = "");
+             renderTabela(listaFiltrada());
          });
          
          document.getElementById("btnExcluir").addEventListener("click", async () => {
-            const invoice = document.getElementById("invoice").value.trim();
-            if (!invoice) return alert("Digite a INVOICE para excluir.");
-            if (!confirm("Deseja realmente excluir a INVOICE: " + invoice + "?")) return;
-            try {
-               await deleteDoc(doc(db, "invoices", invoice));
-               document.getElementById("formInvoice").reset();
-               ["pesquisaInvoice","pesquisaDtFat","pesquisaDtCar","pesquisaDraft","pesquisaVgm","pesquisaCarga","filtroInvoice"]
-                  .forEach(id => document.getElementById(id).value = "");
-               await atualizarLista();
-            } catch (e) {
-               console.error(e);
-               alert("Erro ao excluir no Firestore.");
-            }
+             const invoice = document.getElementById("invoice").value.trim();
+             if (!invoice) return alert("Digite a INVOICE para excluir.");
+             if (!confirm("Deseja realmente excluir a INVOICE: " + invoice + "?")) return;
+             try {
+                 await deleteDoc(doc(db, "invoices", invoice));
+                 document.getElementById("formInvoice").reset();
+                 ["pesquisaInvoice","pesquisaDtFat","pesquisaDtCar","pesquisaDraft","pesquisaVgm","pesquisaCarga","filtroInvoice"]
+                     .forEach(id => document.getElementById(id).value = "");
+                 await atualizarLista();
+             } catch (e) {
+                 console.error(e);
+                 alert("Erro ao excluir no Firestore.");
+             }
          });
          
          document.getElementById("btnConsultar").addEventListener("click", () => {
@@ -510,92 +601,116 @@
          });
          
          document.getElementById("btnBuscarLista").addEventListener("click", async () => {
-            const filtro = (document.getElementById("filtroInvoice").value || "").trim().toLowerCase();
-            if (!filtro) return alert("Digite a invoice que deseja buscar.");
+             const filtro = (document.getElementById("filtroInvoice").value || "").trim().toLowerCase();
+             if (!filtro) return alert("Digite a invoice que deseja buscar.");
          
-            let registro = cacheInvoices.find(r => (r.invoice || "").toLowerCase() === filtro);
+             let registro = cacheInvoices.find(r => (r.invoice || "").toLowerCase() === filtro);
+             if (!registro) {
+                 const tryDoc = await getDoc(doc(db, "invoices", document.getElementById("filtroInvoice").value.trim()));
+                 if (tryDoc.exists()) registro = tryDoc.data();
+             }
          
-            if (!registro) {
-               const tryDoc = await getDoc(doc(db, "invoices", document.getElementById("filtroInvoice").value.trim()));
-               if (tryDoc.exists()) registro = tryDoc.data();
-            }
+             if (!registro) return alert("Invoice não encontrada na lista.");
          
-            if (!registro) return alert("Invoice não encontrada na lista.");
+             document.getElementById("invoice").value = registro.invoice || "";
+             document.getElementById("dtFaturamento").value = registro.dtFaturamento || "";
+             document.getElementById("dtCarregamento").value = registro.dtCarregamento || "";
+             document.getElementById("draft").value = registro.draft || "";
+             document.getElementById("vgm").value = registro.vgm || "";
+             document.getElementById("carga").value = registro.carga || "";
+             document.getElementById("embarque").value = registro.embarque || "";
+             document.getElementById("status").value = registro.status || "";
+             document.getElementById("booking").value = registro.booking || "";
+             document.getElementById("instrucao").value = registro.instrucao || "";
+             document.getElementById("producao").value = registro.producao || "";
+             document.getElementById("dtProduto").value = registro.dtProduto || "";
+             document.getElementById("observacoes").value = registro.observacoes || "";
          
-            document.getElementById("invoice").value = registro.invoice || "";
-            document.getElementById("dtFaturamento").value = registro.dtFaturamento || "";
-            document.getElementById("dtCarregamento").value = registro.dtCarregamento || "";
-            document.getElementById("draft").value = registro.draft || "";
-            document.getElementById("vgm").value = registro.vgm || "";
-            document.getElementById("carga").value = registro.carga || "";
-            document.getElementById("embarque").value = registro.embarque || "";
-            document.getElementById("status").value = registro.status || "";
-            document.getElementById("booking").value = registro.booking || "";
-            document.getElementById("instrucao").value = registro.instrucao || "";
-            document.getElementById("producao").value = registro.producao || "";
-            document.getElementById("dtProduto").value = registro.dtProduto || "";
-            document.getElementById("observacoes").value = registro.observacoes || "";
-         
-            renderTabela([registro]);
+             renderTabela([registro]);
          });
          
-         // Ordenar por dtProduto
+         // ======= Função para converter DD/MM/YYYY em timestamp =======
          function parseDDMMYYYY(d) {
-            if (!d) return 0;
-            const partesHora = d.split(" às ");
-            const [dd, mm, yyyy] = (partesHora[0] || "").split("/");
-            if (!dd || !mm || !yyyy) return 0;
-            const dt = new Date(parseInt(yyyy,10), parseInt(mm,10)-1, parseInt(dd,10)).getTime();
-            return isNaN(dt) ? 0 : dt;
+             if (!d) return 0;
+             const partesHora = d.split(" às ");
+             const [dd, mm, yyyy] = (partesHora[0] || "").split("/");
+             if (!dd || !mm || !yyyy) return 0;
+             const dt = new Date(parseInt(yyyy,10), parseInt(mm,10)-1, parseInt(dd,10)).getTime();
+             return isNaN(dt) ? 0 : dt;
          }
+         
+         // ======= Ordenar por DT Produto =======
          document.getElementById("btnOrdenarDtProduto").addEventListener("click", () => {
-            const lista = [...listaFiltrada()];
-            lista.sort((a,b) => {
-               const A = parseDDMMYYYY(a.dtProduto);
-               const B = parseDDMMYYYY(b.dtProduto);
-               return ordemDtProdutoCrescente ? (A - B) : (B - A);
-            });
-            ordemDtProdutoCrescente = !ordemDtProdutoCrescente;
-            renderTabela(lista);
+             const lista = [...listaFiltrada()]; 
+             lista.sort((a,b) => {
+                 const A = parseDDMMYYYY(a.dtProduto);
+                 const B = parseDDMMYYYY(b.dtProduto);
+         
+                 // Se A ou B estiverem vazios (0), joga para o final
+                 if (A === 0 && B === 0) return 0;
+                 if (A === 0) return 1;  // A vazio => depois
+                 if (B === 0) return -1; // B vazio => depois
+         
+                 return ordemDtProdutoCrescente ? (A - B) : (B - A);
+             });
+             ordemDtProdutoCrescente = !ordemDtProdutoCrescente;
+             renderTabela(lista);
          });
          
-         // Destaque ao clicar na linha
+         // ======= Ordenar por DT Embarque =======
+         document.getElementById("btnOrdenarDtEmbarque").addEventListener("click", () => {
+             const lista = [...listaFiltrada()]; 
+             lista.sort((a,b) => {
+                 const A = parseDDMMYYYY(a.embarque);
+                 const B = parseDDMMYYYY(b.embarque);
+         
+                 // Se A ou B estiverem vazios, joga para o final
+                 if (A === 0 && B === 0) return 0;
+                 if (A === 0) return 1;
+                 if (B === 0) return -1;
+         
+                 return ordemDtEmbarqueCrescente ? (A - B) : (B - A);
+             });
+             ordemDtEmbarqueCrescente = !ordemDtEmbarqueCrescente;
+             renderTabela(lista);
+         });
+         
+         
+         // ======= Destaque ao clicar na linha =======
          document.addEventListener("click", function(e) {
-           const linha = e.target.closest("#listaInvoices tbody tr");
-           if (!linha) return;
-           document.querySelectorAll("#listaInvoices tbody tr").forEach(tr => tr.classList.remove("ativo"));
-           linha.classList.add("ativo");
+             const linha = e.target.closest("#listaInvoices tbody tr");
+             if (!linha) return;
+             document.querySelectorAll("#listaInvoices tbody tr").forEach(tr => tr.classList.remove("ativo"));
+             linha.classList.add("ativo");
          });
          
-         // Expor editarInvoice
+         // ======= Expor editarInvoice =======
          window.editarInvoice = async function(invoiceBusca) {
-            let registro = cacheInvoices.find(r => r.invoice === invoiceBusca);
-            if (!registro) {
-               const ds = await getDoc(doc(db, "invoices", invoiceBusca));
-               if (ds.exists()) registro = ds.data();
-            }
-            if (!registro) return alert("Invoice não encontrada.");
+             let registro = cacheInvoices.find(r => r.invoice === invoiceBusca);
+             if (!registro) {
+                 const ds = await getDoc(doc(db, "invoices", invoiceBusca));
+                 if (ds.exists()) registro = ds.data();
+             }
+             if (!registro) return alert("Invoice não encontrada.");
          
-            document.getElementById("invoice").value = registro.invoice || "";
-            document.getElementById("dtFaturamento").value = registro.dtFaturamento || "";
-            document.getElementById("dtCarregamento").value = registro.dtCarregamento || "";
-            document.getElementById("draft").value = registro.draft || "";
-            document.getElementById("vgm").value = registro.vgm || "";
-            document.getElementById("carga").value = registro.carga || "";
-            document.getElementById("embarque").value = registro.embarque || "";
-            document.getElementById("status").value = registro.status || "";
-            document.getElementById("booking").value = registro.booking || "";
-            document.getElementById("instrucao").value = registro.instrucao || "";
-            document.getElementById("producao").value = registro.producao || "";
-            document.getElementById("dtProduto").value = registro.dtProduto || "";
-            document.getElementById("observacoes").value = registro.observacoes || "";
+             document.getElementById("invoice").value = registro.invoice || "";
+             document.getElementById("dtFaturamento").value = registro.dtFaturamento || "";
+             document.getElementById("dtCarregamento").value = registro.dtCarregamento || "";
+             document.getElementById("draft").value = registro.draft || "";
+             document.getElementById("vgm").value = registro.vgm || "";
+             document.getElementById("carga").value = registro.carga || "";
+             document.getElementById("embarque").value = registro.embarque || "";
+             document.getElementById("status").value = registro.status || "";
+             document.getElementById("booking").value = registro.booking || "";
+             document.getElementById("instrucao").value = registro.instrucao || "";
+             document.getElementById("producao").value = registro.producao || "";
+             document.getElementById("dtProduto").value = registro.dtProduto || "";
+             document.getElementById("observacoes").value = registro.observacoes || "";
          };
          
-         // Inicializa: atualiza altura do topo e carrega lista
+         // ======= Inicializa =======
          window.addEventListener("DOMContentLoaded", () => {
-            updateTopAreaHeight();
-            atualizarLista();
+             updateTopAreaHeight();
+             atualizarLista();
          });
       </script>
-   </body>
-</html>
