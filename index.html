@@ -7,7 +7,8 @@
       <meta name="description" content="Pagina Cadastro Mercado Externo">
       <meta name="author" content="Julio Cesar">
       <title>Controle Mercado Externo</title>
-      <style>* {
+      <style>
+         * {
          margin: 0;
          padding: 0;
          box-sizing: border-box;
@@ -32,14 +33,16 @@
          bottom: 0;
          width: 100%;
          height: 100%;
-         background: rgba(255, 255, 255, 0.45);
+         min-height: 100vh;
+         background: rgba(255, 255, 255, 0.30);
          backdrop-filter: blur(10px);
          padding: 15px;
          border-radius: 8px;
          box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
-         font-size: 0.8rem;
+         font-size: 0.10rem;
          display: flex;
          flex-direction: column;
+         overflow: auto;
          }
          /* ===== TOP-AREA: H1 + filtros + form (agora agrupados) ===== */
          .top-area {
@@ -47,11 +50,11 @@
          top: 0;
          z-index: 20;
          /* acima da tabela */
-         background: rgba(255, 255, 255, 0.60);
+         background: rgba(255, 255, 255, 0.20);
          backdrop-filter: blur(6px);
          padding: 8px 10px;
          border-radius: 6px;
-         box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+         box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
          margin-bottom: 6px;
          }
          .top-area h1 {
@@ -63,14 +66,14 @@
          /* ===== CAMPOS DE PESQUISA E BOTÕES ===== */
          .pesquisa-container {
          display: flex;
-         flex-wrap: wrap;
+         flex-wrap: nowrap;
          gap: 6px;
          margin-bottom: 10px;
          }
          .pesquisa-container input,
          .pesquisa-container button {
          font-size: 0.75rem;
-         padding: 1px 5px;
+         padding: px;
          border-radius: 4px;
          border: 1px solid #ccc;
          text-align: center;
@@ -103,14 +106,6 @@
          color: white;
          border: none;
          }
-         #filtroInvoice {
-         width: 20%;
-         padding: 6px;
-         margin-bottom: 8px;
-         font-size: 0.85rem;
-         border-radius: 4px;
-         border: 1px solid #ccc;
-         }
          /* ===== FORMULARIO ===== */
          form {
          display: grid;
@@ -132,6 +127,11 @@
          padding: 4px;
          border: 1px solid #ccc;
          border-radius: 4px;
+         }
+         input:focus, select:focus {
+         border-color: #fd4213;
+         box-shadow: 0 0 6px rgba(250, 30, 1, 0.7);
+         outline: none;
          }
          /* ===== BOTOES DO FORM ===== */
          .buttons {
@@ -180,12 +180,18 @@
          #listaInvoices th,
          #listaInvoices td {
          border: 1px solid #ccc;
-         font-size: 0.60rem;
+         font-size: 0.75rem;
          padding: 2px;
          text-align: center;
          background: rgba(255, 255, 255, 0.60);
          font-weight: normal;
          min-width: 80px;
+         }
+         #listaInvoices th,
+         #listaInvoices td {
+         white-space: nowrap; /* impede quebra de linha dentro das células */
+         overflow: hidden;    /* opcional: esconde overflow se necessário */
+         text-overflow: ellipsis; /* opcional: adiciona "..." quando o texto é maior que a célula */
          }
          /* CABEÇALHO FIXO: agora top: 0 (relativo ao #listaInvoices) */
          #listaInvoices th {
@@ -262,7 +268,7 @@
          }
          #listaInvoices th,
          #listaInvoices td {
-         font-size: 0.7rem;
+         font-size: 0.85rem;
          padding: 2px;
          }
          }
@@ -279,7 +285,7 @@
          #observacoes {
          width: 100%;
          font-size: 0.75rem;
-         padding: 4px 9px;
+         padding: 4px 250px;
          box-sizing: border-box;
          }
          .titulo {
@@ -301,8 +307,14 @@
          /* borda sutil */
          }
          /* destaque linha selecionada */
-         #listaInvoices tbody tr.ativo td {
-         outline: 2px solid #007bff;
+         /*#listaInvoices tbody tr.ativo td {
+         outline: 2px solid #dacb79;
+         }*/
+         .hidden {
+         display: none;
+         }
+         .full-height {
+         height: 100% !important; /* lista ocupa toda a tela */
          }
       </style>
    </head>
@@ -312,11 +324,12 @@
          <div class="top-area">
             <h1>Controle Mercado Externo</h1>
             <div class="pesquisa-container">
+               <input for="text" id="filtroInvoice" placeholder="Pesquisar/Editar">
                <input type="text" id="pesquisaInvoice" placeholder="Invoice">
                <input type="text" id="pesquisaDtFat" placeholder="DT Faturamento">
                <input type="text" id="pesquisaDtCar" placeholder="DT Carregamento">
                <input type="text" id="pesquisaDraft" placeholder="Dead-Line Draft">
-               <input type="text" id="pesquisaVgm" placeholder="Dead-line VGM">
+               <input type="text" id="pesquisaEmb" placeholder="DT Embarque">
                <input type="text" id="pesquisaCarga" placeholder="Dead-line Carga">
                <button class="salvar" id="btnSalvar">Salvar / Atualizar</button>
                <button class="limpar" id="btnLimpar">Limpar</button>
@@ -324,9 +337,9 @@
                <button class="btn-lista" id="btnConsultar">Consultar Invoice</button>
                <button class="btn-lista" id="btnBuscarLista">Pesquisar e Editar</button>
             </div>
-            <input type="text" id="filtroInvoice" placeholder="Pesquisar INVOICES ">
             <form id="formInvoice">
                <div><label for="invoice">INVOICE</label><input type="text" id="invoice"></div>
+               <div><label for="po">PO#</label><input type="text" id="po"></div>
                <div><label for="dtFaturamento">DT Faturamento</label><input type="text" id="dtFaturamento"></div>
                <div><label for="dtCarregamento">DT Carregamento</label><input type="text" id="dtCarregamento"></div>
                <div><label for="draft">Dead-Line Draft</label><input type="text" id="draft"></div>
@@ -369,13 +382,12 @@
                <div><label for="observacoes">Observações</label><input type="text" id="observacoes"></div>
             </form>
          </div>
-         <!-- LISTA: rolável; observe que removi o H1 duplicado -->
-         <h2 class="titulo">Lista de Invoices</h2>
          <div id="listaInvoices">
             <table>
                <thead>
                   <tr>
                      <th>Invoice</th>
+                     <th>PO#</th>
                      <th>DT Faturamento</th>
                      <th>DT Carregamento</th>
                      <th>Dead-Line Draft</th>
@@ -443,6 +455,7 @@
                  const tr = document.createElement("tr");
                  tr.innerHTML = `
                      <td>${r.invoice || ""}</td>
+                     <td>${r.po || ""}</td>
                      <td>${r.dtFaturamento || ""}</td>
                      <td>${r.dtCarregamento || ""}</td>
                      <td>${r.draft || ""}</td>
@@ -463,22 +476,23 @@
          
          // ======= Filtro da lista =======
          function listaFiltrada() {
-             const fInvoice = (document.getElementById("pesquisaInvoice").value || "").toLowerCase();
-             const fDtFat   = (document.getElementById("pesquisaDtFat").value   || "").toLowerCase();
-             const fDtCar   = (document.getElementById("pesquisaDtCar").value   || "").toLowerCase();
-             const fDraft   = (document.getElementById("pesquisaDraft").value   || "").toLowerCase();
-             const fVgm     = (document.getElementById("pesquisaVgm").value     || "").toLowerCase();
-             const fCarga   = (document.getElementById("pesquisaCarga").value   || "").toLowerCase();
+         const fInvoice = (document.getElementById("pesquisaInvoice").value || "").toLowerCase();
+         const fDtFat   = (document.getElementById("pesquisaDtFat").value   || "").toLowerCase();
+         const fDtCar   = (document.getElementById("pesquisaDtCar").value   || "").toLowerCase();
+         const fDraft   = (document.getElementById("pesquisaDraft").value   || "").toLowerCase();
+         const fEmb     = (document.getElementById("pesquisaEmb").value     || "").toLowerCase(); // corrigido
+         const fCarga   = (document.getElementById("pesquisaCarga").value   || "").toLowerCase();
          
-             return cacheInvoices.filter(r =>
-                 (r.invoice || "").toLowerCase().includes(fInvoice) &&
-                 (r.dtFaturamento || "").toLowerCase().includes(fDtFat) &&
-                 (r.dtCarregamento || "").toLowerCase().includes(fDtCar) &&
-                 (r.draft || "").toLowerCase().includes(fDraft) &&
-                 (r.vgm || "").toLowerCase().includes(fVgm) &&
-                 (r.carga || "").toLowerCase().includes(fCarga)
-             );
+         return cacheInvoices.filter(r =>
+         (r.invoice || "").toLowerCase().includes(fInvoice) &&
+         (r.dtFaturamento || "").toLowerCase().includes(fDtFat) &&
+         (r.dtCarregamento || "").toLowerCase().includes(fDtCar) &&
+         (r.draft || "").toLowerCase().includes(fDraft) &&
+         (r.embarque || "").toLowerCase().includes(fEmb) && // corrigido
+         (r.carga || "").toLowerCase().includes(fCarga)
+         );
          }
+         
          
          // ======= Carregar do Firestore =======
          async function atualizarLista() {
@@ -520,7 +534,7 @@
          }
          
          // ======= Eventos filtros =======
-         ["pesquisaInvoice","pesquisaDtFat","pesquisaDtCar","pesquisaDraft","pesquisaVgm","pesquisaCarga"]
+         ["pesquisaInvoice","pesquisaDtFat","pesquisaDtCar","pesquisaDraft","pesquisaEmb","pesquisaCarga"]
              .forEach(id => {
                  document.getElementById(id).addEventListener("input", () => {
                      renderTabela(listaFiltrada());
@@ -545,26 +559,28 @@
              if (!invoice) return alert("Preencha o número da INVOICE.");
          
              const obj = {
-                 invoice,
-                 dtFaturamento: document.getElementById("dtFaturamento").value || "",
-                 dtCarregamento: document.getElementById("dtCarregamento").value || "",
-                 draft: document.getElementById("draft").value || "",
-                 vgm: document.getElementById("vgm").value || "",
-                 carga: document.getElementById("carga").value || "",
-                 embarque: document.getElementById("embarque").value || "",
-                 status: document.getElementById("status").value || "",
-                 booking: document.getElementById("booking").value || "",
-                 instrucao: document.getElementById("instrucao").value || "",
-                 producao: document.getElementById("producao").value || "",
-                 dtProduto: document.getElementById("dtProduto").value || "",
-                 observacoes: document.getElementById("observacoes").value || "",
-             };
+                invoice,
+                po: document.getElementById("po").value || "", // <-- aqui
+                dtFaturamento: document.getElementById("dtFaturamento").value || "",
+                dtCarregamento: document.getElementById("dtCarregamento").value || "",
+                draft: document.getElementById("draft").value || "",
+                vgm: document.getElementById("vgm").value || "",
+                carga: document.getElementById("carga").value || "",
+                embarque: document.getElementById("embarque").value || "",
+                status: document.getElementById("status").value || "",
+                booking: document.getElementById("booking").value || "",
+                instrucao: document.getElementById("instrucao").value || "",
+                producao: document.getElementById("producao").value || "",
+                dtProduto: document.getElementById("dtProduto").value || "",
+                observacoes: document.getElementById("observacoes").value || "",
+            };
+         
          
              try {
                  await setDoc(doc(db, "invoices", invoice), obj);
                  alert("Invoice salva com sucesso!");
                  document.getElementById("formInvoice").reset();
-                 ["pesquisaInvoice","pesquisaDtFat","pesquisaDtCar","pesquisaDraft","pesquisaVgm","pesquisaCarga","filtroInvoice"]
+                 ["pesquisaInvoice","pesquisaDtFat","pesquisaDtCar","pesquisaDraft","pesquisaEmb","pesquisaCarga","filtroInvoice"]
                      .forEach(id => document.getElementById(id).value = "");
                  await atualizarLista();
              } catch (e) {
@@ -575,7 +591,7 @@
          
          document.getElementById("btnLimpar").addEventListener("click", () => {
              document.getElementById("formInvoice").reset();
-             ["pesquisaInvoice","pesquisaDtFat","pesquisaDtCar","pesquisaDraft","pesquisaVgm","pesquisaCarga","filtroInvoice"]
+             ["pesquisaInvoice","pesquisaDtFat","pesquisaDtCar","pesquisaDraft","pesquisaEmb","pesquisaCarga","filtroInvoice"]
                  .forEach(id => document.getElementById(id).value = "");
              renderTabela(listaFiltrada());
          });
@@ -587,7 +603,7 @@
              try {
                  await deleteDoc(doc(db, "invoices", invoice));
                  document.getElementById("formInvoice").reset();
-                 ["pesquisaInvoice","pesquisaDtFat","pesquisaDtCar","pesquisaDraft","pesquisaVgm","pesquisaCarga","filtroInvoice"]
+                 ["pesquisaInvoice","pesquisaDtFat","pesquisaDtCar","pesquisaDraft","pesquisaEmb","pesquisaCarga","filtroInvoice"]
                      .forEach(id => document.getElementById(id).value = "");
                  await atualizarLista();
              } catch (e) {
@@ -613,6 +629,7 @@
              if (!registro) return alert("Invoice não encontrada na lista.");
          
              document.getElementById("invoice").value = registro.invoice || "";
+             document.getElementById("po").value = registro.po || "";
              document.getElementById("dtFaturamento").value = registro.dtFaturamento || "";
              document.getElementById("dtCarregamento").value = registro.dtCarregamento || "";
              document.getElementById("draft").value = registro.draft || "";
@@ -694,6 +711,7 @@
              if (!registro) return alert("Invoice não encontrada.");
          
              document.getElementById("invoice").value = registro.invoice || "";
+             document.getElementById("po").value = registro.po || "";
              document.getElementById("dtFaturamento").value = registro.dtFaturamento || "";
              document.getElementById("dtCarregamento").value = registro.dtCarregamento || "";
              document.getElementById("draft").value = registro.draft || "";
@@ -713,4 +731,22 @@
              updateTopAreaHeight();
              atualizarLista();
          });
+         
+         
+         const topArea = document.querySelector('.top-area');
+         const lista = document.getElementById('listaInvoices');
+         
+         // Duplo clique na top-area -> esconde ela
+         topArea.addEventListener('dblclick', () => {
+         topArea.classList.add('hidden');
+         lista.classList.add('full-height');
+         });
+         
+         // Duplo clique na lista -> mostra a top-area de volta
+         lista.addEventListener('dblclick', () => {
+         topArea.classList.remove('hidden');
+         lista.classList.remove('full-height');
+         });
       </script>
+   </body>
+</html>
