@@ -1,129 +1,171 @@
 <!DOCTYPE html>
 <html lang="pt-br">
    <head>
-      <meta charset="UTF-8" />
-      <meta http-equiv="X-UA-Compatible" content="IE=edge">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <meta name="description" content="Pagina Relatorio Mercado Externo">
-      <meta name="author" content="Julio Cesar">
+      <meta charset="UTF-8" /> <!-- Define a codificação de caracteres para UTF-8 -->
+      <meta http-equiv="X-UA-Compatible" content="IE=edge"> <!-- Força compatibilidade com versões antigas do IE -->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <!-- Responsividade: ajusta para telas menores -->
+      <meta name="description" content="Pagina Relatorio Mercado Externo"> <!-- Descrição da página (SEO) -->
+      <meta name="author" content="Julio Cesar"> <!-- Autor da página -->
       <title>Lista de Invoices</title>
-      <!-- Biblioteca SheetJS -->
+
+      <!-- Biblioteca para exportar planilhas Excel -->
       <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+
       <style>
+         /* Reset básico de margin/padding e cálculo de largura com bordas */
          * { margin:0; padding:0; box-sizing:border-box; }
+
          body {
-         font-family: Arial, sans-serif;
-         background: url("exportacao.png") no-repeat center center/cover;
-         padding: 10px;
-         min-height: 90vh;
-         line-height: 1.2;
-         color: #333;
+            font-family: Arial, sans-serif; /* Fonte padrão */
+            background: url("exportacao.png") no-repeat center center/cover; /* Fundo com imagem centralizada e cobrindo a tela */
+            padding: 10px; /* Espaço interno */
+            min-height: 90vh; /* Altura mínima: 90% da tela */
+            line-height: 1.2; /* Espaçamento entre linhas */
+            color: #333; /* Cor do texto */
          }
+
          h1 {
-         text-align: center;
-         margin-bottom: 10px;
-         font-size: 1.2rem;
-         color: #fff;
-         text-shadow: 1px 1px 3px #000;
-         position: sticky;
-         top: 0;
-         background: rgba(0,0,0,0.3);
-         z-index:5;
-         padding:6px 0;
-         border-radius:6px;
+            text-align: center; /* Centraliza texto */
+            margin-bottom: 10px; /* Espaço abaixo */
+            font-size: 1.2rem; /* Tamanho da fonte */
+            color: #fff; /* Cor branca */
+            text-shadow: 1px 1px 3px #000; /* Sombra no texto */
+            position: sticky; /* Fixa o título no topo ao rolar */
+            top: 0; /* Distância até o topo */
+            background: rgba(0,0,0,0.3); /* Fundo semi-transparente */
+            z-index:5; /* Prioridade na sobreposição */
+            padding:6px 0; /* Espaçamento interno */
+            border-radius:6px; /* Bordas arredondadas */
          }
+
          .filtro-container {
-         display:flex;
-         flex-wrap:wrap;
-         justify-content:flex-start;
-         gap:6px;
-         margin-bottom:10px;
-         align-items:center;
+            display:flex; /* Exibe em linha */
+            flex-wrap:wrap; /* Quebra para outra linha se não couber */
+            justify-content:flex-start; /* Alinha itens à esquerda */
+            gap:6px; /* Espaço entre os elementos */
+            margin-bottom:10px; /* Espaço abaixo */
+            align-items:center; /* Centraliza verticalmente */
          }
+
          .filtro-container input {
-         padding:4px 6px;
-         font-size:10px;
-         border:1px solid #ccc;
-         border-radius:5px;
-         width:160px;
+            padding:4px 6px; /* Espaçamento interno */
+            font-size:10px; /* Fonte pequena */
+            border:1px solid #ccc; /* Borda cinza clara */
+            border-radius:5px; /* Bordas arredondadas */
+            width:160px; /* Largura fixa */
          }
+
+         /* Botões padrões */
          .btn-voltar,
          .btn-limpar,
          .btn-excel {
-         display:inline-block;
-         margin:0;
-         background:#007bff;
-         color:white;
-         padding:3px 6px;
-         border:none;
-         border-radius:5px;
-         cursor:pointer;
-         font-size:10px;
-         transition:background 0.3s ease;
-         white-space:nowrap;
+            display:inline-block; /* Fica em linha */
+            margin:0; /* Remove margem */
+            background:#007bff; /* Azul padrão */
+            color:white; /* Texto branco */
+            padding:3px 6px; /* Espaçamento interno */
+            border:none; /* Sem borda */
+            border-radius:5px; /* Bordas arredondadas */
+            cursor:pointer; /* Cursor de mãozinha */
+            font-size:10px; /* Fonte pequena */
+            transition:background 0.3s ease; /* Suaviza troca de cor */
+            white-space:nowrap; /* Impede quebra de linha no texto */
          }
+
+         /* Cor ao passar o mouse */
          .btn-voltar:hover,
          .btn-limpar:hover,
          .btn-excel:hover { background:#0056b3; }
+
          .table-container {
-         width:100%;
-         max-height:85vh;
-         overflow-x:auto;
-         overflow-y:auto;
-         background:rgba(255,255,255,0.95);
-         border-radius:6px;
-         box-shadow:0px 2px 4px rgba(0,0,0,0.2);
+            width:100%; /* Ocupa toda largura */
+            max-height:85vh; /* Altura máxima */
+            overflow-x:auto; /* Scroll horizontal */
+            overflow-y:auto; /* Scroll vertical */
+            background:rgba(255,255,255,0.95); /* Fundo branco translúcido */
+            border-radius:6px; /* Bordas arredondadas */
+            box-shadow:0px 2px 4px rgba(0,0,0,0.2); /* Sombra leve */
          }
+
          table {
-         width:max-content;
-         border-collapse:collapse;
-         table-layout:fixed;
-         min-width:100%;
-         font-size:11px;
+            width:max-content; /* Largura mínima baseada no conteúdo */
+            border-collapse:collapse; /* Remove espaçamento entre bordas */
+            table-layout:fixed; /* Colunas fixas */
+            min-width:100%; /* Largura mínima = container */
+            font-size:11px; /* Fonte pequena */
          }
+
          th, td {
-         border:1px solid #ccc;
-         padding:3px 4px;
-         text-align:center;
-         font-weight:normal;
+            border:1px solid #ccc; /* Bordas cinza */
+            padding:3px 4px; /* Espaço interno */
+            text-align:center; /* Texto centralizado */
+            font-weight:normal; /* Peso da fonte normal */
          }
+
          th {
-         background:#007bff;
-         color:white;
-         position:sticky;
-         top:0;
-         z-index:3;
-         font-weight:bold;
-         font-size:11px;
+            background:#007bff; /* Azul */
+            color:white; /* Texto branco */
+            position:sticky; /* Cabeçalho fixo no topo */
+            top:0; /* Gruda no topo */
+            z-index:3; /* Acima das linhas */
+            font-weight:bold; /* Negrito */
+            font-size:11px; /* Fonte pequena */
          }
+
+         /* Alternância de cores entre linhas pares e ímpares */
          tr:nth-child(even) td { background:rgba(240,240,240,0.85); }
          tr:nth-child(odd) td { background:rgba(255,255,255,0.55); }
+
+         /* Destaque ao passar o mouse */
          tr:hover td { background:#fdf59f !important; cursor:pointer; }
+
+         /* Células editáveis com fundo diferenciado */
          td[contenteditable="true"] { background:#fff8dc; outline:none; }
+
+         /* Linha selecionada */
          tr.ativo td { background:orange !important; font-weight:bold; color:#fff; }
+
+         /* Campos de data */
          input[type="date"] { font-size:10px; padding:3px; border:1px solid #ccc; border-radius:4px; width:120px; }
+
+         /* Ajuste de largura de colunas específicas */
          th:nth-child(12), td:nth-child(12) { min-width:100px; }
          th:nth-child(13), td:nth-child(13) { min-width:130px; }
-         th:nth-child(14), td:nth-child(14) { min-width:180px; max-width:350px; padding:3px 5px; text-align:left; white-space:nowrap; overflow:hidden; }
+         th:nth-child(14), td:nth-child(14) {
+            min-width:180px; /* largura mínima */
+            max-width:350px; /* largura máxima */
+            padding:3px 5px; /* espaçamento */
+            text-align:left; /* alinha à esquerda */
+            white-space:nowrap; /* impede quebra de linha */
+            overflow:hidden; /* oculta excesso de texto */
+         }
+
+         /* Responsividade para telas médias */
          @media (max-width:1024px) {
-         h1 { font-size:1.1rem; }
-         table, th, td { font-size:10px; padding:2px 3px; }
-         .btn-voltar, .btn-limpar, .btn-excel { font-size:9px; padding:2px 5px; }
+            h1 { font-size:1.1rem; } /* reduz título */
+            table, th, td { font-size:10px; padding:2px 3px; } /* fonte menor */
+            .btn-voltar, .btn-limpar, .btn-excel { font-size:9px; padding:2px 5px; } /* botões menores */
          }
+
+         /* Responsividade para tablets */
          @media (max-width:768px) {
-         .filtro-container input { width:100%; }
-         table { min-width:750px; }
+            .filtro-container input { width:100%; } /* inputs ocupam largura total */
+            table { min-width:750px; } /* largura mínima da tabela */
          }
+
+         /* Responsividade para celulares */
          @media (max-width:480px) {
-         h1 { font-size:1rem; }
-         th, td { font-size:9px; padding:2px 2px; }
-         .filtro-container { flex-direction:column; align-items:stretch; }
-         .btn-voltar, .btn-limpar, .btn-excel, .filtro-container input { width:100%; }
+            h1 { font-size:1rem; } /* título menor */
+            th, td { font-size:9px; padding:2px 2px; } /* fonte e espaçamento menores */
+            .filtro-container { flex-direction:column; align-items:stretch; } /* filtros em coluna */
+            .btn-voltar, .btn-limpar, .btn-excel, .filtro-container input { width:100%; } /* ocupam toda largura */
          }
       </style>
    </head>
    <body>
       <h1>Lista de Invoices</h1>
+
+      <!-- Área dos filtros -->
       <div class="filtro-container">
          <button class="btn-voltar" onclick="window.location.href='index.html'">⬅ Voltar</button>
          <input type="text" id="filtroInvoice" placeholder="Pesquisar por Invoice" />
@@ -134,6 +176,8 @@
          <button class="btn-limpar" id="btnLimpar">✖ Limpar</button>
          <button class="btn-excel" id="btnExcel">📄 Exportar Excel</button>
       </div>
+
+      <!-- Área da tabela -->
       <div class="table-container">
          <table id="tabela">
             <thead>
@@ -157,25 +201,30 @@
             <tbody id="dadosTabela"></tbody>
          </table>
       </div>
+
+      <!-- Script principal: conecta ao Firebase e monta tabela -->
       <script type="module">
          import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
          import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
          
+         // Configuração do Firebase
          const firebaseConfig = {
-         	apiKey: "AIzaSyACGNNnZcHU1yA3Vozek5cD6egRnADDKUI",
-         	authDomain: "controle-mercado-externo-9c3e8.firebaseapp.com",
-         	projectId: "controle-mercado-externo-9c3e8",
-         	storageBucket: "controle-mercado-externo-9c3e8.appspot.com",
-         	messagingSenderId: "523084089883",
-         	appId: "1:523084089883:web:6b9750c6df679852b346be",
-         	measurementId: "G-RCJG4ZWJ9E"
+         	apiKey: "...",
+         	authDomain: "...",
+         	projectId: "...",
+         	storageBucket: "...",
+         	messagingSenderId: "...",
+         	appId: "...",
+         	measurementId: "..."
          };
          
          const app = initializeApp(firebaseConfig);
          const db = getFirestore(app);
          
-         const registros = [];
+         const registros = []; // Array para armazenar os dados
          const tabela = document.getElementById("dadosTabela");
+
+         // Filtros
          const filtroInvoice = document.getElementById("filtroInvoice");
          const filtroPO = document.getElementById("filtroPO");
          const filtroFaturamento = document.getElementById("filtroFaturamento");
@@ -184,96 +233,96 @@
          const btnLimpar = document.getElementById("btnLimpar");
          const btnExcel = document.getElementById("btnExcel");
          
-         // Exibir dados
+         // Exibe dados na tabela
          function exibirDados(dados) {
-         	tabela.innerHTML = "";
-         	if(dados.length === 0){
-         		const linha = document.createElement("tr");
-         		linha.innerHTML = `<td colspan="14" style="color:gray;font-style:italic;">Nenhuma INVOICE encontrada.</td>`;
-         		tabela.appendChild(linha);
-         	} else {
-         		dados.forEach(r => {
-         			const linha = document.createElement("tr");
-         			linha.innerHTML = `
-         				<td>${r.invoice||""}</td>
-         				<td>${r.po||""}</td>
-         				<td>${r.dtFaturamento||""}</td>
-         				<td>${r.dtCarregamento||""}</td>
-         				<td>${r.draft||""}</td>
-         				<!-- ${r.vgm||""} REMOVIDO -->
-         				<td>${r.carga||""}</td>
-         				<td>${r.embarque||""}</td>
-         				<td>${r.status||""}</td>
-         				<td>${r.booking||""}</td>
-         				<td>${r.instrucao||""}</td>
-         				<td>${r.producao||""}</td>
-         				<td>${r.dtProduto||""}</td>
-         				<td>${r.observacoes||""}</td>
-         			`;
-         			tabela.appendChild(linha);
-         		});
-         	}
+            tabela.innerHTML = "";
+            if(dados.length === 0){
+               const linha = document.createElement("tr");
+               linha.innerHTML = `<td colspan="14" style="color:gray;font-style:italic;">Nenhuma INVOICE encontrada.</td>`;
+               tabela.appendChild(linha);
+            } else {
+               dados.forEach(r => {
+                  const linha = document.createElement("tr");
+                  linha.innerHTML = `
+                     <td>${r.invoice||""}</td>
+                     <td>${r.po||""}</td>
+                     <td>${r.dtFaturamento||""}</td>
+                     <td>${r.dtCarregamento||""}</td>
+                     <td>${r.draft||""}</td>
+                     <td>${r.carga||""}</td>
+                     <td>${r.embarque||""}</td>
+                     <td>${r.status||""}</td>
+                     <td>${r.booking||""}</td>
+                     <td>${r.instrucao||""}</td>
+                     <td>${r.producao||""}</td>
+                     <td>${r.dtProduto||""}</td>
+                     <td>${r.observacoes||""}</td>
+                  `;
+                  tabela.appendChild(linha);
+               });
+            }
          }
          
          // Carrega dados do Firestore
          async function carregarDadosFirestore(){
-         	const querySnapshot = await getDocs(collection(db,"invoices"));
-         	querySnapshot.forEach(doc => registros.push(doc.data()));
-         	exibirDados(registros);
+            const querySnapshot = await getDocs(collection(db,"invoices"));
+            querySnapshot.forEach(doc => registros.push(doc.data()));
+            exibirDados(registros);
          }
          carregarDadosFirestore();
          
-         // Filtros
+         // Filtragem
          function filtrar(){
-         	const invoiceFiltro = filtroInvoice.value.toLowerCase();
-         	const poFiltro = filtroPO.value.toLowerCase();
-         	const faturamentoFiltro = filtroFaturamento.value.toLowerCase();
-         	const carregamentoFiltro = filtroCarregamento.value.toLowerCase();
-         	const embarqueFiltro = filtroEmbarque.value.toLowerCase();
-         	const dadosFiltrados = registros.filter(r =>
-         		(r.invoice||"").toLowerCase().includes(invoiceFiltro) &&
-         		(r.po||"").toLowerCase().includes(poFiltro) &&
-         		(r.dtFaturamento||"").toLowerCase().includes(faturamentoFiltro) &&
-         		(r.dtCarregamento||"").toLowerCase().includes(carregamentoFiltro) &&
-         		(r.embarque||"").toLowerCase().includes(embarqueFiltro)
-         	);
-         	exibirDados(dadosFiltrados);
+            const invoiceFiltro = filtroInvoice.value.toLowerCase();
+            const poFiltro = filtroPO.value.toLowerCase();
+            const faturamentoFiltro = filtroFaturamento.value.toLowerCase();
+            const carregamentoFiltro = filtroCarregamento.value.toLowerCase();
+            const embarqueFiltro = filtroEmbarque.value.toLowerCase();
+            const dadosFiltrados = registros.filter(r =>
+               (r.invoice||"").toLowerCase().includes(invoiceFiltro) &&
+               (r.po||"").toLowerCase().includes(poFiltro) &&
+               (r.dtFaturamento||"").toLowerCase().includes(faturamentoFiltro) &&
+               (r.dtCarregamento||"").toLowerCase().includes(carregamentoFiltro) &&
+               (r.embarque||"").toLowerCase().includes(embarqueFiltro)
+            );
+            exibirDados(dadosFiltrados);
          }
          
          [filtroInvoice,filtroPO,filtroFaturamento,filtroCarregamento,filtroEmbarque].forEach(f => f.addEventListener("input", filtrar));
          
+         // Botão limpar
          btnLimpar.addEventListener("click",()=>{
-         	filtroInvoice.value="";
-         	filtroPO.value="";
-         	filtroFaturamento.value="";
-         	filtroCarregamento.value="";
-         	filtroEmbarque.value="";
-         	filtrar();
-         	filtroInvoice.focus();
+            filtroInvoice.value="";
+            filtroPO.value="";
+            filtroFaturamento.value="";
+            filtroCarregamento.value="";
+            filtroEmbarque.value="";
+            filtrar();
+            filtroInvoice.focus();
          });
          
-         // Exportar Excel (linhas filtradas)
+         // Exportar para Excel
          btnExcel.addEventListener("click", ()=>{
-         	const tabelaFiltrada = document.getElementById("tabela");
-         	const wb = XLSX.utils.book_new();
-         	const ws_data = [];
+            const tabelaFiltrada = document.getElementById("tabela");
+            const wb = XLSX.utils.book_new();
+            const ws_data = [];
          
-         	// Cabeçalho
-         	const cabecalho = [];
-         	tabelaFiltrada.querySelectorAll("thead th").forEach(th => cabecalho.push(th.innerText.toUpperCase())); // maiúsculas
-         	ws_data.push(cabecalho);
+            // Cabeçalho
+            const cabecalho = [];
+            tabelaFiltrada.querySelectorAll("thead th").forEach(th => cabecalho.push(th.innerText.toUpperCase())); 
+            ws_data.push(cabecalho);
          
-         	// Linhas visíveis
-         	tabelaFiltrada.querySelectorAll("tbody tr").forEach(tr => {
-         		if(tr.style.display === "none") return;
-         		const linha = [];
-         		tr.querySelectorAll("td").forEach(td => linha.push(td.innerText));
-         		ws_data.push(linha);
-         	});
+            // Linhas visíveis
+            tabelaFiltrada.querySelectorAll("tbody tr").forEach(tr => {
+               if(tr.style.display === "none") return;
+               const linha = [];
+               tr.querySelectorAll("td").forEach(td => linha.push(td.innerText));
+               ws_data.push(linha);
+            });
          
-         	const ws = XLSX.utils.aoa_to_sheet(ws_data);
-         	XLSX.utils.book_append_sheet(wb, ws, "Invoices");
-         	XLSX.writeFile(wb,"Lista_Invoices_Filtrada.xlsx");
+            const ws = XLSX.utils.aoa_to_sheet(ws_data);
+            XLSX.utils.book_append_sheet(wb, ws, "Invoices");
+            XLSX.writeFile(wb,"Lista_Invoices_Filtrada.xlsx");
          });
       </script>
    </body>
