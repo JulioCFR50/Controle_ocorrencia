@@ -495,15 +495,19 @@
          
          
          // ======= Carregar do Firestore =======
-         async function atualizarLista() {
-             const snap = await getDocs(collection(db, "invoices"));
-             cacheInvoices = [];
-             snap.forEach(docSnap => {
-                 cacheInvoices.push(docSnap.data());
-             });
-             renderTabela(listaFiltrada());
-             updateTopAreaHeight();
-         }
+        async function atualizarLista() {
+    const snap = await getDocs(collection(db, "invoices"));
+    cacheInvoices = [];
+    snap.forEach(docSnap => {
+        const data = docSnap.data();
+        if (data.status === "Pendente") {   // só pendentes
+            cacheInvoices.push(data);
+        }
+    });
+    renderTabela(listaFiltrada());
+    updateTopAreaHeight();
+}
+
          
          // ======= Funções Data/Hora =======
          function formatarDataHora(input) {
