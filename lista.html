@@ -1,170 +1,153 @@
 <!DOCTYPE html>
 <html lang="pt-br">
    <head>
-      <meta charset="UTF-8" /> <!-- Define a codificação de caracteres para UTF-8 -->
-      <meta http-equiv="X-UA-Compatible" content="IE=edge"> <!-- Força compatibilidade com versões antigas do IE -->
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <!-- Responsividade: ajusta para telas menores -->
-      <meta name="description" content="Pagina Relatorio Mercado Externo"> <!-- Descrição da página (SEO) -->
-      <meta name="author" content="Julio Cesar"> <!-- Autor da página -->
+      <meta charset="UTF-8" />
+      <!-- Define a codificação de caracteres para UTF-8 -->
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <!-- Força compatibilidade com versões antigas do IE -->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <!-- Responsividade: ajusta para telas menores -->
+      <meta name="description" content="Pagina Relatorio Mercado Externo">
+      <!-- Descrição da página (SEO) -->
+      <meta name="author" content="Julio Cesar">
+      <!-- Autor da página -->
       <title>Lista de Invoices</title>
-
       <!-- Biblioteca para exportar planilhas Excel -->
       <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
-
       <style>
          /* Reset básico de margin/padding e cálculo de largura com bordas */
          * { margin:0; padding:0; box-sizing:border-box; }
-
          body {
-            font-family: Arial, sans-serif; /* Fonte padrão */
-            background: url("exportacao.png") no-repeat center center/cover; /* Fundo com imagem centralizada e cobrindo a tela */
-            padding: 10px; /* Espaço interno */
-            min-height: 90vh; /* Altura mínima: 90% da tela */
-            line-height: 1.2; /* Espaçamento entre linhas */
-            color: #333; /* Cor do texto */
+         font-family: Arial, sans-serif; /* Fonte padrão */
+         background: url("exportacao.png") no-repeat center center/cover; /* Fundo com imagem centralizada e cobrindo a tela */
+         padding: 10px; /* Espaço interno */
+         min-height: 90vh; /* Altura mínima: 90% da tela */
+         line-height: 1.2; /* Espaçamento entre linhas */
+         color: #333; /* Cor do texto */
          }
-
          h1 {
-            text-align: center; /* Centraliza texto */
-            margin-bottom: 10px; /* Espaço abaixo */
-            font-size: 1.2rem; /* Tamanho da fonte */
-            color: #fff; /* Cor branca */
-            text-shadow: 1px 1px 3px #000; /* Sombra no texto */
-            position: sticky; /* Fixa o título no topo ao rolar */
-            top: 0; /* Distância até o topo */
-            background: rgba(0,0,0,0.3); /* Fundo semi-transparente */
-            z-index:5; /* Prioridade na sobreposição */
-            padding:6px 0; /* Espaçamento interno */
-            border-radius:6px; /* Bordas arredondadas */
+         text-align: center; /* Centraliza texto */
+         margin-bottom: 10px; /* Espaço abaixo */
+         font-size: 1.2rem; /* Tamanho da fonte */
+         color: #fff; /* Cor branca */
+         text-shadow: 1px 1px 3px #000; /* Sombra no texto */
+         position: sticky; /* Fixa o título no topo ao rolar */
+         top: 0; /* Distância até o topo */
+         background: rgba(0,0,0,0.3); /* Fundo semi-transparente */
+         z-index:5; /* Prioridade na sobreposição */
+         padding:6px 0; /* Espaçamento interno */
+         border-radius:6px; /* Bordas arredondadas */
          }
-
          .filtro-container {
-            display:flex; /* Exibe em linha */
-            flex-wrap:wrap; /* Quebra para outra linha se não couber */
-            justify-content:flex-start; /* Alinha itens à esquerda */
-            gap:6px; /* Espaço entre os elementos */
-            margin-bottom:10px; /* Espaço abaixo */
-            align-items:center; /* Centraliza verticalmente */
+         display:flex; /* Exibe em linha */
+         flex-wrap:wrap; /* Quebra para outra linha se não couber */
+         justify-content:flex-start; /* Alinha itens à esquerda */
+         gap:6px; /* Espaço entre os elementos */
+         margin-bottom:10px; /* Espaço abaixo */
+         align-items:center; /* Centraliza verticalmente */
          }
-
          .filtro-container input {
-            padding:4px 6px; /* Espaçamento interno */
-            font-size:10px; /* Fonte pequena */
-            border:1px solid #ccc; /* Borda cinza clara */
-            border-radius:5px; /* Bordas arredondadas */
-            width:160px; /* Largura fixa */
+         padding:4px 6px; /* Espaçamento interno */
+         font-size:10px; /* Fonte pequena */
+         border:1px solid #ccc; /* Borda cinza clara */
+         border-radius:5px; /* Bordas arredondadas */
+         width:160px; /* Largura fixa */
          }
-
          /* Botões padrões */
          .btn-voltar,
          .btn-limpar,
          .btn-excel {
-            display:inline-block; /* Fica em linha */
-            margin:0; /* Remove margem */
-            background:#007bff; /* Azul padrão */
-            color:white; /* Texto branco */
-            padding:3px 6px; /* Espaçamento interno */
-            border:none; /* Sem borda */
-            border-radius:5px; /* Bordas arredondadas */
-            cursor:pointer; /* Cursor de mãozinha */
-            font-size:10px; /* Fonte pequena */
-            transition:background 0.3s ease; /* Suaviza troca de cor */
-            white-space:nowrap; /* Impede quebra de linha no texto */
+         display:inline-block; /* Fica em linha */
+         margin:0; /* Remove margem */
+         background:#007bff; /* Azul padrão */
+         color:white; /* Texto branco */
+         padding:3px 6px; /* Espaçamento interno */
+         border:none; /* Sem borda */
+         border-radius:5px; /* Bordas arredondadas */
+         cursor:pointer; /* Cursor de mãozinha */
+         font-size:10px; /* Fonte pequena */
+         transition:background 0.3s ease; /* Suaviza troca de cor */
+         white-space:nowrap; /* Impede quebra de linha no texto */
          }
-
          /* Cor ao passar o mouse */
          .btn-voltar:hover,
          .btn-limpar:hover,
          .btn-excel:hover { background:#0056b3; }
-
          .table-container {
-            width:100%; /* Ocupa toda largura */
-            max-height:85vh; /* Altura máxima */
-            overflow-x:auto; /* Scroll horizontal */
-            overflow-y:auto; /* Scroll vertical */
-            background:rgba(255,255,255,0.95); /* Fundo branco translúcido */
-            border-radius:6px; /* Bordas arredondadas */
-            box-shadow:0px 2px 4px rgba(0,0,0,0.2); /* Sombra leve */
+         width:100%; /* Ocupa toda largura */
+         max-height:85vh; /* Altura máxima */
+         overflow-x:auto; /* Scroll horizontal */
+         overflow-y:auto; /* Scroll vertical */
+         background:rgba(255,255,255,0.95); /* Fundo branco translúcido */
+         border-radius:6px; /* Bordas arredondadas */
+         box-shadow:0px 2px 4px rgba(0,0,0,0.2); /* Sombra leve */
          }
-
          table {
-            width:max-content; /* Largura mínima baseada no conteúdo */
-            border-collapse:collapse; /* Remove espaçamento entre bordas */
-            table-layout:fixed; /* Colunas fixas */
-            min-width:100%; /* Largura mínima = container */
-            font-size:11px; /* Fonte pequena */
+         width:max-content; /* Largura mínima baseada no conteúdo */
+         border-collapse:collapse; /* Remove espaçamento entre bordas */
+         table-layout:fixed; /* Colunas fixas */
+         min-width:100%; /* Largura mínima = container */
+         font-size:11px; /* Fonte pequena */
          }
-
          th, td {
-            border:1px solid #ccc; /* Bordas cinza */
-            padding:3px 4px; /* Espaço interno */
-            text-align:center; /* Texto centralizado */
-            font-weight:normal; /* Peso da fonte normal */
+         border:1px solid #ccc; /* Bordas cinza */
+         padding:3px 4px; /* Espaço interno */
+         text-align:center; /* Texto centralizado */
+         font-weight:normal; /* Peso da fonte normal */
          }
-
          th {
-            background:#007bff; /* Azul */
-            color:white; /* Texto branco */
-            position:sticky; /* Cabeçalho fixo no topo */
-            top:0; /* Gruda no topo */
-            z-index:3; /* Acima das linhas */
-            font-weight:bold; /* Negrito */
-            font-size:11px; /* Fonte pequena */
+         background:#007bff; /* Azul */
+         color:white; /* Texto branco */
+         position:sticky; /* Cabeçalho fixo no topo */
+         top:0; /* Gruda no topo */
+         z-index:3; /* Acima das linhas */
+         font-weight:bold; /* Negrito */
+         font-size:11px; /* Fonte pequena */
          }
-
          /* Alternância de cores entre linhas pares e ímpares */
          tr:nth-child(even) td { background:rgba(240,240,240,0.85); }
          tr:nth-child(odd) td { background:rgba(255,255,255,0.55); }
-
          /* Destaque ao passar o mouse */
          tr:hover td { background:#fdf59f !important; cursor:pointer; }
-
          /* Células editáveis com fundo diferenciado */
          td[contenteditable="true"] { background:#fff8dc; outline:none; }
-
          /* Linha selecionada */
          tr.ativo td { background:orange !important; font-weight:bold; color:#fff; }
-
          /* Campos de data */
          input[type="date"] { font-size:10px; padding:3px; border:1px solid #ccc; border-radius:4px; width:120px; }
-
          /* Ajuste de largura de colunas específicas */
          th:nth-child(12), td:nth-child(12) { min-width:100px; }
          th:nth-child(13), td:nth-child(13) { min-width:130px; }
          th:nth-child(14), td:nth-child(14) {
-            min-width:180px; /* largura mínima */
-            max-width:350px; /* largura máxima */
-            padding:3px 5px; /* espaçamento */
-            text-align:left; /* alinha à esquerda */
-            white-space:nowrap; /* impede quebra de linha */
-            overflow:hidden; /* oculta excesso de texto */
+         min-width:180px; /* largura mínima */
+         max-width:350px; /* largura máxima */
+         padding:3px 5px; /* espaçamento */
+         text-align:left; /* alinha à esquerda */
+         white-space:nowrap; /* impede quebra de linha */
+         overflow:hidden; /* oculta excesso de texto */
          }
-
          /* Responsividade para telas médias */
          @media (max-width:1024px) {
-            h1 { font-size:1.1rem; } /* reduz título */
-            table, th, td { font-size:10px; padding:2px 3px; } /* fonte menor */
-            .btn-voltar, .btn-limpar, .btn-excel { font-size:9px; padding:2px 5px; } /* botões menores */
+         h1 { font-size:1.1rem; } /* reduz título */
+         table, th, td { font-size:10px; padding:2px 3px; } /* fonte menor */
+         .btn-voltar, .btn-limpar, .btn-excel { font-size:9px; padding:2px 5px; } /* botões menores */
          }
-
          /* Responsividade para tablets */
          @media (max-width:768px) {
-            .filtro-container input { width:100%; } /* inputs ocupam largura total */
-            table { min-width:750px; } /* largura mínima da tabela */
+         .filtro-container input { width:100%; } /* inputs ocupam largura total */
+         table { min-width:750px; } /* largura mínima da tabela */
          }
-
          /* Responsividade para celulares */
          @media (max-width:480px) {
-            h1 { font-size:1rem; } /* título menor */
-            th, td { font-size:9px; padding:2px 2px; } /* fonte e espaçamento menores */
-            .filtro-container { flex-direction:column; align-items:stretch; } /* filtros em coluna */
-            .btn-voltar, .btn-limpar, .btn-excel, .filtro-container input { width:100%; } /* ocupam toda largura */
+         h1 { font-size:1rem; } /* título menor */
+         th, td { font-size:9px; padding:2px 2px; } /* fonte e espaçamento menores */
+         .filtro-container { flex-direction:column; align-items:stretch; } /* filtros em coluna */
+         .btn-voltar, .btn-limpar, .btn-excel, .filtro-container input { width:100%; } /* ocupam toda largura */
          }
       </style>
    </head>
    <body>
       <h1>Lista de Invoices</h1>
-
       <!-- Área dos filtros -->
       <div class="filtro-container">
          <button class="btn-voltar" onclick="window.location.href='index.html'">⬅ Voltar</button>
@@ -176,7 +159,6 @@
          <button class="btn-limpar" id="btnLimpar">✖ Limpar</button>
          <button class="btn-excel" id="btnExcel">📄 Exportar Excel</button>
       </div>
-
       <!-- Área da tabela -->
       <div class="table-container">
          <table id="tabela">
@@ -201,13 +183,12 @@
             <tbody id="dadosTabela"></tbody>
          </table>
       </div>
-
       <!-- Script principal: conecta ao Firebase e monta tabela -->
       <script type="module">
          import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-         import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+         import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
          
-           // === Firebase config ===
+         // === Firebase config ===
          const firebaseConfig = {
              apiKey: "AIzaSyACGNNnZcHU1yA3Vozek5cD6egRnADDKUI",
              authDomain: "controle-mercado-externo-9c3e8.firebaseapp.com",
@@ -221,19 +202,10 @@
          const app = initializeApp(firebaseConfig);
          const db = getFirestore(app);
          
-         const registros = []; // Array para armazenar os dados
+         const registros = [];
          const tabela = document.getElementById("dadosTabela");
-
-         // Filtros
-         const filtroInvoice = document.getElementById("filtroInvoice");
-         const filtroPO = document.getElementById("filtroPO");
-         const filtroFaturamento = document.getElementById("filtroFaturamento");
-         const filtroCarregamento = document.getElementById("filtroCarregamento");
-         const filtroEmbarque = document.getElementById("filtroEmbarque");
-         const btnLimpar = document.getElementById("btnLimpar");
-         const btnExcel = document.getElementById("btnExcel");
          
-         // Exibe dados na tabela
+         // === Função que exibe os dados ===
          function exibirDados(dados) {
             tabela.innerHTML = "";
             if(dados.length === 0){
@@ -263,15 +235,36 @@
             }
          }
          
-         // Carrega dados do Firestore
+         // === Carregar só concluídas e ordenar pelo embarque ===
          async function carregarDadosFirestore(){
-            const querySnapshot = await getDocs(collection(db,"invoices"));
+            const q = query(
+               collection(db,"invoices"), 
+               where("status", "==", "Concluído")
+            );
+            const querySnapshot = await getDocs(q);
+         
             querySnapshot.forEach(doc => registros.push(doc.data()));
+         
+            // 🔹 Ordenar pelo campo embarque (assumindo formato dd/mm/yyyy em texto)
+            registros.sort((a,b) => {
+               const dataA = a.embarque ? a.embarque.split("/").reverse().join("-") : "";
+               const dataB = b.embarque ? b.embarque.split("/").reverse().join("-") : "";
+               return new Date(dataA) - new Date(dataB);
+            });
+         
             exibirDados(registros);
          }
          carregarDadosFirestore();
          
-         // Filtragem
+         // === Mantive todos os filtros originais ===
+         const filtroInvoice = document.getElementById("filtroInvoice");
+         const filtroPO = document.getElementById("filtroPO");
+         const filtroFaturamento = document.getElementById("filtroFaturamento");
+         const filtroCarregamento = document.getElementById("filtroCarregamento");
+         const filtroEmbarque = document.getElementById("filtroEmbarque");
+         const btnLimpar = document.getElementById("btnLimpar");
+         const btnExcel = document.getElementById("btnExcel");
+         
          function filtrar(){
             const invoiceFiltro = filtroInvoice.value.toLowerCase();
             const poFiltro = filtroPO.value.toLowerCase();
@@ -287,10 +280,8 @@
             );
             exibirDados(dadosFiltrados);
          }
-         
          [filtroInvoice,filtroPO,filtroFaturamento,filtroCarregamento,filtroEmbarque].forEach(f => f.addEventListener("input", filtrar));
          
-         // Botão limpar
          btnLimpar.addEventListener("click",()=>{
             filtroInvoice.value="";
             filtroPO.value="";
@@ -301,18 +292,16 @@
             filtroInvoice.focus();
          });
          
-         // Exportar para Excel
+         // Exportar Excel continua igual
          btnExcel.addEventListener("click", ()=>{
             const tabelaFiltrada = document.getElementById("tabela");
             const wb = XLSX.utils.book_new();
             const ws_data = [];
          
-            // Cabeçalho
             const cabecalho = [];
             tabelaFiltrada.querySelectorAll("thead th").forEach(th => cabecalho.push(th.innerText.toUpperCase())); 
             ws_data.push(cabecalho);
          
-            // Linhas visíveis
             tabelaFiltrada.querySelectorAll("tbody tr").forEach(tr => {
                if(tr.style.display === "none") return;
                const linha = [];
