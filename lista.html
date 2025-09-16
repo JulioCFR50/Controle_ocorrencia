@@ -147,10 +147,10 @@
       </style>
    </head>
    <body>
-      <h1>Lista de Invoices</h1>
+      <h1>Lista de Invoices Faturadas</h1>
       <!-- Área dos filtros -->
       <div class="filtro-container">
-         <button class="btn-voltar" onclick="window.location.href='index.html'">⬅ Voltar</button>
+         <button class="btn-voltar" onclick="window.location.href='index.html'">⬅ Voltar</button>         
          <input type="text" id="filtroInvoice" placeholder="Pesquisar por Invoice" />
          <input type="text" id="filtroPO" placeholder="Pesquisar por PO#" />
          <input type="text" id="filtroFaturamento" placeholder="Pesquisar por DT Faturamento" />
@@ -158,7 +158,9 @@
          <input type="text" id="filtroEmbarque" placeholder="Pesquisar por DT Embarque" />
          <button class="btn-limpar" id="btnLimpar">✖ Limpar</button>
          <button class="btn-excel" id="btnExcel">📄 Exportar Excel</button>
+         <button class="btn-voltar" onclick="window.location.href='valor.html'">Consultar Valor ➡</button>
       </div>
+
       <!-- Área da tabela -->
       <div class="table-container">
          <table id="tabela">
@@ -228,7 +230,7 @@
                      <td>${r.instrucao||""}</td>
                      <td>${r.producao||""}</td>
                      <td>${r.dtProduto||""}</td>
-                     <td>${r.observacoes||""}</td>
+                     <td contenteditable="true">${r.observacoes||""}</td>
                   `;
                   tabela.appendChild(linha);
                });
