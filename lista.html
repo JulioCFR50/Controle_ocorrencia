@@ -1,320 +1,194 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-   <head>
-      <meta charset="UTF-8" />
-      <!-- Define a codificação de caracteres para UTF-8 -->
-      <meta http-equiv="X-UA-Compatible" content="IE=edge">
-      <!-- Força compatibilidade com versões antigas do IE -->
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <!-- Responsividade: ajusta para telas menores -->
-      <meta name="description" content="Pagina Relatorio Mercado Externo">
-      <!-- Descrição da página (SEO) -->
-      <meta name="author" content="Julio Cesar">
-      <!-- Autor da página -->
-      <title>Lista de Invoices</title>
-      <!-- Biblioteca para exportar planilhas Excel -->
-      <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
-      <style>
-         /* Reset básico de margin/padding e cálculo de largura com bordas */
-         * { margin:0; padding:0; box-sizing:border-box; }
-         body {
-         font-family: Arial, sans-serif; /* Fonte padrão */
-         background: url("exportacao.png") no-repeat center center/cover; /* Fundo com imagem centralizada e cobrindo a tela */
-         padding: 10px; /* Espaço interno */
-         min-height: 90vh; /* Altura mínima: 90% da tela */
-         line-height: 1.2; /* Espaçamento entre linhas */
-         color: #333; /* Cor do texto */
-         }
-         h1 {
-         text-align: center; /* Centraliza texto */
-         margin-bottom: 10px; /* Espaço abaixo */
-         font-size: 1.2rem; /* Tamanho da fonte */
-         color: #fff; /* Cor branca */
-         text-shadow: 1px 1px 3px #000; /* Sombra no texto */
-         position: sticky; /* Fixa o título no topo ao rolar */
-         top: 0; /* Distância até o topo */
-         background: rgba(0,0,0,0.3); /* Fundo semi-transparente */
-         z-index:5; /* Prioridade na sobreposição */
-         padding:6px 0; /* Espaçamento interno */
-         border-radius:6px; /* Bordas arredondadas */
-         }
-         .filtro-container {
-         display:flex; /* Exibe em linha */
-         flex-wrap:wrap; /* Quebra para outra linha se não couber */
-         justify-content:flex-start; /* Alinha itens à esquerda */
-         gap:6px; /* Espaço entre os elementos */
-         margin-bottom:10px; /* Espaço abaixo */
-         align-items:center; /* Centraliza verticalmente */
-         }
-         .filtro-container input {
-         padding:4px 6px; /* Espaçamento interno */
-         font-size:10px; /* Fonte pequena */
-         border:1px solid #ccc; /* Borda cinza clara */
-         border-radius:5px; /* Bordas arredondadas */
-         width:160px; /* Largura fixa */
-         }
-         /* Botões padrões */
-         .btn-voltar,
-         .btn-limpar,
-         .btn-excel {
-         display:inline-block; /* Fica em linha */
-         margin:0; /* Remove margem */
-         background:#007bff; /* Azul padrão */
-         color:white; /* Texto branco */
-         padding:3px 6px; /* Espaçamento interno */
-         border:none; /* Sem borda */
-         border-radius:5px; /* Bordas arredondadas */
-         cursor:pointer; /* Cursor de mãozinha */
-         font-size:10px; /* Fonte pequena */
-         transition:background 0.3s ease; /* Suaviza troca de cor */
-         white-space:nowrap; /* Impede quebra de linha no texto */
-         }
-         /* Cor ao passar o mouse */
-         .btn-voltar:hover,
-         .btn-limpar:hover,
-         .btn-excel:hover { background:#0056b3; }
-         .table-container {
-         width:100%; /* Ocupa toda largura */
-         max-height:85vh; /* Altura máxima */
-         overflow-x:auto; /* Scroll horizontal */
-         overflow-y:auto; /* Scroll vertical */
-         background:rgba(255,255,255,0.95); /* Fundo branco translúcido */
-         border-radius:6px; /* Bordas arredondadas */
-         box-shadow:0px 2px 4px rgba(0,0,0,0.2); /* Sombra leve */
-         }
-         table {
-         width:max-content; /* Largura mínima baseada no conteúdo */
-         border-collapse:collapse; /* Remove espaçamento entre bordas */
-         table-layout:fixed; /* Colunas fixas */
-         min-width:100%; /* Largura mínima = container */
-         font-size:11px; /* Fonte pequena */
-         }
-         th, td {
-         border:1px solid #ccc; /* Bordas cinza */
-         padding:3px 4px; /* Espaço interno */
-         text-align:center; /* Texto centralizado */
-         font-weight:normal; /* Peso da fonte normal */
-         }
-         th {
-         background:#007bff; /* Azul */
-         color:white; /* Texto branco */
-         position:sticky; /* Cabeçalho fixo no topo */
-         top:0; /* Gruda no topo */
-         z-index:3; /* Acima das linhas */
-         font-weight:bold; /* Negrito */
-         font-size:11px; /* Fonte pequena */
-         }
-         /* Alternância de cores entre linhas pares e ímpares */
-         tr:nth-child(even) td { background:rgba(240,240,240,0.85); }
-         tr:nth-child(odd) td { background:rgba(255,255,255,0.55); }
-         /* Destaque ao passar o mouse */
-         tr:hover td { background:#fdf59f !important; cursor:pointer; }
-         /* Células editáveis com fundo diferenciado */
-         td[contenteditable="true"] { background:#fff8dc; outline:none; }
-         /* Linha selecionada */
-         tr.ativo td { background:orange !important; font-weight:bold; color:#fff; }
-         /* Campos de data */
-         input[type="date"] { font-size:10px; padding:3px; border:1px solid #ccc; border-radius:4px; width:120px; }
-         /* Ajuste de largura de colunas específicas */
-         th:nth-child(12), td:nth-child(12) { min-width:100px; }
-         th:nth-child(13), td:nth-child(13) { min-width:130px; }
-         th:nth-child(14), td:nth-child(14) {
-         min-width:180px; /* largura mínima */
-         max-width:350px; /* largura máxima */
-         padding:3px 5px; /* espaçamento */
-         text-align:left; /* alinha à esquerda */
-         white-space:nowrap; /* impede quebra de linha */
-         overflow:hidden; /* oculta excesso de texto */
-         }
-         /* Responsividade para telas médias */
-         @media (max-width:1024px) {
-         h1 { font-size:1.1rem; } /* reduz título */
-         table, th, td { font-size:10px; padding:2px 3px; } /* fonte menor */
-         .btn-voltar, .btn-limpar, .btn-excel { font-size:9px; padding:2px 5px; } /* botões menores */
-         }
-         /* Responsividade para tablets */
-         @media (max-width:768px) {
-         .filtro-container input { width:100%; } /* inputs ocupam largura total */
-         table { min-width:750px; } /* largura mínima da tabela */
-         }
-         /* Responsividade para celulares */
-         @media (max-width:480px) {
-         h1 { font-size:1rem; } /* título menor */
-         th, td { font-size:9px; padding:2px 2px; } /* fonte e espaçamento menores */
-         .filtro-container { flex-direction:column; align-items:stretch; } /* filtros em coluna */
-         .btn-voltar, .btn-limpar, .btn-excel, .filtro-container input { width:100%; } /* ocupam toda largura */
-         }
-      </style>
-   </head>
-   <body>
-      <h1>Lista de Invoices Faturadas</h1>
-      <!-- Área dos filtros -->
-      <div class="filtro-container">
-         <button class="btn-voltar" onclick="window.location.href='index.html'">⬅ Voltar</button>         
-         <input type="text" id="filtroInvoice" placeholder="Pesquisar por Invoice" />
-         <input type="text" id="filtroPO" placeholder="Pesquisar por PO#" />
-         <input type="text" id="filtroFaturamento" placeholder="Pesquisar por DT Faturamento" />
-         <input type="text" id="filtroCarregamento" placeholder="Pesquisar por DT Carregamento" />
-         <input type="text" id="filtroEmbarque" placeholder="Pesquisar por DT Embarque" />
-         <button class="btn-limpar" id="btnLimpar">✖ Limpar</button>
-         <button class="btn-excel" id="btnExcel">📄 Exportar Excel</button>
-         <button class="btn-voltar" onclick="window.location.href='valor.html'">Consultar Valor ➡</button>
-      </div>
+<head>
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Pagina Relatorio Nota Devolução">
+<meta name="author" content="Julio Cesar">
+<title>Lista de Devolução</title>
+<script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+<style>
+/* ===== Mantive todo o estilo original ===== */
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: Arial, sans-serif; background: url("exportacao.png") no-repeat center center/cover; padding:10px; min-height:90vh; line-height:1.2; color:#333; }
+h1 { text-align:center; margin-bottom:10px; font-size:1.2rem; color:#fff; text-shadow:1px 1px 3px #000; position:sticky; top:0; background:rgba(0,0,0,0.3); z-index:5; padding:6px 0; border-radius:6px; }
+.filtro-container { display:flex; flex-wrap:wrap; justify-content:flex-start; gap:6px; margin-bottom:10px; align-items:center; }
+.filtro-container input { padding:4px 6px; font-size:10px; border:1px solid #ccc; border-radius:5px; width:160px; }
+.btn-voltar, .btn-limpar, .btn-excel { display:inline-block; margin:0; background:#007bff; color:white; padding:3px 6px; border:none; border-radius:5px; cursor:pointer; font-size:10px; transition:background 0.3s ease; white-space:nowrap; }
+.btn-voltar:hover, .btn-limpar:hover, .btn-excel:hover { background:#0056b3; }
+.table-container { width:100%; max-height:85vh; overflow-x:auto; overflow-y:auto; background:rgba(255,255,255,0.95); border-radius:6px; box-shadow:0px 2px 4px rgba(0,0,0,0.2); }
+table { width:max-content; border-collapse:collapse; table-layout:fixed; min-width:100%; font-size:11px; }
+th, td { border:1px solid #ccc; padding:3px 4px; text-align:center; font-weight:normal; }
+th { background:#007bff; color:white; position:sticky; top:0; z-index:3; font-weight:bold; font-size:11px; }
+tr:nth-child(even) td { background:rgba(240,240,240,0.85); }
+tr:nth-child(odd) td { background:rgba(255,255,255,0.55); }
+tr:hover td { background:#fdf59f !important; cursor:pointer; }
+td[contenteditable="true"] { background:#fff8dc; outline:none; }
+tr.ativo td { background:orange !important; font-weight:bold; color:#fff; }
+input[type="date"] { font-size:10px; padding:3px; border:1px solid #ccc; border-radius:4px; width:120px; }
+th:nth-child(12), td:nth-child(12) { min-width:100px; }
+th:nth-child(13), td:nth-child(13) { min-width:130px; }
+th:nth-child(14), td:nth-child(14) { min-width:180px; max-width:350px; padding:3px 5px; text-align:left; white-space:nowrap; overflow:hidden; }
+@media (max-width:1024px) { h1 { font-size:1.1rem; } table, th, td { font-size:10px; padding:2px 3px; } .btn-voltar, .btn-limpar, .btn-excel { font-size:9px; padding:2px 5px; } }
+@media (max-width:768px) { .filtro-container input { width:100%; } table { min-width:750px; } }
+@media (max-width:480px) { h1 { font-size:1rem; } th, td { font-size:9px; padding:2px 2px; } .filtro-container { flex-direction:column; align-items:stretch; } .btn-voltar, .btn-limpar, .btn-excel, .filtro-container input { width:100%; } }
+</style>
+</head>
+<body>
+<h1>Lista de Devoluções</h1>
 
-      <!-- Área da tabela -->
-      <div class="table-container">
-         <table id="tabela">
-            <thead>
-               <tr>
-                  <th>Invoice</th>
-                  <th>PO#</th>
-                  <th>DT Faturamento</th>
-                  <th>DT Carregamento</th>
-                  <th>Dead-Line Draft</th>
-                  <!--<th>Dead-line VGM</th>-->
-                  <th>Dead-line Carga</th>
-                  <th>DT Embarque</th>
-                  <th>Status Faturamento</th>
-                  <th>Status Booking</th>
-                  <th>Instrução de Embarque</th>
-                  <th>Status Produção</th>
-                  <th>Protidão do Pedido</th>
-                  <th>Observações</th>
-               </tr>
-            </thead>
-            <tbody id="dadosTabela"></tbody>
-         </table>
-      </div>
-      <!-- Script principal: conecta ao Firebase e monta tabela -->
-      <script type="module">
-         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-         import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-         
-         // === Firebase config ===
-         const firebaseConfig = {
-             apiKey: "AIzaSyACGNNnZcHU1yA3Vozek5cD6egRnADDKUI",
-             authDomain: "controle-mercado-externo-9c3e8.firebaseapp.com",
-             projectId: "controle-mercado-externo-9c3e8",
-             storageBucket: "controle-mercado-externo-9c3e8.appspot.com",
-             messagingSenderId: "523084089883",
-             appId: "1:523084089883:web:6b9750c6df679852b346be",
-             measurementId: "G-RCJG4ZWJ9E"
-         };
-         
-         const app = initializeApp(firebaseConfig);
-         const db = getFirestore(app);
-         
-         const registros = [];
-         const tabela = document.getElementById("dadosTabela");
-         
-         // === Função que exibe os dados ===
-         function exibirDados(dados) {
-            tabela.innerHTML = "";
-            if(dados.length === 0){
-               const linha = document.createElement("tr");
-               linha.innerHTML = `<td colspan="14" style="color:gray;font-style:italic;">Nenhuma INVOICE encontrada.</td>`;
-               tabela.appendChild(linha);
-            } else {
-               dados.forEach(r => {
-                  const linha = document.createElement("tr");
-                  linha.innerHTML = `
-                     <td>${r.invoice||""}</td>
-                     <td>${r.po||""}</td>
-                     <td>${r.dtFaturamento||""}</td>
-                     <td>${r.dtCarregamento||""}</td>
-                     <td>${r.draft||""}</td>
-                     <td>${r.carga||""}</td>
-                     <td>${r.embarque||""}</td>
-                     <td>${r.status||""}</td>
-                     <td>${r.booking||""}</td>
-                     <td>${r.instrucao||""}</td>
-                     <td>${r.producao||""}</td>
-                     <td>${r.dtProduto||""}</td>
-                     <td contenteditable="true">${r.observacoes||""}</td>
-                  `;
-                  tabela.appendChild(linha);
-               });
-            }
-         }
-         
-         // === Carregar só concluídas e ordenar pelo embarque ===
-         async function carregarDadosFirestore(){
-            const q = query(
-               collection(db,"invoices"), 
-               where("status", "==", "Concluído")
-            );
-            const querySnapshot = await getDocs(q);
-         
-            querySnapshot.forEach(doc => registros.push(doc.data()));
-         
-            // 🔹 Ordenar pelo campo embarque (assumindo formato dd/mm/yyyy em texto)
-            registros.sort((a,b) => {
-               const dataA = a.embarque ? a.embarque.split("/").reverse().join("-") : "";
-               const dataB = b.embarque ? b.embarque.split("/").reverse().join("-") : "";
-               return new Date(dataA) - new Date(dataB);
-            });
-         
-            exibirDados(registros);
-         }
-         carregarDadosFirestore();
-         
-         // === Mantive todos os filtros originais ===
-         const filtroInvoice = document.getElementById("filtroInvoice");
-         const filtroPO = document.getElementById("filtroPO");
-         const filtroFaturamento = document.getElementById("filtroFaturamento");
-         const filtroCarregamento = document.getElementById("filtroCarregamento");
-         const filtroEmbarque = document.getElementById("filtroEmbarque");
-         const btnLimpar = document.getElementById("btnLimpar");
-         const btnExcel = document.getElementById("btnExcel");
-         
-         function filtrar(){
-            const invoiceFiltro = filtroInvoice.value.toLowerCase();
-            const poFiltro = filtroPO.value.toLowerCase();
-            const faturamentoFiltro = filtroFaturamento.value.toLowerCase();
-            const carregamentoFiltro = filtroCarregamento.value.toLowerCase();
-            const embarqueFiltro = filtroEmbarque.value.toLowerCase();
-            const dadosFiltrados = registros.filter(r =>
-               (r.invoice||"").toLowerCase().includes(invoiceFiltro) &&
-               (r.po||"").toLowerCase().includes(poFiltro) &&
-               (r.dtFaturamento||"").toLowerCase().includes(faturamentoFiltro) &&
-               (r.dtCarregamento||"").toLowerCase().includes(carregamentoFiltro) &&
-               (r.embarque||"").toLowerCase().includes(embarqueFiltro)
-            );
-            exibirDados(dadosFiltrados);
-         }
-         [filtroInvoice,filtroPO,filtroFaturamento,filtroCarregamento,filtroEmbarque].forEach(f => f.addEventListener("input", filtrar));
-         
-         btnLimpar.addEventListener("click",()=>{
-            filtroInvoice.value="";
-            filtroPO.value="";
-            filtroFaturamento.value="";
-            filtroCarregamento.value="";
-            filtroEmbarque.value="";
-            filtrar();
-            filtroInvoice.focus();
-         });
-         
-         // Exportar Excel continua igual
-         btnExcel.addEventListener("click", ()=>{
-            const tabelaFiltrada = document.getElementById("tabela");
-            const wb = XLSX.utils.book_new();
-            const ws_data = [];
-         
-            const cabecalho = [];
-            tabelaFiltrada.querySelectorAll("thead th").forEach(th => cabecalho.push(th.innerText.toUpperCase())); 
-            ws_data.push(cabecalho);
-         
-            tabelaFiltrada.querySelectorAll("tbody tr").forEach(tr => {
-               if(tr.style.display === "none") return;
-               const linha = [];
-               tr.querySelectorAll("td").forEach(td => linha.push(td.innerText));
-               ws_data.push(linha);
-            });
-         
-            const ws = XLSX.utils.aoa_to_sheet(ws_data);
-            XLSX.utils.book_append_sheet(wb, ws, "Invoices");
-            XLSX.writeFile(wb,"Lista_Invoices_Filtrada.xlsx");
-         });
-      </script>
-   </body>
+<div class="filtro-container">
+    <button class="btn-voltar" onclick="window.location.href='index.html'">⬅ Voltar</button>
+    <input type="text" id="filtroTransportadora" placeholder="Transportadora" />
+    <input type="text" id="filtroNFOrigem" placeholder="NF Origem" />
+    <input type="text" id="filtroCliente" placeholder="Cliente" />
+    <input type="text" id="filtroDtEmissao" placeholder="DT Emissão" />
+    <input type="text" id="filtroDtEntrega" placeholder="Dt Entrega" />
+    <input type="text" id="filtroNFD" placeholder="NFD" />
+    <input type="text" id="filtroMotivo" placeholder="Motivo Devolução" />
+    <input type="text" id="filtroStatus" placeholder="Status Atual" />
+    <input type="text" id="filtroAcao" placeholder="Ação da devolução" />
+    <input type="text" id="filtroValidacao" placeholder="Validação" />
+    <input type="text" id="filtroItens" placeholder="Itens da devolução" />
+    <input type="text" id="filtroFaturamentoContra" placeholder="Faturamento Contra" />
+    <button class="btn-limpar" id="btnLimpar">✖ Limpar</button>
+    <button class="btn-excel" id="btnExcel">📄 Exportar Excel</button>
+</div>
+
+<div class="table-container">
+    <table id="tabela">
+        <thead>
+            <tr>
+                <th>Transportadora</th>
+                <th>NF Origem</th>
+                <th>Cliente</th>
+                <th>DT Emissão</th>
+                <th>Dt Entrega</th>
+                <th>NFD</th>
+                <th>Dt Emissão</th>
+                <th>Motivo Devolução</th>
+                <th>Status Atual</th>
+                <th>Ação da devolução</th>
+                <th>Validação</th>
+                <th>Itens da devolução</th>
+                <th>Faturamento Contra</th>
+                <th>Observações</th>
+            </tr>
+        </thead>
+        <tbody id="dadosTabela"></tbody>
+    </table>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyDetNhQe-U_xoBD4o7oytKhj_lyH6PR25M",
+    authDomain: "controle-de-ocorrencia-4ffc2.firebaseapp.com",
+    projectId: "controle-de-ocorrencia-4ffc2",
+    storageBucket: "controle-de-ocorrencia-4ffc2.firebasestorage.app",
+    messagingSenderId: "230686446885",
+    appId: "1:230686446885:web:3b992cebd2e9024c09f6cc"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const registros = [];
+const tabela = document.getElementById("dadosTabela");
+
+async function carregarDados(){
+    const snapshot = await getDocs(collection(db,"NotaDevolucao"));
+    snapshot.forEach(doc => registros.push(doc.data()));
+    exibirDados(registros);
+}
+
+function exibirDados(dados){
+    tabela.innerHTML="";
+    if(dados.length === 0){
+        tabela.innerHTML=`<tr><td colspan="14" style="color:gray;font-style:italic;">Nenhuma Nota Devolução encontrada.</td></tr>`;
+        return;
+    }
+    dados.forEach(r=>{
+        const tr = document.createElement("tr");
+        tr.innerHTML=`
+            <td>${r.transportadora||""}</td>
+            <td>${r.nfOrigem||""}</td>
+            <td>${r.cliente||""}</td>
+            <td>${r.dtEmissao||""}</td>
+            <td>${r.dtEntrega||""}</td>
+            <td>${r.nfd||""}</td>
+            <td>${r.dtNfd||""}</td>
+            <td>${r.motivo||""}</td>
+            <td>${r.statusAtual||""}</td>
+            <td>${r.acaoDevolucao||""}</td>
+            <td>${r.validacao||""}</td>
+            <td>${r.itensDevolucao||""}</td>
+            <td>${r.faturamentoContra||""}</td>
+            <td contenteditable="true">${r.observacoes||""}</td>
+        `;
+        tabela.appendChild(tr);
+    });
+}
+
+// ==== Filtros ====
+const filtros = {
+    transportadora: document.getElementById("filtroTransportadora"),
+    nfOrigem: document.getElementById("filtroNFOrigem"),
+    cliente: document.getElementById("filtroCliente"),
+    dtEmissao: document.getElementById("filtroDtEmissao"),
+    dtEntrega: document.getElementById("filtroDtEntrega"),
+    nfd: document.getElementById("filtroNFD"),
+    motivo: document.getElementById("filtroMotivo"),
+    status: document.getElementById("filtroStatus"),
+    acao: document.getElementById("filtroAcao"),
+    validacao: document.getElementById("filtroValidacao"),
+    itens: document.getElementById("filtroItens"),
+    faturamentoContra: document.getElementById("filtroFaturamentoContra")
+};
+
+function filtrar(){
+    let filtrados = registros.filter(r=>{
+        return (!filtros.transportadora.value || r.transportadora.toLowerCase().includes(filtros.transportadora.value.toLowerCase())) &&
+               (!filtros.nfOrigem.value || r.nfOrigem.toLowerCase().includes(filtros.nfOrigem.value.toLowerCase())) &&
+               (!filtros.cliente.value || r.cliente.toLowerCase().includes(filtros.cliente.value.toLowerCase())) &&
+               (!filtros.dtEmissao.value || r.dtEmissao.includes(filtros.dtEmissao.value)) &&
+               (!filtros.dtEntrega.value || r.dtEntrega.includes(filtros.dtEntrega.value)) &&
+               (!filtros.nfd.value || r.nfd.toLowerCase().includes(filtros.nfd.value.toLowerCase())) &&
+               (!filtros.motivo.value || r.motivo.toLowerCase().includes(filtros.motivo.value.toLowerCase())) &&
+               (!filtros.status.value || r.statusAtual.toLowerCase().includes(filtros.status.value.toLowerCase())) &&
+               (!filtros.acao.value || r.acaoDevolucao.toLowerCase().includes(filtros.acao.value.toLowerCase())) &&
+               (!filtros.validacao.value || r.validacao.toLowerCase().includes(filtros.validacao.value.toLowerCase())) &&
+               (!filtros.itens.value || r.itensDevolucao.toLowerCase().includes(filtros.itens.value.toLowerCase())) &&
+               (!filtros.faturamentoContra.value || r.faturamentoContra.toLowerCase().includes(filtros.faturamentoContra.value.toLowerCase()));
+    });
+    exibirDados(filtrados);
+}
+
+Object.values(filtros).forEach(f=>f.addEventListener("input", filtrar));
+document.getElementById("btnLimpar").addEventListener("click",()=>{
+    Object.values(filtros).forEach(f=>f.value="");
+    filtrar();
+});
+
+// ==== Export Excel ====
+document.getElementById("btnExcel").addEventListener("click",()=>{
+    const wb = XLSX.utils.book_new();
+    const ws_data = [];
+    const cabecalho = Array.from(document.querySelectorAll("#tabela thead th")).map(th=>th.innerText);
+    ws_data.push(cabecalho);
+    document.querySelectorAll("#tabela tbody tr").forEach(tr=>{
+        const linha = Array.from(tr.querySelectorAll("td")).map(td=>td.innerText);
+        ws_data.push(linha);
+    });
+    const ws = XLSX.utils.aoa_to_sheet(ws_data);
+    XLSX.utils.book_append_sheet(wb, ws, "NotaDevolucao");
+    XLSX.writeFile(wb,"Lista_NotaDevolucao.xlsx");
+});
+
+carregarDados();
+</script>
+</body>
 </html>
