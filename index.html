@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Cadastro Ocorrência">
+    <meta name="author" content="Julio Cesar">
+    <title>Controle Ocorrência</title>
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        html, body { height:100%; font-family: Arial, sans-serif; background: url("coqueiral.png") no-repeat center center fixed; background-size: cover; overflow: hidden;}
+        .container { position: fixed; top:0; left:0; right:0; bottom:0; width:100%; height:100%; background: rgba(255,255,255,0.30); backdrop-filter: blur(10px); padding:15px; border-radius:8px; box-shadow:0 8px 15px rgba(0,0,0,0.3); display:flex; flex-direction:column; overflow:auto; }
+        .top-area { position: sticky; top:0; z-index:20; background: rgba(255,255,255,0.20); backdrop-filter: blur(6px); padding:8px 10px; border-radius:6px; box-shadow:0 1px 4px rgba(0,0,0,0.2); margin-bottom:6px; }
+        .top-area h1 { font-size:1.2rem; text-align:center; color:#fc0505; margin-bottom:8px; }
+        .pesquisa-container { display:flex; flex-wrap:nowrap; gap:6px; margin-bottom:10px; }
+        .pesquisa-container input, .pesquisa-container button { font-size:0.75rem; padding:2px; border-radius:4px; border:1px solid #ccc; text-align:center; }
+        .pesquisa-container input { flex:1 1 100px; min-width:90px; }
+        .pesquisa-container button { cursor:pointer; flex:1 1 90px; }
+        .pesquisa-container button.salvar { background:#28a745; color:white; border:none; }
+        .pesquisa-container button.limpar { background:#f0f0f0; color:#333; border:none; }
+        .pesquisa-container button.excluir { background:#dc3545; color:white; border:none; }
+        .pesquisa-container button.btn-lista { background:#007bff; color:white; border:none; }
+        form { display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:10px; margin-bottom:6px; }
+        form div { display:flex; flex-direction:column; }
+        form div label { font-size:0.75rem; }
+        input, select { width:100%; font-size:0.75rem; padding:4px; border:1px solid #ccc; border-radius:4px; }
+        input:focus, select:focus { border-color:#fd4213; box-shadow:0 0 6px rgba(250,30,1,0.7); outline:none; }
+        .buttons { display:flex; justify-content:space-between; margin-top:8px; gap:6px; }
+        .buttons button { flex:1; font-size:0.75rem; padding:2px; border-radius:6px; cursor:pointer; }
+        #listasNotas { flex:1; overflow:auto; border:1px solid #ccc; border-radius:6px; background: rgba(255,255,255,0.40); padding:1; margin-top:10px; }
+        #listasNotas th { background: rgba(0, 123, 255, 0.85); color:rgb(15, 15, 15); font-weight:bold; position: sticky; top:0; z-index:3; backdrop-filter: blur(6px); }
+        #listasNotas table { width:100%; border-collapse:collapse; min-width:1200px; }
+        #listasNotas th, #listasNotas td { border:1px solid #ccc; font-size:0.65rem; padding:2px; text-align:center; background: rgba(255,255,255,0.60); font-weight:normal; min-width:80px; white-space: nowrap; overflow:hidden; text-overflow: ellipsis; }
+        #listasNotas tr:nth-child(even) td { background: rgba(240,240,240,0.8); }
+        #listasNotas tr:nth-child(odd) td { background: rgba(255,255,255,0.55); }
+        #listasNotas tr:hover td { background:#fdf59f !important; cursor:pointer; }
+        @media (max-width:1200px){ form { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); } }
+        @media (max-width:992px){ form { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); } .pesquisa-container { flex-direction: column; } }
+        @media (max-width:768px){ form { grid-template-columns: 1fr; } .buttons { flex-direction: column; } #listasNotas table { min-width:900px; } }
+        @media (max-width:576px){ .container { padding:10px; font-size:0.7rem; } input, select { font-size:0.7rem; padding:3px; } #listasNotas th, #listasNotas td { font-size:0.85rem; padding:2px; } }
+        footer { margin-top:4px; display:flex; justify-content:space-between; font-size:0.65rem; color:#f8f6f6; border-top:1px solid #ccc; }
+        .hidden { display:none; }
+        .full-height { height:100% !important; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="top-area">
+        <h1>Controle Ocorrência</h1>
+        <div class="pesquisa-container">
+            <input type="text" id="filtronotas" placeholder="Pesquisar/Editar">
+            <button class="salvar" id="btnSalvar">Salvar / Atualizar</button>
+            <button class="limpar" id="btnLimpar">Limpar</button>
+            <button class="excluir" id="btnExcluir">Excluir</button>
+            <button class="btn-lista" id="btnConsultar">Consultar Lista</button>
+            
+        </div>
+        <form id="formNotas">
+            <div><label for="transportadora">Transportadora</label><input type="text" id="transportadora"></div>
+            <div><label for="nfOrigem">NF Origem</label><input type="text" id="nfOrigem"></div>
+            <div><label for="cliente">Cliente</label><input type="text" id="cliente"></div>
+            <div><label for="dtEmissao">DT Emissão</label><input type="text" id="dtEmissao"></div>
+            <div><label for="dtEntrega">Dt Entrega</label><input type="text" id="dtEntrega"></div>
+            <div><label for="nfd">NFD</label><input type="text" id="nfd"></div>
+            <div><label for="dtNFDEmissao">Dt Emissão</label><input type="text" id="dtNFDEmissao"></div>
+            <div><label for="motivoDevolucao">Motivo Devolução</label><input type="text" id="motivoDevolucao"></div>
+            <div><label for="statusAtual">Status Atual</label><input type="text" id="statusAtual"></div>
+            <div><label for="acaoDevolucao">Ação da devolução</label><input type="text" id="acaoDevolucao"></div>
+            <div><label for="validacao">Validação</label><input type="text" id="validacao"></div>
+            <div><label for="itensDevolucao">Itens da devolução</label><input type="text" id="itensDevolucao"></div>
+            <div><label for="faturamentoContra">Faturamento Contra</label><input type="text" id="faturamentoContra"></div>
+            <div><label for="observacoes">Observações</label><input type="text" id="observacoes"></div>
+        </form>
+    </div>
+    <div id="listasNotas">
+        <table>
+            <thead>
+                <tr>
+                    <th>Transportadora</th>
+                    <th>NF Origem</th>
+                    <th>Cliente</th>
+                    <th>DT Emissão</th>
+                    <th>Dt Entrega</th>
+                    <th>NFD</th>
+                    <th>Dt Emissão</th>
+                    <th>Motivo Devolução</th>
+                    <th>Status Atual</th>
+                    <th>Ação da devolução</th>
+                    <th>Validação</th>
+                    <th>Itens da devolução</th>
+                    <th>Faturamento Contra</th>
+                    <th>Observações</th>
+                    <th>Ação</th>
+                </tr>
+            </thead>
+            <tbody id="tabelaNotas"></tbody>
+        </table>
+    </div>
+    <footer>
+        <span>© 2025 Julio Cesar. Todos os direitos reservados.</span>
+    </footer>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, getDocs, setDoc, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+// Configuração Firebase
+const firebaseConfig = {
+    apiKey: "AIzaSyDetNhQe-U_xoBD4o7oytKhj_lyH6PR25M",
+    authDomain: "controle-de-ocorrencia-4ffc2.firebaseapp.com",
+    projectId: "controle-de-ocorrencia-4ffc2",
+    storageBucket: "controle-de-ocorrencia-4ffc2.firebasestorage.app",
+    messagingSenderId: "230686446885",
+    appId: "1:230686446885:web:3b992cebd2e9024c09f6cc"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const NotasCol = collection(db, "Notas");
+
+// Campos do formulário
+const campos = ["transportadora","nfOrigem","cliente","dtEmissao","dtEntrega","nfd","dtNFDEmissao","motivoDevolucao","statusAtual","acaoDevolucao","validacao","itensDevolucao","faturamentoContra","observacoes"];
+
+
+
+// Carregar notas na tabela
+const carregarNotas = async () => {
+    const tabela = document.getElementById("tabelaNotas");
+    tabela.innerHTML = "";
+    const snapshot = await getDocs(NotasCol);
+    snapshot.forEach(docSnap => {
+        const data = docSnap.data();
+        const tr = document.createElement("tr");
+        campos.forEach(campo => {
+            const td = document.createElement("td");
+            td.textContent = data[campo] || "";
+            tr.appendChild(td);
+        });
+
+        // Coluna Ação (Editar)
+        const tdAcoes = document.createElement("td");
+        const btnEditar = document.createElement("button");
+        btnEditar.textContent = "Editar";
+        btnEditar.addEventListener("click", () => {
+            campos.forEach(campo => {
+                document.getElementById(campo).value = data[campo] || "";
+            });
+        });
+        tdAcoes.appendChild(btnEditar);
+        tr.appendChild(tdAcoes);
+        tabela.appendChild(tr);
+    });
+};
+
+// Eventos
+document.getElementById("btnSalvar").addEventListener("click", async () => {
+    const data = {};
+    campos.forEach(id => data[id] = document.getElementById(id).value.trim());
+
+    if (!data.nfOrigem) return alert("O campo NF Origem é obrigatório!");
+
+    try {
+        const docId = data.nfOrigem.replace(/[.#$/\[\]]/g, "_");
+        await setDoc(doc(NotasCol, docId), data);
+        alert("Notas salva com sucesso!");
+        document.getElementById("formNotas").reset();
+        carregarNotas();
+    } catch (err) {
+        console.error(err);
+        alert("Erro ao salvar!");
+    }
+});
+
+document.getElementById("btnLimpar").addEventListener("click", () => {
+    document.getElementById("formNotas").reset();
+    document.getElementById("filtronotas").value = ""; // limpa pesquisa também
+    carregarNotas(); // 🔄 recarrega lista na tela
+});
+
+
+document.getElementById("btnExcluir").addEventListener("click", async () => {
+    const nfOrigem = document.getElementById("nfOrigem").value.trim();
+    if (!nfOrigem) return alert("Digite a NF Origem para excluir.");
+    const docId = nfOrigem.replace(/[.#$/\[\]]/g, "_");
+    try {
+        await deleteDoc(doc(NotasCol, docId));
+        alert("Notas excluída com sucesso!");
+        document.getElementById("formNotas").reset();
+        carregarNotas();
+    } catch (err) {
+        console.error(err);
+        alert("Erro ao excluir!");
+    }
+});
+
+// Filtro em tempo real
+document.getElementById("filtronotas").addEventListener("input", () => {
+    const filtro = document.getElementById("filtronotas").value.toLowerCase();
+    document.querySelectorAll("#tabelaNotas tr").forEach(tr => {
+        tr.style.display = tr.textContent.toLowerCase().includes(filtro) ? "" : "none";
+    });
+});
+
+// Preencher formulário ao clicar na linha
+document.getElementById("tabelaNotas").addEventListener("click", e => {
+    const tr = e.target.closest("tr");
+    if (!tr) return;
+    const tds = tr.querySelectorAll("td");
+    campos.forEach((campo, i) => document.getElementById(campo).value = tds[i].textContent);
+});
+
+// Consultar lista
+document.getElementById("btnConsultar").addEventListener("click", () => {
+    window.location.href = "lista.html";
+});
+
+// Carregar notas ao iniciar
+window.addEventListener("load", carregarNotas);
+</script>
+</body>
+</html>
+
+</body>
+</html>
