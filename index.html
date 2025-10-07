@@ -7,42 +7,288 @@
     <meta name="description" content="Cadastro Ocorrência">
     <meta name="author" content="Julio Cesar">
     <title>Controle Ocorrência</title>
-    <style>
-        * { margin:0; padding:0; box-sizing:border-box; }
-        html, body { height:100%; font-family: Arial, sans-serif; background: url("coqueiral.png") no-repeat center center fixed; background-size: cover; overflow: hidden;}
-        .container { position: fixed; top:0; left:0; right:0; bottom:0; width:100%; height:100%; background: rgba(255,255,255,0.30); backdrop-filter: blur(10px); padding:15px; border-radius:8px; box-shadow:0 8px 15px rgba(0,0,0,0.3); display:flex; flex-direction:column; overflow:auto; }
-        .top-area { position: sticky; top:0; z-index:20; background: rgba(255,255,255,0.20); backdrop-filter: blur(6px); padding:8px 10px; border-radius:6px; box-shadow:0 1px 4px rgba(0,0,0,0.2); margin-bottom:6px; }
-        .top-area h1 { font-size:1.2rem; text-align:center; color:#fc0505; margin-bottom:8px; }
-        .pesquisa-container { display:flex; flex-wrap:nowrap; gap:6px; margin-bottom:10px; }
-        .pesquisa-container input, .pesquisa-container button { font-size:0.75rem; padding:2px; border-radius:4px; border:1px solid #ccc; text-align:center; }
-        .pesquisa-container input { flex:1 1 100px; min-width:90px; }
-        .pesquisa-container button { cursor:pointer; flex:1 1 90px; }
-        .pesquisa-container button.salvar { background:#28a745; color:white; border:none; }
-        .pesquisa-container button.limpar { background:#f0f0f0; color:#333; border:none; }
-        .pesquisa-container button.excluir { background:#dc3545; color:white; border:none; }
-        .pesquisa-container button.btn-lista { background:#007bff; color:white; border:none; }
-        form { display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:10px; margin-bottom:6px; }
-        form div { display:flex; flex-direction:column; }
-        form div label { font-size:0.75rem; }
-        input, select { width:100%; font-size:0.75rem; padding:4px; border:1px solid #ccc; border-radius:4px; }
-        input:focus, select:focus { border-color:#fd4213; box-shadow:0 0 6px rgba(250,30,1,0.7); outline:none; }
-        .buttons { display:flex; justify-content:space-between; margin-top:8px; gap:6px; }
-        .buttons button { flex:1; font-size:0.75rem; padding:2px; border-radius:6px; cursor:pointer; }
-        #listaInvoices { flex:1; overflow:auto; border:1px solid #ccc; border-radius:6px; background: rgba(255,255,255,0.40); padding:1; margin-top:10px; }
-        #listaInvoices th { background: rgba(0, 123, 255, 0.85); color:white; font-weight:bold; position: sticky; top:0; z-index:3; backdrop-filter: blur(6px); }
-        #listaInvoices table { width:100%; border-collapse:collapse; min-width:1200px; }
-        #listaInvoices th, #listaInvoices td { border:1px solid #ccc; font-size:0.65rem; padding:2px; text-align:center; background: rgba(255,255,255,0.60); font-weight:normal; min-width:80px; white-space: nowrap; overflow:hidden; text-overflow: ellipsis; }
-        #listaInvoices tr:nth-child(even) td { background: rgba(240,240,240,0.8); }
-        #listaInvoices tr:nth-child(odd) td { background: rgba(255,255,255,0.55); }
-        #listaInvoices tr:hover td { background:#fdf59f !important; cursor:pointer; }
-        @media (max-width:1200px){ form { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); } }
-        @media (max-width:992px){ form { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); } .pesquisa-container { flex-direction: column; } }
-        @media (max-width:768px){ form { grid-template-columns: 1fr; } .buttons { flex-direction: column; } #listaInvoices table { min-width:900px; } }
-        @media (max-width:576px){ .container { padding:10px; font-size:0.7rem; } input, select { font-size:0.7rem; padding:3px; } #listaInvoices th, #listaInvoices td { font-size:0.85rem; padding:2px; } }
-        footer { margin-top:4px; display:flex; justify-content:space-between; font-size:0.65rem; color:#f8f6f6; border-top:1px solid #ccc; }
-        .hidden { display:none; }
-        .full-height { height:100% !important; }
-    </style>
+   <style>* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+html,
+body {
+	height: 100%;
+	font-family: Arial, sans-serif;
+	background: url("coqueiral.png") no-repeat center center fixed;
+	background-size: cover;
+	overflow: hidden;
+}
+
+.container {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(255, 255, 255, 0.30);
+	backdrop-filter: blur(10px);
+	padding: 15px;
+	border-radius: 8px;
+	box-shadow: 0 8px 15px rgba(252, 251, 251, 251);
+	display: flex;
+	flex-direction: column;
+	overflow: auto;
+}
+
+.top-area {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: rgba(0, 123, 255, 0.85); /* fundo azul translúcido */
+    backdrop-filter: blur(6px);          /* mantém o efeito de blur */
+    padding: 8px 10px;
+    border-radius: 6px;
+    box-shadow: 0 1px 6px rgb(255, 254, 254); /* sombra mais visível */
+    margin-bottom: 6px;
+}
+
+.top-area h1 {
+    font-size: 1.4rem;
+    text-align: center;
+    color: #f8f6f6; /* texto branco */
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+
+.pesquisa-container {
+	display: flex;
+	flex-wrap: nowrap;
+	gap: 6px;
+	margin-bottom: 10px;
+}
+
+.pesquisa-container input,
+.pesquisa-container button {
+	font-size: 0.75rem;
+	padding: 2px;
+	border-radius: 4px;
+	border: 1px solid #ccc;
+	text-align: center;
+}
+
+.pesquisa-container input {
+	flex: 1 1 100px;
+	min-width: 90px;
+}
+
+.pesquisa-container button {
+	cursor: pointer;
+	flex: 1 1 90px;
+}
+
+.pesquisa-container button.salvar {
+	background: #28a745;
+	color: white;
+	border: none;
+}
+
+.pesquisa-container button.limpar {
+	background: #f0f0f0;
+	color: #333;
+	border: none;
+}
+
+.pesquisa-container button.excluir {
+	background: #dc3545;
+	color: white;
+	border: none;
+}
+
+.pesquisa-container button.btn-lista {
+	background: #007bff;
+	color: white;
+	border: none;
+}
+
+form {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+	gap: 10px;
+	margin-bottom: 6px;
+}
+
+form div {
+	display: flex;
+	flex-direction: column;
+}
+
+form div label {
+	font-size: 0.75rem;
+}
+
+input,
+select {
+	width: 100%;
+	font-size: 0.75rem;
+	padding: 4px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+}
+
+input:focus,
+select:focus {
+	border-color: #fd4213;
+	box-shadow: 0 0 6px rgba(250, 30, 1, 0.7);
+	outline: none;
+}
+
+.buttons {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 8px;
+	gap: 6px;
+}
+
+.buttons button {
+	flex: 1;
+	font-size: 0.75rem;
+	padding: 2px;
+	border-radius: 6px;
+	cursor: pointer;
+}
+
+#listaInvoices {
+	flex: 1;
+	overflow: auto;
+	border: 1px solid #ccc;
+	border-radius: 6px;
+	background: rgba(255, 255, 255, 0.40);
+	padding: 1;
+	margin-top: 10px;
+}
+
+#listaInvoices th {
+	background: rgba(0, 123, 255, 0.85);
+	color: white;
+	font-weight: bold;
+	position: sticky;
+	top: 0;
+	z-index: 3;
+	backdrop-filter: blur(6px);
+}
+
+#listaInvoices table {
+	width: 100%;
+	border-collapse: collapse;
+	min-width: 1200px;
+}
+
+#listaInvoices th,
+#listaInvoices td {
+	border: 1px solid #ccc;
+	font-size: 0.65rem;
+	padding: 2px;
+	text-align: center;
+	
+	font-weight: normal;
+	min-width: 80px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+#listaInvoices tr:nth-child(even) td {
+	background: rgba(240, 240, 240, 0.8);
+}
+
+#listaInvoices tr:nth-child(odd) td {
+	background: rgba(255, 255, 255, 0.55);
+}
+
+#listaInvoices tr:hover td {
+	background: #fdf59f !important;
+	cursor: pointer;
+}
+
+@media (max-width:1200px) {
+	form {
+		grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+	}
+}
+
+@media (max-width:992px) {
+	form {
+		grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+	}
+
+	.pesquisa-container {
+		flex-direction: column;
+	}
+}
+
+@media (max-width:768px) {
+	form {
+		grid-template-columns: 1fr;
+	}
+
+	.buttons {
+		flex-direction: column;
+	}
+
+	#listaInvoices table {
+		min-width: 900px;
+	}
+}
+
+@media (max-width:576px) {
+	.container {
+		padding: 10px;
+		font-size: 0.7rem;
+	}
+
+	input,
+	select {
+		font-size: 0.7rem;
+		padding: 3px;
+	}
+
+	#listaInvoices th,
+	#listaInvoices td {
+		font-size: 0.85rem;
+		padding: 2px;
+	}
+}
+
+footer {
+	margin-top: 4px;
+	display: flex;
+	justify-content: space-between;
+	font-size: 0.65rem;
+	color: #f8f6f6;
+	border-top: 1px solid #ccc;
+}
+
+.hidden {
+	display: none;
+}
+
+.full-height {
+	height: 100% !important;
+}
+
+#btnPesquisar {
+    background: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 2px 5px;
+    border-radius: 4px;
+    flex: 1 1 90px;
+}
+
+
+</style>
 </head>
 <body>
 <div class="container">
@@ -50,11 +296,13 @@
         <h1>Controle Ocorrência</h1>
         <div class="pesquisa-container">
             <input type="text" id="filtroInvoice" placeholder="Pesquisar/Editar">
+            <button id="btnPesquisar">Pesquisar</button>
             <button class="salvar" id="btnSalvar">Salvar / Atualizar</button>
             <button class="limpar" id="btnLimpar">Limpar</button>
             <button class="excluir" id="btnExcluir">Excluir</button>
             <button class="btn-lista" id="btnConsultar">Consultar Lista</button>
         </div>
+
         <form id="formInvoice">
             <div><label for="transportadora">Transportadora</label><input type="text" id="transportadora"></div>
             <div><label for="nfOrigem">NF Origem</label><input type="text" id="nfOrigem"></div>
@@ -66,12 +314,24 @@
             <div><label for="motivoDevolucao">Motivo Devolução</label><input type="text" id="motivoDevolucao"></div>
             <div><label for="statusAtual">Status Atual</label><input type="text" id="statusAtual"></div>
             <div><label for="acaoDevolucao">Ação da devolução</label><input type="text" id="acaoDevolucao"></div>
-            <div><label for="validacao">Validação</label><input type="text" id="validacao"></div>
+            <div><label for="validacao">Validação</label>
+                <select id="validacao">
+                    <option value="Pendente">Pendente</option>
+                    <option value="Finalizada">Validada</option>
+                </select>
+            </div>
             <div><label for="itensDevolucao">Itens da devolução</label><input type="text" id="itensDevolucao"></div>
             <div><label for="faturamentoContra">Faturamento Contra</label><input type="text" id="faturamentoContra"></div>
-            <div><label for="observacoes">Observações</label><input type="text" id="observacoes"></div>
+            <div><label for="status">Status</label>
+         <select id="status">
+        <option value="Pendente">Pendente</option>
+        <option value="Finalizada">Finalizada</option>
+    </select>
+</div>
+
         </form>
     </div>
+
     <div id="listaInvoices">
         <table>
             <thead>
@@ -89,89 +349,205 @@
                     <th>Validação</th>
                     <th>Itens da devolução</th>
                     <th>Faturamento Contra</th>
-                    <th>Observações</th>
+                    <th>Status</th>
                     <th>Ação</th>
                 </tr>
             </thead>
             <tbody id="tabelaInvoices"></tbody>
         </table>
     </div>
+
     <footer>
         <span>© 2025 Julio Cesar. Todos os direitos reservados.</span>
     </footer>
 </div>
 
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getFirestore, collection, getDocs, getDoc, setDoc, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, getDocs, setDoc, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyDetNhQe-U_xoBD4o7oytKhj_lyH6PR25M",
-        authDomain: "controle-de-ocorrencia-4ffc2.firebaseapp.com",
-        projectId: "controle-de-ocorrencia-4ffc2",
-        storageBucket: "controle-de-ocorrencia-4ffc2.firebasestorage.app",
-        messagingSenderId: "230686446885",
-        appId: "1:230686446885:web:3b992cebd2e9024c09f6cc"
-    };
+// Configuração do Firebase
+const firebaseConfig = {
+    apiKey: "AIzaSyDetNhQe-U_xoBD4o7oytKhj_lyH6PR25M",
+    authDomain: "controle-de-ocorrencia-4ffc2.firebaseapp.com",
+    projectId: "controle-de-ocorrencia-4ffc2",
+    storageBucket: "controle-de-ocorrencia-4ffc2.firebasestorage.app",
+    messagingSenderId: "230686446885",
+    appId: "1:230686446885:web:3b992cebd2e9024c09f6cc"
+};
 
-    const app = initializeApp(firebaseConfig);
-    const db  = getFirestore(app);
-    const invoicesCol = collection(db, "invoices");
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const invoicesCol = collection(db, "invoices");
 
-    const carregarInvoices = async () => {
-        const tabela = document.getElementById("tabelaInvoices");
-        tabela.innerHTML = "";
-        const snapshot = await getDocs(invoicesCol);
-        snapshot.forEach(docSnap => {
-            const data = docSnap.data();
-            const tr = document.createElement("tr");
-            ["transportadora","nfOrigem","cliente","dtEmissao","dtEntrega","nfd","dtNFDEmissao","motivoDevolucao","statusAtual","acaoDevolucao","validacao","itensDevolucao","faturamentoContra","observacoes"].forEach(campo=>{
-                const td = document.createElement("td");
-                td.textContent = data[campo] || "";
-                tr.appendChild(td);
-            });
-            const tdAcoes = document.createElement("td");
-            const btnEditar = document.createElement("button");
-            btnEditar.textContent = "Editar";
-            btnEditar.addEventListener("click", ()=>{
-                ["transportadora","nfOrigem","cliente","dtEmissao","dtEntrega","nfd","dtNFDEmissao","motivoDevolucao","statusAtual","acaoDevolucao","validacao","itensDevolucao","faturamentoContra","observacoes"].forEach(campo=>{
-                    document.getElementById(campo).value = data[campo] || "";
-                });
-            });
-            tdAcoes.appendChild(btnEditar);
-            tr.appendChild(tdAcoes);
-            tabela.appendChild(tr);
-        });
-    };
+// Preenche formulário e marca para edição
+const preencherFormulario = (data, docId) => {
+    Object.keys(data).forEach(campo => {
+        const el = document.getElementById(campo);
+        if(el) el.value = data[campo] || (campo === "validacao" ? "Pendente" : "");
+    });
+    localStorage.setItem("nfEditar", docId);
+};
 
-    document.getElementById("btnSalvar").addEventListener("click", async ()=>{
-        const data = {};
-        const campos = ["transportadora","nfOrigem","cliente","dtEmissao","dtEntrega","nfd","dtNFDEmissao","motivoDevolucao","statusAtual","acaoDevolucao","validacao","itensDevolucao","faturamentoContra","observacoes"];
-        campos.forEach(id => {
-            const el = document.getElementById(id);
-            if(el) data[id] = el.value.trim();
+// Carrega todas as invoices na tabela (filtra status "Finalizada")
+const carregarInvoices = async () => {
+    const tabela = document.getElementById("tabelaInvoices");
+    tabela.innerHTML = "";
+
+    const snapshot = await getDocs(invoicesCol);
+    snapshot.forEach(docSnap => {
+        const data = docSnap.data();
+
+        // Ignora registros finalizados na index
+        if(data.status === "Finalizada") return;
+
+        const tr = document.createElement("tr");
+
+        ["transportadora","nfOrigem","cliente","dtEmissao","dtEntrega","nfd","dtNFDEmissao",
+        "motivoDevolucao","statusAtual","acaoDevolucao","validacao","itensDevolucao",
+        "faturamentoContra","status"].forEach(campo => {
+            const td = document.createElement("td");
+            td.textContent = data[campo] || "";
+            tr.appendChild(td);
         });
 
-        if(!data.nfOrigem){
-            alert("O campo NF Origem é obrigatório!");
-            return;
+        // Coluna ações
+        const tdAcoes = document.createElement("td");
+
+        const btnEditar = document.createElement("button");
+        btnEditar.textContent = "Editar";
+        btnEditar.addEventListener("click", () => preencherFormulario(data, docSnap.id));
+        tdAcoes.appendChild(btnEditar);
+
+        const btnExcluirLinha = document.createElement("button");
+        btnExcluirLinha.textContent = "Excluir";
+        btnExcluirLinha.style.marginLeft = "4px";
+        btnExcluirLinha.addEventListener("click", async () => {
+            if(confirm(`Deseja realmente excluir a NF ${data.nfOrigem}?`)){
+                await deleteDoc(doc(invoicesCol, docSnap.id));
+                alert("NF excluída com sucesso!");
+                document.getElementById("formInvoice").reset();
+                localStorage.removeItem("nfEditar");
+                document.getElementById("filtroInvoice").value = "";
+                carregarInvoices();
+            }
+        });
+        tdAcoes.appendChild(btnExcluirLinha);
+
+        tr.appendChild(tdAcoes);
+        tabela.appendChild(tr);
+    });
+};
+
+// Salvar ou Atualizar
+document.getElementById("btnSalvar").addEventListener("click", async () => {
+    const campos = ["transportadora","nfOrigem","cliente","dtEmissao","dtEntrega","nfd","dtNFDEmissao",
+                    "motivoDevolucao","statusAtual","acaoDevolucao","validacao","itensDevolucao",
+                    "faturamentoContra","status"];
+    const data = {};
+    campos.forEach(id => {
+        const el = document.getElementById(id);
+        if(el) data[id] = el.value.trim();
+    });
+
+    if(!data.nfOrigem){
+        alert("O campo NF Origem é obrigatório!");
+        return;
+    }
+
+    try {
+        let docId;
+        const nfEditar = localStorage.getItem("nfEditar");
+        if(nfEditar){
+            docId = nfEditar;
+        } else {
+            const snapshot = await getDocs(invoicesCol);
+            const existe = snapshot.docs.some(docSnap => docSnap.id === data.nfOrigem.replace(/[.#$/\[\]]/g,"_"));
+            if(existe){
+                alert("Esta NF Origem já está cadastrada!");
+                return;
+            }
+            docId = data.nfOrigem.replace(/[.#$/\[\]]/g,"_");
         }
 
-        try {
-            const docId = data.nfOrigem.replace(/[.#$/\[\]]/g, "_");
-            await setDoc(doc(invoicesCol, docId), data);
-            alert("Invoice salva com sucesso!");
-            document.getElementById("formInvoice").reset();
-            carregarInvoices();
-        } catch (error) {
-            console.error("Erro ao salvar no Firestore:", error);
-            alert("Erro ao salvar! Verifique o console.");
+        await setDoc(doc(invoicesCol, docId), data);
+        alert("Invoice salva com sucesso!");
+        document.getElementById("formInvoice").reset();
+        localStorage.removeItem("nfEditar");
+        document.getElementById("filtroInvoice").value = "";
+        carregarInvoices();
+    } catch(error){
+        console.error("Erro ao salvar:", error);
+        alert("Erro ao salvar! Verifique o console.");
+    }
+});
+
+// Pesquisar e já preencher para edição
+document.getElementById("btnPesquisar").addEventListener("click", async () => {
+    const filtro = document.getElementById("filtroInvoice").value.trim().toLowerCase();
+    if(!filtro){
+        alert("Digite uma NF para pesquisar!");
+        return;
+    }
+
+    const snapshot = await getDocs(invoicesCol);
+    let encontrou = false;
+
+    snapshot.forEach(docSnap => {
+        const data = docSnap.data();
+        if(data.nfOrigem?.toLowerCase() === filtro){
+            encontrou = true;
+            preencherFormulario(data, docSnap.id);
         }
     });
 
-    document.getElementById("btnLimpar").addEventListener("click", ()=>document.getElementById("formInvoice").reset());
+    if(!encontrou){
+        alert("Nenhuma NF encontrada!");
+        document.getElementById("formInvoice").reset();
+        document.getElementById("validacao").value = "Pendente";
+        localStorage.removeItem("nfEditar");
+    }
+});
 
-    window.addEventListener("load", carregarInvoices);
+// Limpar formulário
+document.getElementById("btnLimpar").addEventListener("click", () => {
+    document.getElementById("formInvoice").reset();
+    document.getElementById("filtroInvoice").value = "";
+    localStorage.removeItem("nfEditar");
+    carregarInvoices();
+});
+
+// Consultar lista
+document.getElementById("btnConsultar").addEventListener("click", () => {
+    window.location.href = "lista.html";
+});
+
+// Excluir NF em edição
+document.getElementById("btnExcluir").addEventListener("click", async () => {
+    const nfEditar = localStorage.getItem("nfEditar");
+    if(!nfEditar){
+        alert("Nenhuma NF selecionada para excluir!");
+        return;
+    }
+
+    if(confirm("Deseja realmente excluir esta NF?")){
+        try {
+            await deleteDoc(doc(invoicesCol, nfEditar));
+            alert("NF excluída com sucesso!");
+            document.getElementById("formInvoice").reset();
+            localStorage.removeItem("nfEditar");
+            document.getElementById("filtroInvoice").value = "";
+            carregarInvoices();
+        } catch(error){
+            console.error("Erro ao excluir:", error);
+            alert("Erro ao excluir! Verifique o console.");
+        }
+    }
+});
+
+// Inicialização
+window.addEventListener("load", carregarInvoices);
 </script>
+
 </body>
 </html>
